@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  purchases Purchase[]
+  progress  ModuleProgress[]
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  price       Int
+  createdAt   DateTime @default(now())
+
+  modules   Module[]
+  purchases Purchase[]
+}
+
+model Module {
+  id              String   @id @default(cuid())
+  title           String
+  order           Int
+  videoPlaybackId String
+  durationSeconds Int
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  progress ModuleProgress[]
+}
+
+model Purchase {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+}
+
+model ModuleProgress {
+  id              String   @id @default(cuid())
+  progressSeconds Int
+  completedAt     DateTime?
+
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id])
+
+  @@unique([userId, moduleId])
+}
