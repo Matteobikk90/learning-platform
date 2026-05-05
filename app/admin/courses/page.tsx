@@ -43,8 +43,16 @@ export default async function AdminCoursesPage() {
                     </p>
                   )}
                 </div>
-                <div className="text-sm font-medium">
-                  €{(course.price / 100).toFixed(2)}
+                <div className="flex items-center gap-4">
+                  <div className="text-sm font-medium">
+                    €{(course.price / 100).toFixed(2)}
+                  </div>
+
+                  <Link
+                    href={`/admin/courses/${course.id}/modules`}
+                    className="rounded-md border px-3 py-2 text-sm">
+                    Manage modules
+                  </Link>
                 </div>
               </div>
             ))}
