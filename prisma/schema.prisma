@@ -34,11 +34,13 @@ model Module {
   id              String           @id @default(cuid())
   title           String
   order           Int
-  videoPlaybackId String
   durationSeconds Int
   courseId        String
   course          Course           @relation(fields: [courseId], references: [id])
   progress        ModuleProgress[]
+  videoPlaybackId String?
+  muxUploadId     String?
+  muxAssetId      String?
 }
 
 model Purchase {

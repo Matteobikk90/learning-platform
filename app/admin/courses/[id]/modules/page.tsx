@@ -1,3 +1,4 @@
+import { VideoUpload } from "@/components/video-upload";
 import { formatDuration } from "@/lib/format-duration";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
@@ -60,9 +61,7 @@ export default async function ModulesPage({ params }: ModulesPageProps) {
                   <h2 className="font-semibold">
                     {module.order}. {module.title}
                   </h2>
-                  <p className="mt-1 text-sm text-gray-600">
-                    Playback ID: {module.videoPlaybackId}
-                  </p>
+                  <VideoUpload />
                 </div>
 
                 <div className="text-sm text-gray-500">
