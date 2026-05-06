@@ -1,12 +1,13 @@
 "use client";
 
+import { attachMuxUploadToModule } from "@/features/modules/actions";
 import { useState } from "react";
 
-export function VideoUpload({
-  onUploaded,
-}: {
-  onUploaded?: (id: string) => void;
-}) {
+type VideoUploadProps = {
+  moduleId: string;
+};
+
+export function VideoUpload({ moduleId }: VideoUploadProps) {
   const [loading, setLoading] = useState(false);
 
   async function handleUpload(file: File) {
@@ -23,13 +24,12 @@ export function VideoUpload({
 
       const { uploadUrl, uploadId } = await res.json();
 
+      await attachMuxUploadToModule(moduleId, uploadId);
+
       await fetch(uploadUrl, {
         method: "PUT",
-
         body: file,
       });
-
-      onUploaded?.(uploadId);
 
       alert("Upload completed. Mux is processing the video.");
     } finally {
@@ -45,7 +45,6 @@ export function VideoUpload({
         disabled={loading}
         onChange={(event) => {
           const file = event.target.files?.[0];
-
           if (file) handleUpload(file);
         }}
       />

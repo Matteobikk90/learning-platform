@@ -61,7 +61,14 @@ export default async function ModulesPage({ params }: ModulesPageProps) {
                   <h2 className="font-semibold">
                     {module.order}. {module.title}
                   </h2>
-                  <VideoUpload />
+                  <VideoUpload moduleId={module.id} />
+                  <p className="mt-1 text-sm text-gray-600">
+                    {module.videoPlaybackId
+                      ? "Video ready"
+                      : module.muxUploadId
+                      ? "Video processing"
+                      : "No video uploaded"}
+                  </p>
                 </div>
 
                 <div className="text-sm text-gray-500">
