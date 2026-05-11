@@ -16,26 +16,42 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center p-6">
-      <h1 className="mb-6 text-2xl font-bold">Login</h1>
+    <main className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-6 py-16">
+      <span className="label-upper text-center">Accesso</span>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="email"
-          type="email"
-          required
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="you@example.com"
-          className="w-full rounded-md border px-3 py-2"
-        />
+      <h1 className="font-display text-[2.75rem] font-normal leading-[1.15] text-navy mb-3 text-center">
+        Bentornato
+      </h1>
 
-        <button
-          type="submit"
-          className="w-full rounded-md bg-black px-4 py-2 text-white">
-          Send magic link
-        </button>
-      </form>
+      <p className="text-sm text-muted text-center mb-10 leading-relaxed">
+        Inserisci la tua email per ricevere il link di accesso.
+      </p>
+
+      <div className="card p-8">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-[0.7rem] font-semibold tracking-widest uppercase text-muted mb-2">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="tu@esempio.com"
+              className="w-full px-3.5 py-2.5 border border-stroke rounded-md bg-canvas text-ink text-[0.9375rem] font-sans outline-none"
+            />
+          </div>
+
+          <button type="submit" className="btn-primary w-full">
+            Invia link magico
+          </button>
+        </form>
+      </div>
     </main>
   );
 }

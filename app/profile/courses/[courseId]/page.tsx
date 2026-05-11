@@ -7,95 +7,80 @@ import { notFound, redirect } from "next/navigation";
 export default async function ProfileCoursePage({
   params,
 }: {
-  params: Promise<{
-    courseId: string;
-  }>;
+  params: Promise<{ courseId: string }>;
 }) {
   const session = await requireAuth();
   const { courseId } = await params;
 
   const user = await prisma.user.findUnique({
-    where: {
-      email: session.user.email!,
-    },
+    where: { email: session.user.email! },
   });
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
   const purchase = await prisma.purchase.findFirst({
-    where: {
-      userId: user.id,
-      courseId,
-    },
+    where: { userId: user.id, courseId },
     include: {
       course: {
-        include: {
-          modules: {
-            orderBy: {
-              order: "asc",
-            },
-          },
-        },
+        include: { modules: { orderBy: { order: "asc" } } },
       },
     },
   });
 
-  if (!purchase) {
-    notFound();
-  }
+  if (!purchase) notFound();
 
   return (
-    <main className="mx-auto max-w-5xl p-10">
-      <Link href="/profile" className="text-sm text-gray-600">
-        ← Back to profile
+    <main className="mx-auto max-w-5xl px-6 py-14">
+      <Link href="/profile" className="back-link">
+        ← Profilo
       </Link>
 
-      <div className="mt-6">
-        <h1 className="text-3xl font-bold">{purchase.course.title}</h1>
-
+      <div className="mb-10">
+        <span className="label-upper">Corso</span>
+        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
+          {purchase.course.title}
+        </h1>
         {purchase.course.description && (
-          <p className="mt-2 text-gray-600">{purchase.course.description}</p>
+          <p className="text-[0.9375rem] text-muted leading-relaxed max-w-[60ch]">
+            {purchase.course.description}
+          </p>
         )}
       </div>
 
-      <section className="mt-10">
-        <h2 className="text-2xl font-semibold">Modules</h2>
+      <section>
+        <p className="text-[0.7rem] font-semibold tracking-widest uppercase text-muted mb-4">
+          Moduli ({purchase.course.modules.length})
+        </p>
 
-        <div className="mt-4 rounded-lg border">
+        <div className="card">
           {purchase.course.modules.length === 0 ? (
-            <p className="p-6 text-gray-600">No modules available yet.</p>
+            <p className="px-8 py-8 text-muted">Nessun modulo disponibile.</p>
           ) : (
-            <div className="divide-y">
-              {purchase.course.modules.map((module) => (
-                <div
-                  key={module.id}
-                  className="flex items-center justify-between p-6">
-                  <div>
-                    <h3 className="font-semibold">
-                      {module.order}. {module.title}
+            purchase.course.modules.map((module) => (
+              <div key={module.id} className="list-row">
+                <div>
+                  <div className="flex items-baseline gap-2.5 mb-1">
+                    <span className="text-[0.7rem] font-semibold tracking-widest text-subtle">
+                      {String(module.order).padStart(2, "0")}
+                    </span>
+                    <h3 className="font-display text-xl font-medium text-navy">
+                      {module.title}
                     </h3>
-
-                    <p className="mt-1 text-sm text-gray-600">
-                      {formatDuration(module.durationSeconds)}
-                    </p>
-
-                    {!module.videoPlaybackId && (
-                      <p className="mt-1 text-sm text-gray-500">
-                        Video not ready yet.
-                      </p>
-                    )}
                   </div>
-
-                  <Link
-                    href={`/profile/courses/${purchase.course.id}/modules/${module.id}`}
-                    className="rounded-md bg-black px-4 py-2 text-sm text-white">
-                    Open module
-                  </Link>
+                  <p className="text-[0.8125rem] text-subtle">
+                    {formatDuration(module.durationSeconds)}
+                    {!module.videoPlaybackId && (
+                      <span className="ml-2">· Video non ancora disponibile</span>
+                    )}
+                  </p>
                 </div>
-              ))}
-            </div>
+                <Link
+                  href={`/profile/courses/${purchase.course.id}/modules/${module.id}`}
+                  className="btn-primary">
+                  Guarda
+                </Link>
+              </div>
+            ))
           )}
         </div>
       </section>
