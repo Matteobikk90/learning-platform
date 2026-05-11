@@ -1,4 +1,3 @@
-import { VideoUpload } from "@/components/video-upload";
 import { formatDuration } from "@/lib/format-duration";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
@@ -61,7 +60,7 @@ export default async function ModulesPage({ params }: ModulesPageProps) {
                   <h2 className="font-semibold">
                     {module.order}. {module.title}
                   </h2>
-                  <VideoUpload moduleId={module.id} />
+
                   <p className="mt-1 text-sm text-gray-600">
                     {module.videoPlaybackId
                       ? "Video ready"
@@ -71,8 +70,16 @@ export default async function ModulesPage({ params }: ModulesPageProps) {
                   </p>
                 </div>
 
-                <div className="text-sm text-gray-500">
-                  {formatDuration(module.durationSeconds)}{" "}
+                <div className="flex items-center gap-4">
+                  <div className="text-sm text-gray-500">
+                    {formatDuration(module.durationSeconds)}
+                  </div>
+
+                  <Link
+                    href={`/admin/courses/${course.id}/modules/${module.id}`}
+                    className="rounded-md border px-3 py-2 text-sm">
+                    Manage
+                  </Link>
                 </div>
               </div>
             ))}
