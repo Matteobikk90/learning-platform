@@ -63,10 +63,20 @@ export default async function ModuleDetailPage({
         <h2 className="text-xl font-semibold">Video</h2>
 
         {courseModule.videoPlaybackId ? (
-          <VideoPlayer
-            playbackId={courseModule.videoPlaybackId}
-            title={courseModule.title}
-          />
+          <>
+            <VideoPlayer
+              playbackId={courseModule.videoPlaybackId}
+              title={courseModule.title}
+            />
+
+            <div className="mt-6 border-t pt-6">
+              <p className="mb-4 text-sm text-gray-600">
+                Replace the current video with a new one.
+              </p>
+
+              <VideoUpload moduleId={courseModule.id} />
+            </div>
+          </>
         ) : (
           <div className="mt-4">
             <p className="mb-4 text-sm text-gray-600">
