@@ -11,7 +11,7 @@ export default function LoginPage() {
 
     await signIn("email", {
       email,
-      callbackUrl: "/dashboard",
+      callbackUrl: "/profile",
     });
   }
 
