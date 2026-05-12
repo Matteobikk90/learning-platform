@@ -1,5 +1,6 @@
 import { ModuleProgressPlayer } from "@/components/module-progress-layer";
 import { formatDuration } from "@/lib/format-duration";
+import { isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
 import Link from "next/link";
@@ -32,6 +33,31 @@ export default async function ProfileModulePage({
 
   if (!courseModule || courseModule.courseId !== courseId) {
     notFound();
+  }
+
+  const isAdmin = session.user.role === "ADMIN";
+
+  if (!isAdmin && courseModule.order > 1) {
+    const prevModule = await prisma.module.findFirst({
+      where: { courseId, order: courseModule.order - 1 },
+      select: { id: true },
+    });
+
+    const prevProgress = prevModule
+      ? await prisma.moduleProgress.findUnique({
+          where: { userId_moduleId: { userId: user.id, moduleId: prevModule.id } },
+          select: { completedAt: true },
+        })
+      : null;
+
+    if (
+      !isModuleUnlocked({
+        moduleOrder: courseModule.order,
+        previousCompletedAt: prevProgress?.completedAt,
+      })
+    ) {
+      redirect(`/profile/courses/${courseId}`);
+    }
   }
 
   const progress = await prisma.moduleProgress.findUnique({
