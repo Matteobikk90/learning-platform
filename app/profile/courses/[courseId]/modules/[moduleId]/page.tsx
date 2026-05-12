@@ -71,6 +71,7 @@ export default async function ProfileModulePage({
               playbackId={courseModule.videoPlaybackId}
               title={courseModule.title}
               moduleId={courseModule.id}
+              durationSeconds={courseModule.durationSeconds}
               initialTime={progress?.progressSeconds ?? 0}
             />
           </div>

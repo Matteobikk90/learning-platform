@@ -40,13 +40,13 @@ export async function saveModuleProgress(
     },
   });
 
-  const nextProgressSeconds = Math.max(
+  const maxProgressSeconds = Math.max(
     existingProgress?.progressSeconds ?? 0,
     safeProgressSeconds
   );
 
   const completionThreshold = Math.floor(courseModule.durationSeconds * 0.9);
-  const isCompleted = nextProgressSeconds >= completionThreshold;
+  const isCompleted = maxProgressSeconds >= completionThreshold;
 
   await prisma.moduleProgress.upsert({
     where: {
@@ -56,14 +56,14 @@ export async function saveModuleProgress(
       },
     },
     update: {
-      progressSeconds: nextProgressSeconds,
+      progressSeconds: safeProgressSeconds,
       completedAt:
         isCompleted && !existingProgress?.completedAt ? new Date() : undefined,
     },
     create: {
       userId: user.id,
       moduleId,
-      progressSeconds: nextProgressSeconds,
+      progressSeconds: safeProgressSeconds,
       completedAt: isCompleted ? new Date() : null,
     },
   });

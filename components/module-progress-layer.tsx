@@ -9,6 +9,7 @@ type ModuleProgressPlayerProps = {
   playbackId: string;
   title: string;
   moduleId: string;
+  durationSeconds: number;
   initialTime?: number;
 };
 
@@ -16,9 +17,12 @@ export function ModuleProgressPlayer({
   playbackId,
   title,
   moduleId,
+  durationSeconds,
   initialTime = 0,
 }: ModuleProgressPlayerProps) {
-  const lastSavedTime = useRef(initialTime);
+  const completionThreshold = Math.floor(durationSeconds * 0.9);
+  const resumeTime = initialTime >= completionThreshold ? 0 : initialTime;
+  const lastSavedTime = useRef(resumeTime);
 
   async function saveProgress(currentTime: number) {
     try {
@@ -32,7 +36,7 @@ export function ModuleProgressPlayer({
     <VideoPlayer
       playbackId={playbackId}
       title={title}
-      initialTime={initialTime}
+      initialTime={resumeTime}
       onTimeUpdate={(currentTime) => {
         const diff = Math.abs(currentTime - lastSavedTime.current);
         if (diff < 10) return;
