@@ -56,6 +56,7 @@ export default async function ProfileModulePage({
             <VideoPlayer
               playbackId={courseModule.videoPlaybackId}
               title={courseModule.title}
+              moduleId={courseModule.id}
             />
           </div>
         ) : (
