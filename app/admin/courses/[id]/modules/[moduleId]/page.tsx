@@ -67,7 +67,6 @@ export default async function ModuleDetailPage({
             <VideoPlayer
               playbackId={courseModule.videoPlaybackId}
               title={courseModule.title}
-              moduleId={courseModule.id}
             />
 
             <div className="mt-6 border-t pt-6">

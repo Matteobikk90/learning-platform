@@ -1,4 +1,4 @@
-import { VideoPlayer } from "@/components/video-player";
+import { ModuleProgressPlayer } from "@/components/module-progress-layer";
 import { formatDuration } from "@/lib/format-duration";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
@@ -30,6 +30,20 @@ export default async function ProfileModulePage({
     include: { course: true },
   });
 
+  if (!courseModule || courseModule.courseId !== courseId) {
+    notFound();
+  }
+
+  const progress = await prisma.moduleProgress.findUnique({
+    where: {
+      userId_moduleId: {
+        userId: user.id,
+
+        moduleId: courseModule.id,
+      },
+    },
+  });
+
   if (!courseModule || courseModule.courseId !== courseId) notFound();
 
   return (
@@ -53,10 +67,11 @@ export default async function ProfileModulePage({
       <section>
         {courseModule.videoPlaybackId ? (
           <div className="card overflow-hidden">
-            <VideoPlayer
+            <ModuleProgressPlayer
               playbackId={courseModule.videoPlaybackId}
               title={courseModule.title}
               moduleId={courseModule.id}
+              initialTime={progress?.progressSeconds ?? 0}
             />
           </div>
         ) : (
