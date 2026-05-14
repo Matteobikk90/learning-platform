@@ -1,7 +1,7 @@
+import { Navbar } from "@/components/navbar";
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -19,8 +19,8 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Umberto Iglina Yoga",
-  description: "La tua piattaforma di apprendimento yoga",
+  title: "Umberto Iglina",
+  description: "La tua piattaforma di apprendimento personalizzata",
 };
 
 export default function RootLayout({
@@ -32,7 +32,9 @@ export default function RootLayout({
     <html
       lang="it"
       className={`${montserrat.variable} ${cormorant.variable} h-full`}>
-      <body className="min-h-full flex flex-col" style={{ background: "var(--color-bg)" }}>
+      <body
+        className="min-h-full flex flex-col"
+        style={{ background: "var(--color-bg)" }}>
         <Navbar />
         <div className="flex-1">{children}</div>
       </body>

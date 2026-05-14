@@ -1,3 +1,4 @@
+import { createCheckoutSession } from "@/features/courses/checkout";
 import { prisma } from "@/lib/prisma";
 
 export default async function Home() {
@@ -7,7 +8,9 @@ export default async function Home() {
     <main className="mx-auto max-w-5xl px-6 py-16">
       {/* Hero */}
       <section className="mb-16 text-center">
-        <span className="label-upper justify-center">Piattaforma di apprendimento</span>
+        <span className="label-upper justify-center">
+          Piattaforma di apprendimento
+        </span>
         <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] font-light leading-[1.1] text-navy mb-6">
           Scopri il tuo percorso
           <br />
@@ -37,12 +40,23 @@ export default async function Home() {
                   <h3 className="font-display text-2xl font-medium text-navy mb-1">
                     {course.title}
                   </h3>
+
                   {course.description && (
                     <p className="text-sm text-muted leading-relaxed">
                       {course.description}
                     </p>
                   )}
+
+                  <p className="mt-3 text-sm text-muted">
+                    €{(course.price / 100).toFixed(2)}
+                  </p>
                 </div>
+
+                <form action={createCheckoutSession.bind(null, course.id)}>
+                  <button type="submit" className="btn-primary">
+                    Acquista
+                  </button>
+                </form>
               </div>
             ))}
           </div>
