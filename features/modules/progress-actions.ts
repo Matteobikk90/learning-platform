@@ -5,7 +5,8 @@ import { requireAuth } from "@/lib/session";
 
 export async function saveModuleProgress(
   moduleId: string,
-  progressSeconds: number
+  progressSeconds: number,
+  forceComplete = false
 ) {
   const session = await requireAuth();
 
@@ -46,7 +47,7 @@ export async function saveModuleProgress(
   );
 
   const completionThreshold = Math.floor(courseModule.durationSeconds * 0.9);
-  const isCompleted = maxProgressSeconds >= completionThreshold;
+  const isCompleted = forceComplete || maxProgressSeconds >= completionThreshold;
 
   await prisma.moduleProgress.upsert({
     where: {
