@@ -2,22 +2,22 @@
 
 /* Brand colors — direct values so Tailwind generates bg-*, text-*, border-* utilities */
 @theme {
-  --color-navy:       #0D2240;
-  --color-ocean:      #1A5F9C;
-  --color-ocean-dark: #134A7D;
-  --color-petrol:     #0A7A72;
-  --color-canvas:     #EBF1F0;
-  --color-surface:    #F7FAFA;
-  --color-stroke:     #B8CECC;
-  --color-ink:        #0B1C1A;
-  --color-muted:      #3D6462;
-  --color-subtle:     #7AADAB;
+  --color-navy: #0d2240;
+  --color-ocean: #1a5f9c;
+  --color-ocean-dark: #134a7d;
+  --color-petrol: #0a7a72;
+  --color-canvas: #ebf1f0;
+  --color-surface: #f7fafa;
+  --color-stroke: #b8cecc;
+  --color-ink: #0b1c1a;
+  --color-muted: #3d6462;
+  --color-subtle: #7aadab;
 }
 
 /* Fonts reference Next.js CSS vars injected at runtime — must stay inline */
 @theme inline {
   --font-display: var(--font-cormorant), serif;
-  --font-sans:    var(--font-montserrat), sans-serif;
+  --font-sans: var(--font-montserrat), sans-serif;
 }
 
 @layer base {

@@ -37,9 +37,10 @@ export default async function ProfileModulePage({
 
   const isAdmin = session.user.role === "ADMIN";
 
-  if (!isAdmin && courseModule.order > 1) {
+  if (!isAdmin) {
     const prevModule = await prisma.module.findFirst({
-      where: { courseId, order: courseModule.order - 1 },
+      where: { courseId, order: { lt: courseModule.order } },
+      orderBy: { order: "desc" },
       select: { id: true },
     });
 
