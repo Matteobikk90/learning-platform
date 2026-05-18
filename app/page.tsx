@@ -1,12 +1,30 @@
 import { createCheckoutSession } from "@/features/courses/checkout";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/session";
+import Link from "next/link";
 
 export default async function Home() {
+  const user = await getCurrentUser();
+
   const courses = await prisma.course.findMany();
+
+  const purchases = user
+    ? await prisma.purchase.findMany({
+        where: {
+          userId: user.id,
+        },
+        select: {
+          courseId: true,
+        },
+      })
+    : [];
+
+  const purchasedCourseIds = new Set(
+    purchases.map((purchase) => purchase.courseId)
+  );
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
-      {/* Hero */}
       <section className="mb-16 text-center">
         <span className="label-upper justify-center">
           Piattaforma di apprendimento
@@ -22,7 +40,6 @@ export default async function Home() {
         </p>
       </section>
 
-      {/* Courses */}
       <section>
         <p className="text-[0.7rem] font-semibold tracking-widest uppercase text-muted mb-6">
           Corsi disponibili ({courses.length})
@@ -34,31 +51,43 @@ export default async function Home() {
           </div>
         ) : (
           <div className="card divide-y divide-stroke">
-            {courses.map((course) => (
-              <div key={course.id} className="list-row">
-                <div>
-                  <h3 className="font-display text-2xl font-medium text-navy mb-1">
-                    {course.title}
-                  </h3>
+            {courses.map((course) => {
+              const isPurchased = purchasedCourseIds.has(course.id);
 
-                  {course.description && (
-                    <p className="text-sm text-muted leading-relaxed">
-                      {course.description}
+              return (
+                <div key={course.id} className="list-row">
+                  <div>
+                    <h3 className="font-display text-2xl font-medium text-navy mb-1">
+                      {course.title}
+                    </h3>
+
+                    {course.description && (
+                      <p className="text-sm text-muted leading-relaxed">
+                        {course.description}
+                      </p>
+                    )}
+
+                    <p className="mt-3 text-sm text-muted">
+                      €{(course.price / 100).toFixed(2)}
                     </p>
+                  </div>
+
+                  {isPurchased ? (
+                    <Link
+                      href={`/profile/courses/${course.id}`}
+                      className="btn-primary">
+                      Vai al corso
+                    </Link>
+                  ) : (
+                    <form action={createCheckoutSession.bind(null, course.id)}>
+                      <button type="submit" className="btn-primary">
+                        Acquista
+                      </button>
+                    </form>
                   )}
-
-                  <p className="mt-3 text-sm text-muted">
-                    €{(course.price / 100).toFixed(2)}
-                  </p>
                 </div>
-
-                <form action={createCheckoutSession.bind(null, course.id)}>
-                  <button type="submit" className="btn-primary">
-                    Acquista
-                  </button>
-                </form>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>

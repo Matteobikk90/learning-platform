@@ -28,6 +28,20 @@ export async function createCheckoutSession(courseId: string) {
     throw new Error("Course not found");
   }
 
+  const existingPurchase = await prisma.purchase.findUnique({
+    where: {
+      userId_courseId: {
+        userId: user.id,
+
+        courseId: course.id,
+      },
+    },
+  });
+
+  if (existingPurchase) {
+    redirect(`/profile/courses/${course.id}`);
+  }
+
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: "payment",
     customer_email: user.email,
