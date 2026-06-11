@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Brand colors — direct values so Tailwind generates bg-*, text-*, border-* utilities */
+/* Brand colors */
 @theme {
   --color-navy: #0d2240;
   --color-ocean: #1a5f9c;
@@ -14,7 +14,7 @@
   --color-subtle: #7aadab;
 }
 
-/* Fonts reference Next.js CSS vars injected at runtime — must stay inline */
+/* Fonts injected by Next.js */
 @theme inline {
   --font-display: var(--font-cormorant), serif;
   --font-sans: var(--font-montserrat), sans-serif;
@@ -33,41 +33,104 @@
     font-family: var(--font-display);
     letter-spacing: 0.02em;
   }
+
+  body.parallax-active {
+    overflow: hidden;
+  }
+
+  body.parallax-active .site-header {
+    display: none;
+  }
 }
 
 @layer components {
-  /* Primary CTA — oceano */
+  /* Layout */
+  .parallax-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .parallax-scroll {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .parallax-content {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+
+  .parallax-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Typography */
+  .section-title {
+    @apply font-display font-light text-navy leading-[1.05];
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .section-title-sm {
+    @apply font-display font-light text-navy leading-[1.05];
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .hero-title {
+    @apply font-display font-light leading-[1.05] text-white;
+    font-size: clamp(3.5rem, 8vw, 6.5rem);
+  }
+
+  .label-upper {
+    @apply block text-[0.7rem] font-semibold tracking-widest uppercase text-petrol mb-2.5;
+  }
+
+  /* Buttons */
   .btn-primary {
     @apply inline-block shrink-0 bg-ocean text-white no-underline rounded-md
            border-none cursor-pointer font-sans
            text-[0.7rem] font-semibold tracking-[0.12em] uppercase
            px-[1.375rem] py-[0.5625rem] transition-colors duration-150;
   }
+
   .btn-primary:hover {
     background-color: var(--color-ocean-dark);
   }
 
-  /* Section kicker label — "Profilo", "Corso", "Modulo 01" */
-  .label-upper {
-    @apply block text-[0.7rem] font-semibold tracking-widest uppercase text-petrol mb-2.5;
-  }
-
-  /* Surface card container */
+  /* Cards */
   .card {
     @apply bg-surface border border-stroke rounded-lg overflow-hidden;
   }
 
-  /* Row inside a .card list — auto top-border between siblings */
   .list-row {
     @apply flex items-center justify-between gap-4 px-8 py-6;
   }
+
   .list-row + .list-row {
     @apply border-t border-stroke;
   }
 
-  /* Back navigation link */
   .back-link {
-    @apply inline-flex items-center gap-1.5 text-xs font-medium
-           tracking-widest uppercase text-muted no-underline mb-10;
+    @apply inline-flex items-center gap-1.5 text-xs font-medium tracking-widest uppercase text-muted no-underline mb-10;
+  }
+
+  /* Hero scroll indicator */
+  .parallax-scroll-line {
+    animation: scroll-line-move 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes scroll-line-move {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  50% {
+    transform: translateY(0%);
+  }
+
+  100% {
+    transform: translateY(100%);
   }
 }

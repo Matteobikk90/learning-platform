@@ -6,7 +6,7 @@ export async function Navbar() {
   const session = await getServerSession(authOptions);
 
   return (
-    <header className="bg-surface border-b border-stroke">
+    <header className="bg-surface border-b border-stroke site-header">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <Link
           href="/"
