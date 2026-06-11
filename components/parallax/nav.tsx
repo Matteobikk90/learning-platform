@@ -1,8 +1,13 @@
+"use client";
+
+import { useStore } from "@/store";
 import { SECTIONS } from "@/constants/parallax";
 import type { ParallaxNavProps } from "@/types/parallax";
 import Link from "next/link";
 
 export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
+  const user = useStore((s) => s.user);
+
   const textColor = isDark ? "rgba(255,255,255,0.9)" : "var(--color-navy)";
   const dotActive = isDark ? "#ffffff" : "var(--color-navy)";
   const dotInactive = isDark ? "rgba(255,255,255,0.28)" : "rgba(13,34,64,0.25)";
@@ -24,12 +29,30 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
           }}>
           Umberto Iglina Yoga
         </button>
-        <Link
-          href="/login"
-          className="text-[0.68rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
-          style={{ color: "inherit" }}>
-          Accedi
-        </Link>
+
+        {user ? (
+          <div className="flex items-center gap-5">
+            <Link
+              href="/profile"
+              className="text-[0.68rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
+              style={{ color: "inherit" }}>
+              I miei corsi
+            </Link>
+            <Link
+              href="/api/auth/signout"
+              className="text-[0.68rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
+              style={{ color: "inherit" }}>
+              Esci
+            </Link>
+          </div>
+        ) : (
+          <Link
+            href="/login"
+            className="text-[0.68rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
+            style={{ color: "inherit" }}>
+            Accedi
+          </Link>
+        )}
       </nav>
 
       {/* ── Section dots ───────────────────────────────────────────── */}
