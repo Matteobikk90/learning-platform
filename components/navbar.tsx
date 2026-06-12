@@ -1,10 +1,7 @@
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import { NavbarAuth } from "@/components/navbar-auth";
 import Link from "next/link";
 
-export async function Navbar() {
-  const session = await getServerSession(authOptions);
-
+export function Navbar() {
   return (
     <header className="bg-surface border-b border-stroke site-header">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
@@ -15,24 +12,7 @@ export async function Navbar() {
         </Link>
 
         <nav className="flex items-center gap-6">
-          {session ? (
-            <>
-              <Link
-                href="/profile"
-                className="text-[0.75rem] font-medium tracking-widest uppercase text-muted no-underline">
-                I miei corsi
-              </Link>
-              <Link
-                href="/api/auth/signout"
-                className="text-[0.75rem] font-medium tracking-widest uppercase text-subtle no-underline">
-                Esci
-              </Link>
-            </>
-          ) : (
-            <Link href="/login" className="btn-primary">
-              Accedi
-            </Link>
-          )}
+          <NavbarAuth />
         </nav>
       </div>
     </header>

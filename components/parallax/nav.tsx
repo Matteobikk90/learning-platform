@@ -1,12 +1,12 @@
 "use client";
 
-import { useStore } from "@/store";
 import { SECTIONS } from "@/constants/parallax";
 import type { ParallaxNavProps } from "@/types/parallax";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
-  const user = useStore((s) => s.user);
+  const { data: session } = useSession();
 
   const textColor = isDark ? "rgba(255,255,255,0.9)" : "var(--color-navy)";
   const dotActive = isDark ? "#ffffff" : "var(--color-navy)";
@@ -30,7 +30,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
           Umberto Iglina Yoga
         </button>
 
-        {user ? (
+        {session ? (
           <div className="flex items-center gap-5">
             <Link
               href="/profile"

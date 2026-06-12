@@ -1,9 +1,7 @@
+import { AuthProvider } from "@/components/auth-provider";
 import { Navbar } from "@/components/navbar";
-import { StoreInitializer } from "@/components/store-initializer";
-import { authOptions } from "@/lib/auth";
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Montserrat } from "next/font/google";
-import { getServerSession } from "next-auth";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -26,16 +24,11 @@ export const metadata: Metadata = {
   description: "La tua piattaforma di apprendimento personalizzata",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
-  const user = session?.user
-    ? { name: session.user.name, email: session.user.email }
-    : null;
-
   return (
     <html
       lang="it"
@@ -43,9 +36,10 @@ export default async function RootLayout({
       <body
         className="min-h-full flex flex-col"
         style={{ background: "var(--color-bg)" }}>
-        <StoreInitializer user={user} />
-        <Navbar />
-        <div className="flex-1">{children}</div>
+        <AuthProvider>
+          <Navbar />
+          <div className="flex-1">{children}</div>
+        </AuthProvider>
       </body>
     </html>
   );
