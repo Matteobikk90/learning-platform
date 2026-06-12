@@ -53,6 +53,7 @@
   .parallax-scroll {
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    overscroll-behavior: contain;
   }
 
   .parallax-content {
@@ -119,18 +120,18 @@
   .parallax-scroll-line {
     animation: scroll-line-move 1.8s ease-in-out infinite;
   }
-}
 
-@keyframes scroll-line-move {
-  0% {
-    transform: translateY(-100%);
-  }
+  @keyframes scroll-line-move {
+    0% {
+      transform: translateY(-100%);
+    }
 
-  50% {
-    transform: translateY(0%);
-  }
+    50% {
+      transform: translateY(0%);
+    }
 
-  100% {
-    transform: translateY(100%);
+    100% {
+      transform: translateY(100%);
+    }
   }
 }

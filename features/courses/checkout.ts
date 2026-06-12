@@ -58,8 +58,8 @@ export async function createCheckoutSession(courseId: string) {
         quantity: 1,
       },
     ],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/profile`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/`,
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?courseId=${course.id}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/cancel`,
     metadata: {
       userId: user.id,
       courseId: course.id,
