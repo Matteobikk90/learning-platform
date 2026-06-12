@@ -1,22 +1,20 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
-
+import { DeleteModuleButton } from "@/components/delete-module-button";
 import { VideoPlayer } from "@/components/video-player";
 import { VideoUpload } from "@/components/video-upload";
 import { formatDuration } from "@/lib/format-duration";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-type ModuleDetailPageProps = {
+export default async function ModuleDetailPage({
+  params,
+}: {
   params: Promise<{
     id: string;
     moduleId: string;
   }>;
-};
-
-export default async function ModuleDetailPage({
-  params,
-}: ModuleDetailPageProps) {
+}) {
   await requireAdmin();
 
   const { id, moduleId } = await params;
@@ -92,6 +90,21 @@ export default async function ModuleDetailPage({
             )}
           </div>
         )}
+      </section>
+      <section className="mt-8 rounded-lg border border-red-200 p-6">
+        <h2 className="text-xl font-semibold text-red-700">Danger zone</h2>
+
+        <p className="mt-2 text-sm text-gray-600">
+          Delete this module permanently. Progress data for this module will
+          also be deleted.
+        </p>
+
+        <div className="mt-4">
+          <DeleteModuleButton
+            moduleId={courseModule.id}
+            courseId={courseModule.courseId}
+          />
+        </div>
       </section>
     </main>
   );
