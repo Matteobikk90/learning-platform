@@ -49,6 +49,11 @@ export default async function AdminCoursesPage() {
                   </div>
 
                   <Link
+                    href={`/admin/courses/${course.id}/edit`}
+                    className="rounded-md border px-3 py-2 text-sm">
+                    Edit
+                  </Link>
+                  <Link
                     href={`/admin/courses/${course.id}/modules`}
                     className="rounded-md border px-3 py-2 text-sm">
                     Manage modules
