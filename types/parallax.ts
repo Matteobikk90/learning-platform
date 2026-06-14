@@ -1,3 +1,5 @@
+import type { RefObject } from "react";
+
 export type SectionId = "hero" | "benefici" | "corsi" | "chi-sono" | "faq";
 
 export type Course = {
@@ -23,6 +25,10 @@ export type HeroSectionProps = BaseSectionProps & {
 export type CorsiSectionProps = BaseSectionProps & {
   courses: Course[];
   purchasedSet: Set<string>;
+};
+
+export type BeneficiSectionProps = BaseSectionProps & {
+  scrollContainerRef: RefObject<HTMLDivElement | null>;
 };
 
 export type ParallaxNavProps = {

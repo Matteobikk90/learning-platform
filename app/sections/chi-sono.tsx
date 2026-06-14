@@ -18,17 +18,16 @@ export function ChiSono({ visible }: BaseSectionProps) {
           <p
             className="leading-loose text-[0.9375rem] max-w-[60ch]"
             style={{ color: "rgba(255,255,255,0.55)" }}>
-            Insegnante di yoga con oltre vent'anni di esperienza, mi sono
-            formato nelle tradizioni dell'Hatha e dell'Ashtanga yoga. La mia
-            pratica è un viaggio continuo di scoperta — fisico, mentale e
-            spirituale.
+            Sono Umberto Iglina. Come osteopata e specialista nel movimento
+            umano ho sempre cercato strumenti che permettessero ai miei pazienti
+            di vivere al meglio.
           </p>
           <p
             className="leading-loose text-[0.9375rem] max-w-[60ch] mt-6"
             style={{ color: "rgba(255,255,255,0.55)" }}>
-            Ho creato questa piattaforma per condividere ciò che ho imparato in
-            anni di pratica e insegnamento, rendendolo accessibile a chiunque
-            voglia intraprendere questo cammino.
+            Da oltre venti anni studio la scienza del respiro. Nell'unione di
+            tradizioni millenarie e approccio clinico moderno ho scoperto come
+            trasformare concretamente la propria vita. Benvenuto.
           </p>
         </div>
       </div>

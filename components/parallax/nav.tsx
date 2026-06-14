@@ -27,20 +27,20 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
             border: "none",
             cursor: "pointer",
           }}>
-          Umberto Iglina Yoga
+          Umberto Iglina
         </button>
 
         {session ? (
           <div className="flex items-center gap-5">
             <Link
               href="/profile"
-              className="text-[0.68rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
+              className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
               style={{ color: "inherit" }}>
               I miei corsi
             </Link>
             <Link
               href="/api/auth/signout"
-              className="text-[0.68rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
+              className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
               style={{ color: "inherit" }}>
               Esci
             </Link>
@@ -48,7 +48,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
         ) : (
           <Link
             href="/login"
-            className="text-[0.68rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
+            className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
             style={{ color: "inherit" }}>
             Accedi
           </Link>

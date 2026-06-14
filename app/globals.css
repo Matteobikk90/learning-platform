@@ -47,11 +47,10 @@
   /* Layout */
   .parallax-section {
     scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 
   .parallax-scroll {
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
     scroll-behavior: smooth;
     overscroll-behavior: contain;
   }
@@ -84,15 +83,15 @@
   }
 
   .label-upper {
-    @apply block text-[0.7rem] font-semibold tracking-widest uppercase text-petrol mb-2.5;
+    @apply block text-[0.75rem] font-semibold tracking-widest uppercase text-petrol mb-2.5;
   }
 
   /* Buttons */
   .btn-primary {
     @apply inline-block shrink-0 bg-ocean text-white no-underline rounded-md
            border-none cursor-pointer font-sans
-           text-[0.7rem] font-semibold tracking-[0.12em] uppercase
-           px-[1.375rem] py-[0.5625rem] transition-colors duration-150;
+           text-[0.75rem] font-semibold tracking-[0.12em] uppercase
+           px-5.5 py-2.25 transition-colors duration-150;
   }
 
   .btn-primary:hover {
@@ -116,7 +115,7 @@
     @apply inline-flex items-center gap-1.5 text-xs font-medium tracking-widest uppercase text-muted no-underline mb-10;
   }
 
-  /* Hero scroll indicator */
+  /* Scroll indicators */
   .parallax-scroll-line {
     animation: scroll-line-move 1.8s ease-in-out infinite;
   }
@@ -133,5 +132,10 @@
     100% {
       transform: translateY(100%);
     }
+  }
+
+  /* Horizontal progress bar (Benefici sticky section) */
+  .parallax-scroll-progress {
+    transition: width 0.1s linear;
   }
 }

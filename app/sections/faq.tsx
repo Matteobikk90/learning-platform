@@ -1,6 +1,6 @@
-import { cn } from "@/lib/cn";
 import { FaqItem } from "@/components/parallax/faq-item";
 import { FAQ_ITEMS, TESTIMONIALS } from "@/constants/parallax";
+import { cn } from "@/lib/cn";
 import type { BaseSectionProps } from "@/types/parallax";
 
 export function Faq({ visible }: BaseSectionProps) {
@@ -9,7 +9,10 @@ export function Faq({ visible }: BaseSectionProps) {
       id="faq"
       className="parallax-section min-h-dvh bg-canvas flex flex-col items-center justify-center px-6 py-24">
       <div
-        className={cn("parallax-content max-w-5xl w-full", visible.has("faq") && "visible")}>
+        className={cn(
+          "parallax-content max-w-5xl w-full",
+          visible.has("faq") && "visible"
+        )}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
           {/* FAQ */}
           <div>
@@ -38,9 +41,9 @@ export function Faq({ visible }: BaseSectionProps) {
               {TESTIMONIALS.map(({ name, text }) => (
                 <div key={name} className="border-l-2 border-petrol pl-5">
                   <p className="text-sm text-muted leading-[1.9] italic mb-2">
-                    "{text}"
+                    `&quot;{text}&quot;`
                   </p>
-                  <span className="text-[0.65rem] font-semibold tracking-[0.15em] uppercase text-petrol">
+                  <span className="text-[0.7rem] font-semibold tracking-[0.15em] uppercase text-petrol">
                     {name}
                   </span>
                 </div>
@@ -53,7 +56,7 @@ export function Faq({ visible }: BaseSectionProps) {
           <p
             className="text-xs tracking-wider"
             style={{ color: "var(--color-muted)", opacity: 0.5 }}>
-            © {new Date().getFullYear()} Umberto Iglina Yoga
+            © {new Date().getFullYear()} Umberto Iglina
           </p>
         </div>
       </div>

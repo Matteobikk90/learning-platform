@@ -6,20 +6,19 @@ export function Hero({ visible, scrollTo }: HeroSectionProps) {
     <section
       id="hero"
       className="parallax-section min-h-dvh bg-navy flex flex-col items-center justify-center text-center px-6 relative">
-      <div
-        className={cn("parallax-content", visible.has("hero") && "visible")}>
-        <span className="label-upper mb-8">Piattaforma di apprendimento</span>
+      <div className={cn("parallax-content", visible.has("hero") && "visible")}>
+        <span className="label-upper mb-8">Osteopatia & Breathwork</span>
         <h1 className="hero-title mb-8">
-          Scopri il tuo
+          Riprogramma il tuo respiro.
           <br />
-          <em>percorso nello yoga</em>
+          <em>Trasforma la tua vita.</em>
         </h1>
         <p
           className="text-[0.9375rem] leading-[1.9] mb-12 mx-auto"
           style={{ color: "rgba(255,255,255,0.45)", maxWidth: "40ch" }}>
-          Corsi pensati per guidarti in ogni fase della pratica,
+          Un metodo clinico fondato su vent&apos; anni di ricerca
           <br />
-          dal primo respiro alla consapevolezza profonda.
+          osteopatica e scienza del respiro.
         </p>
         <button onClick={() => scrollTo("corsi")} className="btn-primary">
           Scopri i corsi
@@ -30,7 +29,7 @@ export function Hero({ visible, scrollTo }: HeroSectionProps) {
       <div
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         style={{ color: "rgba(255,255,255,0.25)" }}>
-        <span className="text-[0.58rem] tracking-[0.25em] uppercase">
+        <span className="text-[0.625rem] tracking-[0.25em] uppercase">
           Scorri
         </span>
         <div
