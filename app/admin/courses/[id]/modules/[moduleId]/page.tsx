@@ -10,102 +10,100 @@ import { notFound } from "next/navigation";
 export default async function ModuleDetailPage({
   params,
 }: {
-  params: Promise<{
-    id: string;
-    moduleId: string;
-  }>;
+  params: Promise<{ id: string; moduleId: string }>;
 }) {
   await requireAdmin();
 
   const { id, moduleId } = await params;
 
   const courseModule = await prisma.module.findUnique({
-    where: {
-      id: moduleId,
-    },
-    include: {
-      course: true,
-    },
+    where: { id: moduleId },
+    include: { course: true },
   });
 
-  if (!courseModule || courseModule.courseId !== id) {
-    notFound();
-  }
+  if (!courseModule || courseModule.courseId !== id) notFound();
 
   const videoStatus = courseModule.videoPlaybackId
-    ? "Video ready"
+    ? "Video pronto"
     : courseModule.muxUploadId
-    ? "Video processing"
-    : "No video uploaded";
+    ? "Video in elaborazione"
+    : "Nessun video caricato";
 
   return (
-    <main className="mx-auto max-w-4xl p-10">
+    <main className="mx-auto max-w-4xl px-6 py-14">
       <Link
         href={`/admin/courses/${id}/modules`}
-        className="text-sm text-gray-600">
-        ← Back to modules
+        className="back-link">
+        ← {courseModule.course.title}
       </Link>
 
-      <div className="mt-6">
-        <p className="text-sm text-gray-500">{courseModule.course.title}</p>
-        <h1 className="mt-2 text-3xl font-bold">{courseModule.title}</h1>
-
-        <div className="mt-4 grid gap-2 text-sm text-gray-600">
-          <p>Order: {courseModule.order}</p>
-          <p>Duration: {formatDuration(courseModule.durationSeconds)}</p>
-          <p>Status: {videoStatus}</p>
-        </div>
+      <div className="mb-10">
+        <span className="label-upper">
+          Modulo {String(courseModule.order).padStart(2, "0")}
+        </span>
+        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
+          {courseModule.title}
+        </h1>
+        <p className="text-sm text-muted">
+          Durata: {formatDuration(courseModule.durationSeconds)}
+          {" · "}
+          {videoStatus}
+        </p>
       </div>
 
-      <section className="mt-8 rounded-lg border p-6">
-        <h2 className="text-xl font-semibold">Video</h2>
+      <div className="space-y-6">
+        {/* Video */}
+        <div className="card p-8">
+          <span className="label-upper">Video</span>
 
-        {courseModule.videoPlaybackId ? (
-          <>
-            <VideoPlayer
-              playbackId={courseModule.videoPlaybackId}
-              title={courseModule.title}
-            />
-
-            <div className="mt-6 border-t pt-6">
-              <p className="mb-4 text-sm text-gray-600">
-                Replace the current video with a new one.
+          {courseModule.videoPlaybackId ? (
+            <>
+              <div className="mt-4">
+                <VideoPlayer
+                  playbackId={courseModule.videoPlaybackId}
+                  title={courseModule.title}
+                />
+              </div>
+              <div className="mt-6 pt-6 border-t border-stroke">
+                <p className="text-sm text-muted mb-4">
+                  Sostituisci il video corrente con uno nuovo.
+                </p>
+                <VideoUpload moduleId={courseModule.id} />
+              </div>
+            </>
+          ) : (
+            <div className="mt-4">
+              <p className="text-sm text-muted mb-4">
+                Carica un video per questo modulo.
               </p>
-
               <VideoUpload moduleId={courseModule.id} />
+              {courseModule.muxUploadId && (
+                <p className="mt-3 text-sm text-subtle">
+                  Il video è in elaborazione. Aggiorna la pagina tra qualche
+                  secondo.
+                </p>
+              )}
             </div>
-          </>
-        ) : (
-          <div className="mt-4">
-            <p className="mb-4 text-sm text-gray-600">
-              Upload a video for this module.
-            </p>
+          )}
+        </div>
 
-            <VideoUpload moduleId={courseModule.id} />
-
-            {courseModule.muxUploadId && (
-              <p className="mt-3 text-sm text-gray-500">
-                Video is processing. Refresh this page in a few seconds.
-              </p>
-            )}
-          </div>
-        )}
-      </section>
-      <section className="mt-8 rounded-lg border border-red-200 p-6">
-        <h2 className="text-xl font-semibold text-red-700">Danger zone</h2>
-
-        <p className="mt-2 text-sm text-gray-600">
-          Delete this module permanently. Progress data for this module will
-          also be deleted.
-        </p>
-
-        <div className="mt-4">
+        {/* Danger zone */}
+        <div className="card p-8 border-red-200/70">
+          <span
+            className="block text-[0.75rem] font-semibold tracking-widest uppercase mb-2"
+            style={{ color: "var(--color-red, #b91c1c)" }}>
+            Zona pericolosa
+          </span>
+          <p className="text-sm text-muted mb-4">
+            Elimina questo modulo definitivamente. I dati di avanzamento
+            associati verranno anch&apos;essi eliminati.
+          </p>
           <DeleteModuleButton
             moduleId={courseModule.id}
             courseId={courseModule.courseId}
           />
         </div>
-      </section>
+      </div>
     </main>
   );
 }

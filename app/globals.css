@@ -138,4 +138,31 @@
   .parallax-scroll-progress {
     transition: width 0.1s linear;
   }
+
+  /* Secondary / outline button */
+  .btn-secondary {
+    @apply inline-block shrink-0 bg-transparent no-underline rounded-md
+           border border-stroke cursor-pointer font-sans
+           text-[0.75rem] font-semibold tracking-[0.12em] uppercase
+           text-muted px-[1.375rem] py-[0.5625rem] transition-colors duration-150;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-subtle);
+    color: var(--color-navy);
+  }
+
+  /* Form utilities */
+  .form-label {
+    @apply block text-[0.75rem] font-semibold tracking-widest uppercase text-muted mb-2;
+  }
+
+  .form-input {
+    @apply w-full px-3.5 py-2.5 border border-stroke rounded-md bg-canvas
+           text-ink text-[0.9375rem] font-sans outline-none transition-colors duration-150;
+  }
+
+  .form-input:focus {
+    border-color: var(--color-subtle);
+  }
 }

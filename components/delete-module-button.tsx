@@ -14,20 +14,16 @@ export function DeleteModuleButton({
       action={deleteModule}
       onSubmit={(event) => {
         const confirmed = window.confirm(
-          "Are you sure you want to delete this module? This action cannot be undone."
+          "Sei sicuro di voler eliminare questo modulo? L'operazione non può essere annullata."
         );
-
-        if (!confirmed) {
-          event.preventDefault();
-        }
+        if (!confirmed) event.preventDefault();
       }}>
       <input type="hidden" name="moduleId" value={moduleId} />
       <input type="hidden" name="courseId" value={courseId} />
-
       <button
         type="submit"
-        className="rounded-md border border-red-500 px-4 py-2 text-sm text-red-600">
-        Delete module
+        className="inline-block shrink-0 rounded-md border border-red-300 px-5.5 py-2.25 text-[0.75rem] font-semibold tracking-[0.12em] uppercase text-red-600 transition-colors duration-150 hover:border-red-400 hover:bg-red-50">
+        Elimina modulo
       </button>
     </form>
   );

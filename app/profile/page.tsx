@@ -9,28 +9,20 @@ export default async function CoursesPage() {
   const session = await requireAuth();
 
   const user = await prisma.user.findUnique({
-    where: {
-      email: session.user.email!,
-    },
+    where: { email: session.user.email! },
     include: {
       purchases: {
         include: {
           course: {
             include: {
               modules: {
-                orderBy: {
-                  order: "asc",
-                },
-                include: {
-                  progress: true,
-                },
+                orderBy: { order: "asc" },
+                include: { progress: true },
               },
             },
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: { createdAt: "desc" },
       },
     },
   });
@@ -51,7 +43,7 @@ export default async function CoursesPage() {
         </p>
       </div>
 
-      <div className="card">
+      <div className="card divide-y divide-stroke">
         {courses.length === 0 ? (
           <div className="px-8 py-12 text-center text-muted">
             <p className="font-display text-xl mb-1">Nessun corso ancora</p>
@@ -62,31 +54,36 @@ export default async function CoursesPage() {
             const progress = getCourseProgress(course.modules);
 
             return (
-              <div
-                key={course.id}
-                className="flex items-center justify-between p-6">
+              <div key={course.id} className="list-row">
                 <div>
-                  <h3 className="font-semibold">{course.title}</h3>
+                  <h3 className="font-display text-xl font-medium text-navy mb-0.5">
+                    {course.title}
+                  </h3>
                   {course.description && (
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="text-sm text-muted mt-1">
                       {course.description}
                     </p>
                   )}
-                  <p className="mt-2 text-sm text-gray-600">
-                    {progress.completedModules}/{progress.totalModules} modules
-                    completed · {progress.percentage}%
+                  <p className="text-sm text-muted mt-2">
+                    {progress.completedModules}/{progress.totalModules} moduli
+                    completati · {progress.percentage}%
                   </p>
-                  <div className="mt-3 h-2 w-48 rounded-full bg-gray-200">
+                  <div
+                    className="mt-3 h-1 w-48 rounded-full overflow-hidden"
+                    style={{ background: "var(--color-stroke)" }}>
                     <div
-                      className="h-2 rounded-full bg-black"
-                      style={{ width: `${progress.percentage}%` }}
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${progress.percentage}%`,
+                        background: "var(--color-petrol)",
+                      }}
                     />
                   </div>
                 </div>
                 <Link
                   href={`/profile/courses/${course.id}`}
-                  className="rounded-md bg-black px-4 py-2 text-sm text-white">
-                  Open course
+                  className="btn-primary">
+                  Vai al corso
                 </Link>
               </div>
             );

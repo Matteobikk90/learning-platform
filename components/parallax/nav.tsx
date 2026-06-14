@@ -20,7 +20,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
         style={{ color: textColor, transition: "color 0.5s ease" }}>
         <button
           onClick={() => scrollTo("hero")}
-          className="font-display text-xl font-semibold tracking-[0.04em] hover:opacity-70 transition-opacity"
+          className="font-display text-2xl font-semibold tracking-[0.04em] hover:opacity-70 transition-opacity"
           style={{
             color: "inherit",
             background: "none",

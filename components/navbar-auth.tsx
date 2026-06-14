@@ -15,12 +15,12 @@ export function NavbarAuth() {
       <>
         <Link
           href="/profile"
-          className="text-[0.75rem] font-medium tracking-widest uppercase text-muted no-underline">
+          className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase text-muted no-underline">
           I miei corsi
         </Link>
         <Link
           href="/api/auth/signout"
-          className="text-[0.75rem] font-medium tracking-widest uppercase text-subtle no-underline">
+          className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase text-subtle no-underline">
           Esci
         </Link>
       </>
@@ -28,7 +28,10 @@ export function NavbarAuth() {
   }
 
   return (
-    <Link href="/login" className="btn-primary">
+    <Link
+      href="/login"
+      className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase no-underline hover:opacity-70 transition-opacity"
+      style={{ color: "var(--color-navy)" }}>
       Accedi
     </Link>
   );

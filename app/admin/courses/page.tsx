@@ -6,62 +6,59 @@ export default async function AdminCoursesPage() {
   await requireAdmin();
 
   const courses = await prisma.course.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: { createdAt: "desc" },
   });
 
   return (
-    <main className="p-10">
-      <div className="mb-8 flex items-center justify-between">
+    <main className="mx-auto max-w-5xl px-6 py-14">
+      <div className="mb-10 flex items-end justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold">Courses</h1>
-          <p className="mt-2 text-gray-600">Manage platform courses.</p>
+          <span className="label-upper">Admin</span>
+          <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
+            Corsi
+          </h1>
+          <p className="text-sm text-muted">
+            Gestisci i corsi della piattaforma.
+          </p>
         </div>
-
-        <Link
-          href="/admin/courses/new"
-          className="rounded-md bg-black px-4 py-2 text-white">
-          New course
+        <Link href="/admin/courses/new" className="btn-primary shrink-0">
+          Nuovo corso
         </Link>
       </div>
 
-      <div className="rounded-lg border">
+      <div className="card divide-y divide-stroke">
         {courses.length === 0 ? (
-          <p className="p-6 text-gray-600">No courses yet.</p>
+          <p className="px-8 py-12 text-center text-muted">
+            Nessun corso ancora.
+          </p>
         ) : (
-          <div className="divide-y">
-            {courses.map((course) => (
-              <div
-                key={course.id}
-                className="flex items-center justify-between p-6">
-                <div>
-                  <h2 className="font-semibold">{course.title}</h2>
-                  {course.description && (
-                    <p className="mt-1 text-sm text-gray-600">
-                      {course.description}
-                    </p>
-                  )}
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-sm font-medium">
-                    €{(course.price / 100).toFixed(2)}
-                  </div>
-
-                  <Link
-                    href={`/admin/courses/${course.id}/edit`}
-                    className="rounded-md border px-3 py-2 text-sm">
-                    Edit
-                  </Link>
-                  <Link
-                    href={`/admin/courses/${course.id}/modules`}
-                    className="rounded-md border px-3 py-2 text-sm">
-                    Manage modules
-                  </Link>
-                </div>
+          courses.map((course) => (
+            <div key={course.id} className="list-row">
+              <div>
+                <h2 className="font-display text-xl font-medium text-navy mb-0.5">
+                  {course.title}
+                </h2>
+                {course.description && (
+                  <p className="text-sm text-muted">{course.description}</p>
+                )}
+                <p className="text-sm text-muted mt-1">
+                  €{(course.price / 100).toFixed(2)}
+                </p>
               </div>
-            ))}
-          </div>
+              <div className="flex items-center gap-3">
+                <Link
+                  href={`/admin/courses/${course.id}/edit`}
+                  className="btn-secondary">
+                  Modifica
+                </Link>
+                <Link
+                  href={`/admin/courses/${course.id}/modules`}
+                  className="btn-primary">
+                  Moduli
+                </Link>
+              </div>
+            </div>
+          ))
         )}
       </div>
     </main>
