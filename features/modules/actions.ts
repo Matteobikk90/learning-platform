@@ -45,6 +45,24 @@ export async function createModule(formData: FormData) {
   redirect(`/admin/courses/${parsed.data.courseId}/modules`);
 }
 
+export async function updateModule(formData: FormData) {
+  await requireAdmin();
+
+  const moduleId = String(formData.get("moduleId"));
+  const courseId = String(formData.get("courseId"));
+  const title = String(formData.get("title"));
+  const order = Number(formData.get("order"));
+  const durationSeconds = Number(formData.get("durationSeconds"));
+
+  await prisma.module.update({
+    where: { id: moduleId },
+    data: { title, order, durationSeconds },
+  });
+
+  revalidatePath(`/admin/courses/${courseId}/modules`);
+  redirect(`/admin/courses/${courseId}/modules/${moduleId}`);
+}
+
 export async function attachMuxUploadToModule(
   moduleId: string,
   uploadId: string

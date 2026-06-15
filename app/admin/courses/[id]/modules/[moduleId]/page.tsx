@@ -1,6 +1,7 @@
 import { DeleteModuleButton } from "@/components/delete-module-button";
 import { VideoPlayer } from "@/components/video-player";
 import { VideoUpload } from "@/components/video-upload";
+import { updateModule } from "@/features/modules/actions";
 import { formatDuration } from "@/lib/format-duration";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
@@ -52,6 +53,30 @@ export default async function ModuleDetailPage({
       </div>
 
       <div className="space-y-6">
+        {/* Dettagli */}
+        <div className="card p-8">
+          <span className="label-upper">Dettagli</span>
+          <form action={updateModule} className="mt-4 space-y-5">
+            <input type="hidden" name="moduleId" value={courseModule.id} />
+            <input type="hidden" name="courseId" value={courseModule.courseId} />
+            <div>
+              <label className="form-label">Titolo</label>
+              <input name="title" required defaultValue={courseModule.title} className="form-input" />
+            </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label className="form-label">Ordine</label>
+                <input name="order" type="number" min="1" required defaultValue={courseModule.order} className="form-input" />
+              </div>
+              <div className="flex-1">
+                <label className="form-label">Durata (secondi)</label>
+                <input name="durationSeconds" type="number" min="1" required defaultValue={courseModule.durationSeconds} className="form-input" />
+              </div>
+            </div>
+            <button type="submit" className="btn-primary">Salva</button>
+          </form>
+        </div>
+
         {/* Video */}
         <div className="card p-8">
           <span className="label-upper">Video</span>
