@@ -21,13 +21,14 @@ model User {
 }
 
 model Course {
-  id          String     @id @default(cuid())
-  title       String
-  description String?
-  price       Int
-  createdAt   DateTime   @default(now())
-  modules     Module[]
-  purchases   Purchase[]
+  id            String     @id @default(cuid())
+  title         String
+  description   String?
+  price         Int
+  coverImageUrl String?
+  createdAt     DateTime   @default(now())
+  modules       Module[]
+  purchases     Purchase[]
 }
 
 model Module {

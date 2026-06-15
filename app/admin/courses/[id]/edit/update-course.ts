@@ -11,15 +11,15 @@ export async function updateCourse(formData: FormData) {
   const title = String(formData.get("title"));
   const description = String(formData.get("description"));
   const price = Number(formData.get("price"));
+  const coverImageUrl = formData.get("coverImageUrl");
 
   await prisma.course.update({
-    where: {
-      id,
-    },
+    where: { id },
     data: {
       title,
       description,
       price,
+      coverImageUrl: coverImageUrl ? String(coverImageUrl) : null,
     },
   });
 

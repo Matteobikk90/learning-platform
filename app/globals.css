@@ -144,12 +144,38 @@
     @apply inline-block shrink-0 bg-transparent no-underline rounded-md
            border border-stroke cursor-pointer font-sans
            text-[0.75rem] font-semibold tracking-[0.12em] uppercase
-           text-muted px-[1.375rem] py-[0.5625rem] transition-colors duration-150;
+           text-muted px-5.5 py-2.25 transition-colors duration-150;
   }
 
   .btn-secondary:hover {
     border-color: var(--color-subtle);
     color: var(--color-navy);
+  }
+
+  /* Course cards */
+  .course-card {
+    @apply flex flex-col bg-surface rounded-2xl overflow-hidden;
+    box-shadow: 0 1px 3px rgba(13, 34, 64, 0.06),
+      0 4px 16px rgba(13, 34, 64, 0.07);
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+  }
+
+  .course-card:hover {
+    box-shadow: 0 4px 12px rgba(13, 34, 64, 0.09),
+      0 16px 48px rgba(13, 34, 64, 0.14);
+    transform: translateY(-5px);
+  }
+
+  .course-card-img {
+    transition: transform 0.65s ease;
+  }
+
+  .course-card:hover .course-card-img {
+    transform: scale(1.06);
+  }
+
+  .course-price-chip {
+    @apply self-start px-3 py-1 rounded-md text-[0.75rem] font-semibold tracking-wide mb-6 bg-ocean/10 text-ocean;
   }
 
   /* Form utilities */

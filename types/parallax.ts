@@ -7,6 +7,7 @@ export type Course = {
   title: string;
   description: string | null;
   price: number;
+  coverImageUrl: string | null;
 };
 
 export type ParallaxProps = {

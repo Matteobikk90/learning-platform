@@ -1,3 +1,4 @@
+import { CourseImageUpload } from "@/components/course-image-upload";
 import { createCourse } from "@/features/courses/actions";
 import { requireAdmin } from "@/lib/session";
 import Link from "next/link";
@@ -43,6 +44,10 @@ export default async function NewCoursePage() {
               placeholder="49.99"
               className="form-input"
             />
+          </div>
+          <div>
+            <label className="form-label">Immagine di copertina</label>
+            <CourseImageUpload />
           </div>
           <button type="submit" className="btn-primary">
             Crea corso

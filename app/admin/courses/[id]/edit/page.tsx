@@ -1,4 +1,5 @@
 import { updateCourse } from "@/app/admin/courses/[id]/edit/update-course";
+import { CourseImageUpload } from "@/components/course-image-upload";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import Link from "next/link";
@@ -11,7 +12,10 @@ export default async function EditCoursePage({
 }) {
   await requireAdmin();
   const { id } = await params;
-  const course = await prisma.course.findUnique({ where: { id } });
+  const course = await prisma.course.findUnique({
+    where: { id },
+    select: { id: true, title: true, description: true, price: true, coverImageUrl: true },
+  });
 
   if (!course) notFound();
 
@@ -61,6 +65,11 @@ export default async function EditCoursePage({
               required
               className="form-input"
             />
+          </div>
+
+          <div>
+            <label className="form-label">Immagine di copertina</label>
+            <CourseImageUpload defaultUrl={course.coverImageUrl} />
           </div>
 
           <button type="submit" className="btn-primary">

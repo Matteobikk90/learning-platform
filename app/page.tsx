@@ -12,6 +12,7 @@ export default async function Home() {
         title: true,
         description: true,
         price: true,
+        coverImageUrl: true,
       },
     }),
     user

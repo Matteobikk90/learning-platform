@@ -29,11 +29,14 @@ export async function createCourse(formData: FormData) {
 
   const priceInCents = Math.round(priceNumber * 100);
 
+  const coverImageUrl = formData.get("coverImageUrl");
+
   await prisma.course.create({
     data: {
       title: parsed.data.title,
       description: parsed.data.description || null,
       price: priceInCents,
+      coverImageUrl: coverImageUrl ? String(coverImageUrl) : null,
     },
   });
 
