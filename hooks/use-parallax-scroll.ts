@@ -15,6 +15,7 @@ export function useParallaxScroll(
   // Restore scroll position from URL hash on mount
   useEffect(() => {
     const hash = window.location.hash.slice(1) as SectionId;
+    if (!hash) return;
     const container = containerRef.current;
     const el = container?.querySelector<HTMLElement>(`#${hash}`);
     if (container && el) {

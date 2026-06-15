@@ -23,5 +23,5 @@ export async function updateCourse(formData: FormData) {
     },
   });
 
-  redirect(`/admin/courses/${id}`);
+  redirect(`/admin/courses`);
 }
