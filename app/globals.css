@@ -174,8 +174,15 @@
     transform: scale(1.06);
   }
 
-  .course-price-chip {
-    @apply self-start px-3 py-1 rounded-md text-[0.75rem] font-semibold tracking-wide mb-6 bg-ocean/10 text-ocean;
+  .course-price-tag {
+    @apply inline-flex items-center bg-navy text-white font-sans text-[0.8rem] font-semibold tracking-wide pl-4 pr-6 py-1.5 rounded-sm;
+    clip-path: polygon(
+      0 0,
+      calc(100% - 10px) 0,
+      100% 50%,
+      calc(100% - 10px) 100%,
+      0 100%
+    );
   }
 
   /* Form utilities */

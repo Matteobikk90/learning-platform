@@ -3,6 +3,7 @@
 import { createCheckoutSession } from "@/features/courses/checkout";
 import { cn } from "@/lib/cn";
 import type { CorsiSectionProps } from "@/types/parallax";
+import Image from "next/image";
 import Link from "next/link";
 
 export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
@@ -23,7 +24,8 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
             <em>percorso</em>
           </h2>
           <p className="text-sm text-muted leading-relaxed max-w-[42ch]">
-            Formazione clinica sviluppata in vent&apos;anni di pratica osteopatica.
+            Formazione clinica sviluppata in vent&apos;anni di pratica
+            osteopatica.
           </p>
         </div>
 
@@ -37,16 +39,17 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
               const purchased = purchasedSet.has(course.id);
               return (
                 <article key={course.id} className="course-card">
-                  {/* Image */}
-                  <div className="relative aspect-[3/2] overflow-hidden bg-stroke/20">
+                  <div className="relative aspect-3/2 overflow-hidden bg-stroke/20">
                     {course.coverImageUrl ? (
-                      <img
+                      <Image
                         src={course.coverImageUrl}
                         alt={course.title}
-                        className="w-full h-full object-cover course-card-img"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover course-card-img"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
+                      <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-canvas to-stroke/40">
                         <svg
                           width="36"
                           height="36"
@@ -84,9 +87,11 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                       </p>
                     )}
 
-                    <span className="course-price-chip">
-                      €{(course.price / 100).toFixed(0)}
-                    </span>
+                    <div className="mb-6">
+                      <span className="course-price-tag">
+                        €{(course.price / 100).toFixed(0)}
+                      </span>
+                    </div>
 
                     <div className="mt-auto pt-5 border-t border-stroke/60">
                       {purchased ? (
@@ -96,8 +101,11 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                           Vai al corso
                         </Link>
                       ) : (
-                        <form action={createCheckoutSession.bind(null, course.id)}>
-                          <button type="submit" className="btn-primary w-full cursor-pointer">
+                        <form
+                          action={createCheckoutSession.bind(null, course.id)}>
+                          <button
+                            type="submit"
+                            className="btn-primary w-full cursor-pointer">
                             Acquista il corso
                           </button>
                         </form>
