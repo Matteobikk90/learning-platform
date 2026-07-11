@@ -1,21 +1,20 @@
 import { AuthProvider } from "@/components/auth-provider";
 import { Navbar } from "@/components/navbar";
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Montserrat } from "next/font/google";
+import { Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 
-const montserrat = Montserrat({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-montserrat",
-  weight: ["300", "400", "500", "600"],
+  variable: "--font-inter",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
-const cormorant = Cormorant_Garamond({
+const spaceMono = Space_Mono({
   subsets: ["latin"],
-  variable: "--font-cormorant",
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  variable: "--font-space-mono",
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -32,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="it"
-      className={`${montserrat.variable} ${cormorant.variable} h-full`}>
+      className={`${inter.variable} ${spaceMono.variable} h-full`}>
       <body
         className="min-h-full flex flex-col"
         style={{ background: "var(--color-bg)" }}>

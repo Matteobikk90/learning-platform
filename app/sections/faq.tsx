@@ -43,7 +43,7 @@ export function Faq({ visible }: BaseSectionProps) {
                   <p className="text-sm text-muted leading-[1.9] italic mb-2">
                     `&quot;{text}&quot;`
                   </p>
-                  <span className="text-[0.7rem] font-semibold tracking-[0.15em] uppercase text-petrol">
+                  <span className="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-petrol">
                     {name}
                   </span>
                 </div>

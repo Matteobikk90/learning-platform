@@ -4,7 +4,7 @@ export const SECTIONS: { id: SectionId; label: string; dark: boolean }[] = [
   { id: "hero", label: "Home", dark: true },
   { id: "benefici", label: "Benefici", dark: false },
   { id: "corsi", label: "Corsi", dark: false },
-  { id: "chi-sono", label: "Chi Sono", dark: true },
+  { id: "chi-sono", label: "Mi presento", dark: true },
   { id: "faq", label: "FAQ", dark: false },
 ];
 
@@ -16,13 +16,13 @@ export const BENEFITS = [
   },
   {
     num: "02",
-    title: "Sistema Nervoso Autonomo",
-    body: "Protocolli avanzati per il controllo dell'omeostasi: down-regulation profonda per abbattere il cortisolo, ottimizzare la variabilità della frequenza cardiaca e avviare un reset biologico profondo.",
+    title: "Performance & Qualità della vita",
+    body: "Protocolli avanzati per neuromodulare il tuo organismo. Incrementa le prestazioni sportive scoprendo nuovi aspetti del tuo sistema corpo, scopri come calmare la mente nel quotidiano e nelle situazioni di maggiore stress e regalati un'esperienza di autentica autocura.",
   },
   {
     num: "03",
-    title: "Integrazione Biomeccanica",
-    body: "L'unione tra la scienza del respiro e la precisione osteopatica genera un impatto diretto su postura, espansione toracica, efficienza cardiovascolare e longevità sistemica.",
+    title: "Rimettiti al centro",
+    body: "L'unione tra l'antica scienza del respiro estratta dalle pratiche di Yoga Tradizionale e la precisione osteopatica genera un impatto diretto su postura, efficienza cardiovascolare, longevità sistemica e benessere psicofisico. Sei pronto a sviluppare il tuo pieno potenziale?",
   },
 ];
 

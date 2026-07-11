@@ -16,8 +16,9 @@
 
 /* Fonts injected by Next.js */
 @theme inline {
-  --font-display: var(--font-cormorant), serif;
-  --font-sans: var(--font-montserrat), sans-serif;
+  --font-display: var(--font-inter), sans-serif;
+  --font-sans: var(--font-inter), sans-serif;
+  --font-mono: var(--font-space-mono), monospace;
 }
 
 @layer base {
@@ -31,7 +32,7 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    letter-spacing: 0.02em;
+    letter-spacing: -0.015em;
   }
 
   body.parallax-active {
@@ -68,29 +69,29 @@
 
   /* Typography */
   .section-title {
-    @apply font-display font-light text-navy leading-[1.05];
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    @apply font-display font-medium text-navy leading-[1.05] tracking-tight;
+    font-size: clamp(2.25rem, 4.5vw, 4rem);
   }
 
   .section-title-sm {
-    @apply font-display font-light text-navy leading-[1.05];
-    font-size: clamp(2rem, 4vw, 3.5rem);
+    @apply font-display font-medium text-navy leading-[1.05] tracking-[-0.02em];
+    font-size: clamp(1.875rem, 3.5vw, 3rem);
   }
 
   .hero-title {
-    @apply font-display font-light leading-[1.05] text-white;
-    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    @apply font-display font-medium leading-[1.05] text-white tracking-tight;
+    font-size: clamp(2.75rem, 6.5vw, 5.25rem);
   }
 
   .label-upper {
-    @apply block text-[0.75rem] font-semibold tracking-widest uppercase text-petrol mb-2.5;
+    @apply block font-mono font-normal text-[0.75rem] tracking-widest uppercase text-petrol mb-2.5;
   }
 
   /* Buttons */
   .btn-primary {
     @apply inline-block shrink-0 bg-ocean text-white no-underline rounded-md
-           border-none cursor-pointer font-sans
-           text-[0.75rem] font-semibold tracking-[0.12em] uppercase
+           border-none cursor-pointer font-mono
+           text-[0.75rem] font-bold tracking-[0.12em] uppercase
            px-5.5 py-2.25 transition-colors duration-150;
   }
 
@@ -142,8 +143,8 @@
   /* Secondary / outline button */
   .btn-secondary {
     @apply inline-block shrink-0 bg-transparent no-underline rounded-md
-           border border-stroke cursor-pointer font-sans
-           text-[0.75rem] font-semibold tracking-[0.12em] uppercase
+           border border-stroke cursor-pointer font-mono
+           text-[0.75rem] font-bold tracking-[0.12em] uppercase
            text-muted px-5.5 py-2.25 transition-colors duration-150;
   }
 
@@ -152,30 +153,41 @@
     color: var(--color-navy);
   }
 
-  /* Course cards */
-  .course-card {
-    @apply flex flex-col bg-surface rounded-2xl overflow-hidden;
+  /* Course banners — horizontal boxes with composite background image */
+  .course-banner {
+    @apply relative flex overflow-hidden rounded-2xl bg-navy;
     box-shadow: 0 1px 3px rgba(13, 34, 64, 0.06),
       0 4px 16px rgba(13, 34, 64, 0.07);
     transition: box-shadow 0.35s ease, transform 0.35s ease;
   }
 
-  .course-card:hover {
+  .course-banner:hover {
     box-shadow: 0 4px 12px rgba(13, 34, 64, 0.09),
       0 16px 48px rgba(13, 34, 64, 0.14);
     transform: translateY(-5px);
   }
 
-  .course-card-img {
-    transition: transform 0.65s ease;
+  .course-banner-img {
+    transition: transform 0.8s ease;
   }
 
-  .course-card:hover .course-card-img {
-    transform: scale(1.06);
+  .course-banner:hover .course-banner-img {
+    transform: scale(1.04);
+  }
+
+  /* Legibility gradient over the background composite */
+  .course-banner-overlay {
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      rgba(13, 34, 64, 0.92) 0%,
+      rgba(13, 34, 64, 0.72) 45%,
+      rgba(13, 34, 64, 0.28) 100%
+    );
   }
 
   .course-price-tag {
-    @apply inline-flex items-center bg-navy text-white font-sans text-[0.8rem] font-semibold tracking-wide pl-4 pr-6 py-1.5 rounded-sm;
+    @apply inline-flex items-center bg-navy text-white font-mono text-[0.8rem] font-bold tracking-wide pl-4 pr-6 py-1.5 rounded-sm;
     clip-path: polygon(
       0 0,
       calc(100% - 10px) 0,
@@ -185,9 +197,14 @@
     );
   }
 
+  /* Tag variant for dark backgrounds */
+  .course-price-tag-invert {
+    @apply bg-surface text-navy;
+  }
+
   /* Form utilities */
   .form-label {
-    @apply block text-[0.75rem] font-semibold tracking-widest uppercase text-muted mb-2;
+    @apply block font-mono font-normal text-[0.75rem] tracking-widest uppercase text-muted mb-2;
   }
 
   .form-input {

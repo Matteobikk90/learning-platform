@@ -47,11 +47,11 @@ export function Benefici({
                   visible.has("benefici") && "visible"
                 )}>
                 <div className="flex items-baseline gap-3 mb-12">
-                  <span className="text-[0.7rem] font-semibold tracking-[0.2em] uppercase text-petrol">
+                  <span className="font-mono text-[0.7rem] font-bold tracking-[0.2em] uppercase text-petrol">
                     {num}
                   </span>
                   <span
-                    className="text-[0.65rem] tracking-[0.15em] uppercase"
+                    className="font-mono text-[0.65rem] tracking-[0.15em] uppercase"
                     style={{ color: "var(--color-muted)", opacity: 0.4 }}>
                     / {String(totalSlides).padStart(2, "0")}
                   </span>
@@ -82,7 +82,7 @@ export function Benefici({
               }}
             />
           </div>
-          <span className="text-[0.625rem] tracking-[0.25em] uppercase">
+          <span className="font-mono text-[0.625rem] tracking-[0.25em] uppercase">
             Scorri
           </span>
         </div>

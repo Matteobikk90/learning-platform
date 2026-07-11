@@ -8,7 +8,7 @@ export function ChiSono({ visible }: BaseSectionProps) {
       className="parallax-section min-h-dvh bg-navy flex flex-col items-center justify-center px-6 py-24">
       <div
         className={cn("parallax-content max-w-3xl w-full", visible.has("chi-sono") && "visible")}>
-        <span className="label-upper mb-8">Chi sono</span>
+        <span className="label-upper mb-8">Mi presento</span>
         <h2 className="section-title text-white mb-10">
           <em>Umberto Iglina</em>
         </h2>
@@ -18,16 +18,16 @@ export function ChiSono({ visible }: BaseSectionProps) {
           <p
             className="leading-loose text-[0.9375rem] max-w-[60ch]"
             style={{ color: "rgba(255,255,255,0.55)" }}>
-            Sono Umberto Iglina. Come osteopata e specialista nel movimento
-            umano ho sempre cercato strumenti che permettessero ai miei pazienti
-            di vivere al meglio.
+            Come osteopata e specialista nel movimento umano ho sempre cercato
+            strumenti che permettessero ai miei pazienti di vivere al meglio.
           </p>
           <p
             className="leading-loose text-[0.9375rem] max-w-[60ch] mt-6"
             style={{ color: "rgba(255,255,255,0.55)" }}>
-            Da oltre venti anni studio la scienza del respiro. Nell'unione di
-            tradizioni millenarie e approccio clinico moderno ho scoperto come
-            trasformare concretamente la propria vita. Benvenuto.
+            Ho avuto il privilegio di studiare lo Yoga nella sua forma più
+            autentica e da oltre 20 anni studio la scienza del respiro.
+            Nell'unione di tradizioni millenarie e approccio clinico moderno ho
+            scoperto come trasformare concretamente la propria vita. Benvenuto.
           </p>
         </div>
       </div>
