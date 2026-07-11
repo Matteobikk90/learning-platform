@@ -175,15 +175,27 @@
     transform: scale(1.04);
   }
 
-  /* Legibility gradient over the background composite */
+  /* Legibility gradient over the background composite.
+     Below md the text column spans nearly the full banner, so the scrim
+     stays almost flat; from md up it fades to reveal the image on the right. */
   .course-banner-overlay {
     @apply absolute inset-0;
     background: linear-gradient(
       90deg,
-      rgba(13, 34, 64, 0.92) 0%,
-      rgba(13, 34, 64, 0.72) 45%,
-      rgba(13, 34, 64, 0.28) 100%
+      rgba(13, 34, 64, 0.94) 0%,
+      rgba(13, 34, 64, 0.8) 100%
     );
+  }
+
+  @media (min-width: 768px) {
+    .course-banner-overlay {
+      background: linear-gradient(
+        90deg,
+        rgba(13, 34, 64, 0.94) 0%,
+        rgba(13, 34, 64, 0.85) 45%,
+        rgba(13, 34, 64, 0.62) 100%
+      );
+    }
   }
 
   .course-price-tag {

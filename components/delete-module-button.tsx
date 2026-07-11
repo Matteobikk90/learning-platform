@@ -22,7 +22,7 @@ export function DeleteModuleButton({
       <input type="hidden" name="courseId" value={courseId} />
       <button
         type="submit"
-        className="inline-block shrink-0 rounded-md border border-red-300 px-5.5 py-2.25 text-[0.75rem] font-semibold tracking-[0.12em] uppercase text-red-600 transition-colors duration-150 hover:border-red-400 hover:bg-red-50">
+        className="inline-block shrink-0 rounded-md border border-red-300 px-5.5 py-2.25 font-mono text-[0.75rem] font-bold tracking-[0.12em] uppercase text-red-600 transition-colors duration-150 hover:border-red-400 hover:bg-red-50">
         Elimina modulo
       </button>
     </form>

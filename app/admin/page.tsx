@@ -43,7 +43,7 @@ export default async function AdminPage() {
           <div
             key={label}
             className="bg-surface border border-stroke rounded-xl px-5 py-5">
-            <p className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase text-muted mb-2">
+            <p className="font-mono text-[0.7rem] tracking-[0.18em] uppercase text-muted mb-2">
               {label}
             </p>
             <p className="font-display text-[1.75rem] font-medium text-navy leading-none">

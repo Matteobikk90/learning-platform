@@ -18,7 +18,7 @@ export function DeleteCourseButton({ courseId }: { courseId: string }) {
       <button
         type="submit"
         title="Elimina corso"
-        className="inline-flex items-center gap-2 shrink-0 rounded-md border border-red-300 px-3 py-2.25 text-[0.75rem] font-semibold tracking-[0.12em] uppercase text-red-600 transition-colors duration-150 hover:border-red-400 hover:bg-red-50 cursor-pointer">
+        className="inline-flex items-center gap-2 shrink-0 rounded-md border border-red-300 px-3 py-2.25 font-mono text-[0.75rem] font-bold tracking-[0.12em] uppercase text-red-600 transition-colors duration-150 hover:border-red-400 hover:bg-red-50 cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="14"

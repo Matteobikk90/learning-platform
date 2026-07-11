@@ -115,7 +115,7 @@ export default async function ModuleDetailPage({
         {/* Danger zone */}
         <div className="card p-8 border-red-200/70">
           <span
-            className="block text-[0.75rem] font-semibold tracking-widest uppercase mb-2"
+            className="block font-mono text-[0.75rem] tracking-widest uppercase mb-2"
             style={{ color: "var(--color-red, #b91c1c)" }}>
             Zona pericolosa
           </span>

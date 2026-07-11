@@ -70,7 +70,7 @@ export default async function ProfileCoursePage({
       </div>
 
       <section>
-        <p className="text-[0.7rem] font-semibold tracking-widest uppercase text-muted mb-4">
+        <p className="font-mono text-[0.7rem] tracking-widest uppercase text-muted mb-4">
           Moduli ({modules.length})
         </p>
 

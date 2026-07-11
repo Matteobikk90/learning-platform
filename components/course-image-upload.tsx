@@ -74,7 +74,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
           <div
             className="absolute inset-0 flex items-center justify-center"
             style={{ background: "rgba(247,250,250,0.85)" }}>
-            <span className="text-xs font-semibold tracking-widest uppercase text-petrol animate-pulse">
+            <span className="font-mono text-xs tracking-widest uppercase text-petrol animate-pulse">
               Caricamento…
             </span>
           </div>

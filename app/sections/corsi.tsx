@@ -57,14 +57,14 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                     )}
 
                     {/* Logo placeholder — swap for the course logo asset when delivered */}
-                    <h3 className="font-display text-[2rem] md:text-[2.5rem] font-medium text-white tracking-[-0.02em] leading-[1.1] mb-4">
+                    <h3 className="font-display text-[clamp(1.375rem,5.5vw,2.5rem)] font-medium text-white tracking-[-0.02em] leading-[1.1] wrap-break-word mb-4">
                       {course.title}
                     </h3>
 
                     {course.description && (
                       <p
-                        className="text-[0.9375rem] leading-[1.8] mb-8"
-                        style={{ color: "rgba(255,255,255,0.65)" }}>
+                        className="text-[0.9375rem] leading-[1.8] line-clamp-3 mb-8"
+                        style={{ color: "rgba(255,255,255,0.85)" }}>
                         {course.description}
                       </p>
                     )}
