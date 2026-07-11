@@ -26,8 +26,9 @@ export function ChiSono({ visible }: BaseSectionProps) {
             style={{ color: "rgba(255,255,255,0.55)" }}>
             Ho avuto il privilegio di studiare lo Yoga nella sua forma più
             autentica e da oltre 20 anni studio la scienza del respiro.
-            Nell'unione di tradizioni millenarie e approccio clinico moderno ho
-            scoperto come trasformare concretamente la propria vita. Benvenuto.
+            Nell&apos;unione di tradizioni millenarie e approccio clinico
+            moderno ho scoperto come trasformare concretamente la propria vita.
+            Benvenuto.
           </p>
         </div>
       </div>
