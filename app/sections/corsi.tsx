@@ -63,7 +63,7 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
 
                     {course.description && (
                       <p
-                        className="text-[0.9375rem] leading-[1.8] line-clamp-3 mb-8"
+                        className="label-upper leading-5 line-clamp-3 mb-8"
                         style={{ color: "rgba(255,255,255,0.85)" }}>
                         {course.description}
                       </p>

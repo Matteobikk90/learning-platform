@@ -17,19 +17,21 @@ export function Hero({ visible, scrollTo }: HeroSectionProps) {
           <br />
           Trasforma la tua vita.
           <br />
-          <em>Per davvero.</em>
+          <span className="flex flex-wrap items-center gap-x-8 gap-y-4">
+            <em>Per davvero.</em>
+            <button onClick={() => scrollTo("corsi")} className="btn-primary">
+              Scopri di più
+            </button>
+          </span>
         </h1>
         <p
-          className="text-[0.9375rem] leading-[1.9] mb-12"
-          style={{ color: "rgba(255,255,255,0.45)", maxWidth: "52ch" }}>
+          className="label-upper leading-5"
+          style={{ color: "rgba(255,255,255,0.45)" }}>
           Il mio metodo. 20 anni di ricerca clinica.
           <br />
-          Alta formazione in Osteopatia, Chinesiologia e Yoga Tradizionale a
-          tua disposizione.
+          Alta formazione in Osteopatia, Chinesiologia e Yoga Tradizionale.
+          <br />A tua disposizione.
         </p>
-        <button onClick={() => scrollTo("corsi")} className="btn-primary">
-          Scopri i corsi
-        </button>
       </div>
 
       {/* Scroll indicator */}
