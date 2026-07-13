@@ -27,9 +27,7 @@ export default async function NewModulePage({
 
       <div className="mb-10">
         <span className="label-upper">{course.title}</span>
-        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-          Nuovo modulo
-        </h1>
+        <h1 className="page-title">Nuovo modulo</h1>
       </div>
 
       <div className="card p-8">

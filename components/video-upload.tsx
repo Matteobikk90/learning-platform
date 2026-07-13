@@ -32,12 +32,12 @@ export function VideoUpload({ moduleId }: VideoUploadProps) {
     <MuxUploader
       endpoint={getUploadUrl}
       onSuccess={() => setDone(true)}
-      className="mt-3 inline-flex w-full rounded-lg border-2 border-dashed border-stroke bg-surface font-sans text-ink [[upload-in-progress]]:border-solid [[upload-in-progress]]:border-ocean [[upload-complete]]:border-petrol"
+      className="mt-3 inline-flex w-full min-h-[160px] rounded-lg border-2 border-dashed border-stroke bg-surface font-sans text-ink [[upload-in-progress]]:border-solid [[upload-in-progress]]:border-ocean [[upload-complete]]:border-petrol"
       style={
         {
-          minHeight: 160,
-          "--progress-bar-fill-color": "#1A5F9C",
-          "--overlay-background-color": "rgba(235, 241, 240, 0.95)",
+          "--progress-bar-fill-color": "var(--color-ocean)",
+          "--overlay-background-color":
+            "color-mix(in oklab, var(--color-canvas) 95%, transparent)",
         } as React.CSSProperties
       }
     >

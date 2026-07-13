@@ -19,11 +19,9 @@ export default function VerifyRequestPage() {
         </svg>
       </div>
 
-      <h1 className="font-display text-[2.5rem] font-normal text-navy mb-3">
-        Controlla la tua email
-      </h1>
+      <h1 className="page-title text-[2.5rem] mb-3">Controlla la tua email</h1>
 
-      <p className="text-[0.9375rem] text-muted leading-[1.7]">
+      <p className="text-muted leading-relaxed">
         Ti abbiamo inviato un link sicuro per accedere.
         <br />
         Controlla la tua casella di posta.

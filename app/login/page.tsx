@@ -19,9 +19,7 @@ export default function LoginPage() {
     <main className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-6 py-16">
       <span className="label-upper text-center">Accesso</span>
 
-      <h1 className="font-display text-[2.75rem] font-normal leading-[1.15] text-navy mb-3 text-center">
-        Bentornato
-      </h1>
+      <h1 className="page-title leading-[1.15] mb-3 text-center">Bentornato</h1>
 
       <p className="text-sm text-muted text-center mb-10 leading-relaxed">
         Inserisci la tua email per ricevere il link di accesso.

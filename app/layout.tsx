@@ -32,9 +32,7 @@ export default function RootLayout({
     <html
       lang="it"
       className={`${inter.variable} ${spaceMono.variable} h-full`}>
-      <body
-        className="min-h-full flex flex-col"
-        style={{ background: "var(--color-bg)" }}>
+      <body className="min-h-full flex flex-col">
         <AuthProvider>
           <Navbar />
           <div className="flex-1">{children}</div>

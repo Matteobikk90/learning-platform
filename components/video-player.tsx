@@ -20,9 +20,7 @@ export function VideoPlayer({
   onSeeked,
 }: VideoPlayerProps) {
   return (
-    <div
-      className="mt-4 overflow-hidden rounded-lg"
-      style={{ display: "flex" }}>
+    <div className="mt-4 flex overflow-hidden rounded-lg">
       <MuxPlayer
         playbackId={playbackId}
         startTime={initialTime}

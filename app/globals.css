@@ -155,6 +155,10 @@
     @apply px-8 py-12 text-center text-muted;
   }
 
+  .list-num {
+    @apply font-mono text-[0.7rem] font-semibold tracking-widest text-subtle;
+  }
+
   /* Cards */
   .card {
     @apply bg-surface border border-stroke rounded-lg overflow-hidden;

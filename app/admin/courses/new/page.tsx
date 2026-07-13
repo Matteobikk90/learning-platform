@@ -14,9 +14,7 @@ export default async function NewCoursePage() {
 
       <div className="mb-10">
         <span className="label-upper">Admin</span>
-        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-          Nuovo corso
-        </h1>
+        <h1 className="page-title">Nuovo corso</h1>
       </div>
 
       <div className="card p-8">

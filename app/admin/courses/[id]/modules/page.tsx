@@ -29,33 +29,27 @@ export default async function ModulesPage({ params }: ModulesPageProps) {
       <div className="mb-10 flex items-end justify-between gap-6">
         <div>
           <span className="label-upper">Moduli</span>
-          <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-            {course.title}
-          </h1>
+          <h1 className="page-title">{course.title}</h1>
         </div>
         <Link
           href={`/admin/courses/${course.id}/modules/new`}
-          className="btn-primary shrink-0">
+          className="btn-primary">
           Nuovo modulo
         </Link>
       </div>
 
-      <div className="card divide-y divide-stroke">
+      <div className="card">
         {course.modules.length === 0 ? (
-          <p className="px-8 py-12 text-center text-muted">
-            Nessun modulo ancora.
-          </p>
+          <p className="list-empty">Nessun modulo ancora.</p>
         ) : (
           course.modules.map((module) => (
             <div key={module.id} className="list-row">
               <div>
                 <div className="flex items-baseline gap-2.5 mb-1">
-                  <span className="text-[0.75rem] font-semibold tracking-widest text-subtle">
+                  <span className="list-num">
                     {String(module.order).padStart(2, "0")}
                   </span>
-                  <h2 className="font-display text-xl font-medium text-navy">
-                    {module.title}
-                  </h2>
+                  <h2 className="list-row-title">{module.title}</h2>
                 </div>
                 <p className="text-sm text-muted">
                   {formatDuration(module.durationSeconds)}

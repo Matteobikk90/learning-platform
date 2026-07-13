@@ -10,7 +10,9 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
 
   const textColor = isDark ? "rgba(255,255,255,0.9)" : "var(--color-navy)";
   const dotActive = isDark ? "#ffffff" : "var(--color-navy)";
-  const dotInactive = isDark ? "rgba(255,255,255,0.28)" : "rgba(13,34,64,0.25)";
+  const dotInactive = isDark
+    ? "rgba(255,255,255,0.28)"
+    : "color-mix(in srgb, var(--color-navy) 25%, transparent)";
 
   return (
     <>

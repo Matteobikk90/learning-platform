@@ -27,11 +27,9 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-14">
-      <div className="mb-12">
+      <div className="mb-10">
         <span className="label-upper">Dashboard</span>
-        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-          Amministrazione
-        </h1>
+        <h1 className="page-title">Amministrazione</h1>
         <p className="text-sm text-muted">
           Gestisci i contenuti della piattaforma.
         </p>
@@ -42,8 +40,8 @@ export default async function AdminPage() {
         {stats.map(({ label, value }) => (
           <div
             key={label}
-            className="bg-surface border border-stroke rounded-xl px-5 py-5">
-            <p className="font-mono text-[0.7rem] tracking-[0.18em] uppercase text-muted mb-2">
+            className="bg-surface border border-stroke rounded-xl p-5">
+            <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-muted mb-2">
               {label}
             </p>
             <p className="font-display text-[1.75rem] font-medium text-navy leading-none">
@@ -54,14 +52,12 @@ export default async function AdminPage() {
       </div>
 
       {/* Navigation */}
-      <div className="card divide-y divide-stroke">
+      <div className="card">
         <Link
           href="/admin/courses"
           className="list-row no-underline hover:bg-canvas transition-colors">
           <div>
-            <h2 className="font-display text-xl font-medium text-navy mb-0.5">
-              Corsi
-            </h2>
+            <h2 className="list-row-title mb-0.5">Corsi</h2>
             <p className="text-sm text-muted">
               Crea, modifica ed elimina i corsi della piattaforma.
             </p>

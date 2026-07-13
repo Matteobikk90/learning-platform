@@ -71,8 +71,6 @@ export default async function ProfileModulePage({
     },
   });
 
-  if (!courseModule || courseModule.courseId !== courseId) notFound();
-
   return (
     <main className="mx-auto max-w-5xl px-6 py-14">
       <Link href={`/profile/courses/${courseId}`} className="back-link">
@@ -83,9 +81,7 @@ export default async function ProfileModulePage({
         <span className="label-upper">
           Modulo {String(courseModule.order).padStart(2, "0")}
         </span>
-        <h1 className="font-display text-[2.5rem] font-normal text-navy mb-2">
-          {courseModule.title}
-        </h1>
+        <h1 className="page-title text-[2.5rem]">{courseModule.title}</h1>
         <p className="text-[0.8125rem] text-subtle">
           Durata: {formatDuration(courseModule.durationSeconds)}
         </p>
@@ -93,7 +89,7 @@ export default async function ProfileModulePage({
 
       <section>
         {courseModule.videoPlaybackId ? (
-          <div className="card overflow-hidden">
+          <div className="card">
             <ModuleProgressPlayer
               playbackId={courseModule.videoPlaybackId}
               title={courseModule.title}

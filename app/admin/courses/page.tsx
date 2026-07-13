@@ -15,30 +15,24 @@ export default async function AdminCoursesPage() {
       <div className="mb-10 flex items-end justify-between gap-6">
         <div>
           <span className="label-upper">Admin</span>
-          <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-            Corsi
-          </h1>
+          <h1 className="page-title">Corsi</h1>
           <p className="text-sm text-muted">
             Gestisci i corsi della piattaforma.
           </p>
         </div>
-        <Link href="/admin/courses/new" className="btn-primary shrink-0">
+        <Link href="/admin/courses/new" className="btn-primary">
           Nuovo corso
         </Link>
       </div>
 
-      <div className="card divide-y divide-stroke">
+      <div className="card">
         {courses.length === 0 ? (
-          <p className="px-8 py-12 text-center text-muted">
-            Nessun corso ancora.
-          </p>
+          <p className="list-empty">Nessun corso ancora.</p>
         ) : (
           courses.map((course) => (
             <div key={course.id} className="list-row">
               <div>
-                <h2 className="font-display text-xl font-medium text-navy mb-0.5">
-                  {course.title}
-                </h2>
+                <h2 className="list-row-title mb-0.5">{course.title}</h2>
                 {course.description && (
                   <p className="text-sm text-muted">{course.description}</p>
                 )}

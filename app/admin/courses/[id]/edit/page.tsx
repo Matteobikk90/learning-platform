@@ -27,9 +27,7 @@ export default async function EditCoursePage({
 
       <div className="mb-10">
         <span className="label-upper">Admin</span>
-        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-          Modifica corso
-        </h1>
+        <h1 className="page-title">Modifica corso</h1>
       </div>
 
       <div className="card p-8">

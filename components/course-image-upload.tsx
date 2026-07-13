@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState } from "react";
 
 type Props = {
@@ -40,8 +41,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
 
       {/* Preview / drop zone */}
       <div
-        className="relative rounded-lg border-2 border-dashed border-stroke overflow-hidden cursor-pointer"
-        style={{ minHeight: "11rem", background: "var(--color-canvas)" }}
+        className="relative rounded-lg border-2 border-dashed border-stroke overflow-hidden cursor-pointer min-h-44 bg-canvas"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
@@ -50,14 +50,18 @@ export function CourseImageUpload({ defaultUrl }: Props) {
           if (file) handleFile(file);
         }}>
         {url ? (
-          <img
-            src={url}
-            alt="Cover preview"
-            className="w-full h-44 object-cover"
-          />
+          <div className="relative h-44 w-full">
+            <Image
+              src={url}
+              alt="Cover preview"
+              fill
+              sizes="(max-width: 768px) 100vw, 608px"
+              className="object-cover"
+            />
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-44 gap-2 select-none">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-subtle)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="stroke-subtle" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
@@ -71,9 +75,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
 
         {/* Loading overlay */}
         {uploading && (
-          <div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ background: "rgba(247,250,250,0.85)" }}>
+          <div className="absolute inset-0 flex items-center justify-center bg-surface/85">
             <span className="font-mono text-xs tracking-widest uppercase text-petrol animate-pulse">
               Caricamento…
             </span>

@@ -42,9 +42,7 @@ export default async function ModuleDetailPage({
         <span className="label-upper">
           Modulo {String(courseModule.order).padStart(2, "0")}
         </span>
-        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-          {courseModule.title}
-        </h1>
+        <h1 className="page-title">{courseModule.title}</h1>
         <p className="text-sm text-muted">
           Durata: {formatDuration(courseModule.durationSeconds)}
           {" · "}
@@ -114,11 +112,7 @@ export default async function ModuleDetailPage({
 
         {/* Danger zone */}
         <div className="card p-8 border-red-200/70">
-          <span
-            className="block font-mono text-[0.75rem] tracking-widest uppercase mb-2"
-            style={{ color: "var(--color-red, #b91c1c)" }}>
-            Zona pericolosa
-          </span>
+          <span className="form-label text-danger">Zona pericolosa</span>
           <p className="text-sm text-muted mb-4">
             Elimina questo modulo definitivamente. I dati di avanzamento
             associati verranno anch&apos;essi eliminati.

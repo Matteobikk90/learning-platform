@@ -59,11 +59,9 @@ export default async function ProfileCoursePage({
 
       <div className="mb-10">
         <span className="label-upper">Corso</span>
-        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-          {purchase.course.title}
-        </h1>
+        <h1 className="page-title">{purchase.course.title}</h1>
         {purchase.course.description && (
-          <p className="text-[0.9375rem] text-muted leading-relaxed max-w-[60ch]">
+          <p className="text-muted leading-relaxed max-w-[60ch]">
             {purchase.course.description}
           </p>
         )}
@@ -100,11 +98,11 @@ export default async function ProfileCoursePage({
                 <div key={module.id} className="list-row">
                   <div>
                     <div className="flex items-baseline gap-2.5 mb-1">
-                      <span className="text-[0.7rem] font-semibold tracking-widest text-subtle">
+                      <span className="list-num">
                         {String(module.order).padStart(2, "0")}
                       </span>
                       <h3
-                        className={`font-display text-xl font-medium ${unlocked ? "text-navy" : "text-muted"}`}>
+                        className={`list-row-title ${unlocked ? "" : "text-muted"}`}>
                         {module.title}
                       </h3>
                     </div>

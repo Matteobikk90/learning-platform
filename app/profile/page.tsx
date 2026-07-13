@@ -35,17 +35,15 @@ export default async function CoursesPage() {
     <main className="mx-auto max-w-5xl px-6 py-14">
       <div className="mb-10">
         <span className="label-upper">Profilo</span>
-        <h1 className="font-display text-[2.75rem] font-normal text-navy mb-2">
-          I miei corsi
-        </h1>
+        <h1 className="page-title">I miei corsi</h1>
         <p className="text-sm text-muted">
           Continua il tuo percorso di pratica.
         </p>
       </div>
 
-      <div className="card divide-y divide-stroke">
+      <div className="card">
         {courses.length === 0 ? (
-          <div className="px-8 py-12 text-center text-muted">
+          <div className="list-empty">
             <p className="font-display text-xl mb-1">Nessun corso ancora</p>
             <p className="text-sm">I tuoi corsi acquistati appariranno qui.</p>
           </div>
@@ -56,9 +54,7 @@ export default async function CoursesPage() {
             return (
               <div key={course.id} className="list-row">
                 <div>
-                  <h3 className="font-display text-xl font-medium text-navy mb-0.5">
-                    {course.title}
-                  </h3>
+                  <h3 className="list-row-title mb-0.5">{course.title}</h3>
                   {course.description && (
                     <p className="text-sm text-muted mt-1">
                       {course.description}
@@ -68,15 +64,10 @@ export default async function CoursesPage() {
                     {progress.completedModules}/{progress.totalModules} moduli
                     completati · {progress.percentage}%
                   </p>
-                  <div
-                    className="mt-3 h-1 w-48 rounded-full overflow-hidden"
-                    style={{ background: "var(--color-stroke)" }}>
+                  <div className="mt-3 h-1 w-48 rounded-full overflow-hidden bg-stroke">
                     <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${progress.percentage}%`,
-                        background: "var(--color-petrol)",
-                      }}
+                      className="h-full rounded-full bg-petrol"
+                      style={{ width: `${progress.percentage}%` }}
                     />
                   </div>
                 </div>
