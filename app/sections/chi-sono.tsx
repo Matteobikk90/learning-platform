@@ -16,11 +16,11 @@ export function ChiSono({ visible }: BaseSectionProps) {
           <em>Umberto Iglina</em>
         </h2>
         <div className="border-t border-white/10 pt-8">
-          <p className="label-upper leading-5 max-w-[60ch] text-white/55">
+          <p className="label-upper leading-5 w-full text-white/55">
             Come osteopata e specialista nel movimento umano ho sempre cercato
             strumenti che permettessero ai miei pazienti di vivere al meglio.
           </p>
-          <p className="label-upper leading-5 max-w-[60ch] mt-6 text-white/55">
+          <p className="label-upper leading-5 w-full mt-6 text-white/55">
             Ho avuto il privilegio di studiare lo Yoga nella sua forma più
             autentica e da oltre 20 anni studio la scienza del respiro.
             Nell&apos;unione di tradizioni millenarie e approccio clinico

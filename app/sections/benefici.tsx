@@ -56,7 +56,7 @@ export function Benefici({
                 </div>
                 <h2 className="section-title mb-8">{title}</h2>
                 <div className="border-t-2 border-stroke pt-8">
-                  <p className="label-upper text-muted leading-5 max-w-[55ch]">
+                  <p className="label-upper text-muted leading-5 w-full">
                     {body}
                   </p>
                 </div>

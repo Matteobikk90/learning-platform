@@ -57,11 +57,11 @@ export default async function ProfileCoursePage({
         ← Profilo
       </Link>
 
-      <div className="mb-10">
+      <div className="mb-10 max-w-3xl">
         <span className="label-upper">Corso</span>
         <h1 className="page-title">{purchase.course.title}</h1>
         {purchase.course.description && (
-          <p className="text-muted leading-relaxed max-w-[60ch]">
+          <p className="text-muted leading-relaxed w-full">
             {purchase.course.description}
           </p>
         )}
