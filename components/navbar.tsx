@@ -7,7 +7,7 @@ export function Navbar() {
       <div className="flex items-center justify-between px-8 py-5">
         <Link
           href="/"
-          className="font-display text-2xl font-semibold text-navy tracking-[0.04em] no-underline">
+          className="nav-brand text-navy no-underline">
           Umberto Iglina
         </Link>
 

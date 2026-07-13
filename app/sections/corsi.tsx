@@ -49,7 +49,7 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                   <div className="course-banner-overlay" aria-hidden="true" />
 
                   {/* Content */}
-                  <div className="relative flex flex-col justify-center min-h-[20rem] max-w-2xl px-8 py-14 md:px-14">
+                  <div className="relative flex flex-col justify-center min-h-80 max-w-2xl px-8 py-14 md:px-14">
                     {purchased && (
                       <span className="self-start font-mono text-[0.625rem] font-bold tracking-[0.18em] uppercase px-2.5 py-1 rounded-full bg-petrol text-white mb-5">
                         Acquistato
@@ -62,9 +62,7 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                     </h3>
 
                     {course.description && (
-                      <p
-                        className="label-upper leading-5 line-clamp-3 mb-8"
-                        style={{ color: "rgba(255,255,255,0.85)" }}>
+                      <p className="label-upper leading-5 line-clamp-3 mb-8 text-white/85">
                         {course.description}
                       </p>
                     )}

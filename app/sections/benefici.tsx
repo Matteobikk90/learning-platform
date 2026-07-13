@@ -50,9 +50,7 @@ export function Benefici({
                   <span className="font-mono text-[0.7rem] font-bold tracking-[0.2em] uppercase text-petrol">
                     {num}
                   </span>
-                  <span
-                    className="font-mono text-[0.65rem] tracking-[0.15em] uppercase"
-                    style={{ color: "var(--color-muted)", opacity: 0.4 }}>
+                  <span className="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-muted opacity-40">
                     / {String(totalSlides).padStart(2, "0")}
                   </span>
                 </div>
@@ -68,18 +66,11 @@ export function Benefici({
         </div>
 
         {/* Progress indicator */}
-        <div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3"
-          style={{ color: "var(--color-muted)", opacity: 0.45 }}>
-          <div
-            className="h-px w-16 overflow-hidden"
-            style={{ background: "rgba(61,100,98,0.15)" }}>
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 text-muted opacity-45">
+          <div className="h-px w-16 overflow-hidden bg-muted/15">
             <div
-              className="h-full parallax-scroll-progress"
-              style={{
-                width: `${progress * 100}%`,
-                background: "var(--color-petrol)",
-              }}
+              className="h-full parallax-scroll-progress bg-petrol"
+              style={{ width: `${progress * 100}%` }}
             />
           </div>
           <span className="font-mono text-[0.625rem] tracking-[0.25em] uppercase">

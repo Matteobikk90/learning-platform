@@ -22,8 +22,9 @@ export function FaqItem({
         aria-controls={contentId}>
         <span className="text-sm font-medium text-navy">{question}</span>
         <span
-          className="text-petrol shrink-0 text-lg leading-none transition-transform duration-200"
-          style={{ transform: open ? "rotate(45deg)" : undefined }}
+          className={`text-petrol shrink-0 text-lg leading-none transition-transform duration-200 ${
+            open ? "rotate-45" : ""
+          }`}
           aria-hidden="true">
           +
         </span>

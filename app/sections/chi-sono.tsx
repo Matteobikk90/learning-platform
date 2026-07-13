@@ -15,18 +15,12 @@ export function ChiSono({ visible }: BaseSectionProps) {
         <h2 className="section-title text-white mb-10">
           <em>Umberto Iglina</em>
         </h2>
-        <div
-          className="border-t pt-8"
-          style={{ borderColor: "rgba(255,255,255,0.1)" }}>
-          <p
-            className="label-upper leading-5 max-w-[60ch]"
-            style={{ color: "rgba(255,255,255,0.55)" }}>
+        <div className="border-t border-white/10 pt-8">
+          <p className="label-upper leading-5 max-w-[60ch] text-white/55">
             Come osteopata e specialista nel movimento umano ho sempre cercato
             strumenti che permettessero ai miei pazienti di vivere al meglio.
           </p>
-          <p
-            className="label-upper leading-5 max-w-[60ch] mt-6"
-            style={{ color: "rgba(255,255,255,0.55)" }}>
+          <p className="label-upper leading-5 max-w-[60ch] mt-6 text-white/55">
             Ho avuto il privilegio di studiare lo Yoga nella sua forma più
             autentica e da oltre 20 anni studio la scienza del respiro.
             Nell&apos;unione di tradizioni millenarie e approccio clinico

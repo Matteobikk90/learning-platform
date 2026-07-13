@@ -41,7 +41,7 @@ export function Faq({ visible }: BaseSectionProps) {
               {TESTIMONIALS.map(({ name, text }) => (
                 <div key={name} className="border-l-2 border-petrol pl-5">
                   <p className="text-sm text-muted leading-[1.9] italic mb-2">
-                    `&quot;{text}&quot;`
+                    &quot;{text}&quot;
                   </p>
                   <span className="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-petrol">
                     {name}
@@ -53,9 +53,7 @@ export function Faq({ visible }: BaseSectionProps) {
         </div>
 
         <div className="mt-16 pt-8 border-t border-stroke text-center">
-          <p
-            className="text-xs tracking-wider"
-            style={{ color: "var(--color-muted)", opacity: 0.5 }}>
+          <p className="text-xs tracking-wider text-muted opacity-50">
             © {new Date().getFullYear()} Umberto Iglina
           </p>
         </div>

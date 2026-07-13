@@ -20,13 +20,8 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
         style={{ color: textColor, transition: "color 0.5s ease" }}>
         <button
           onClick={() => scrollTo("hero")}
-          className="font-display text-2xl font-semibold tracking-[0.04em] hover:opacity-70 transition-opacity"
-          style={{
-            color: "inherit",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-          }}>
+          className="nav-brand hover:opacity-70 transition-opacity cursor-pointer"
+          style={{ color: "inherit", background: "none", border: "none" }}>
           Umberto Iglina
         </button>
 
@@ -34,13 +29,13 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
           <div className="flex items-center gap-5">
             <Link
               href="/profile"
-              className="font-mono text-[0.75rem] tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
+              className="nav-link hover:opacity-70 transition-opacity no-underline"
               style={{ color: "inherit" }}>
               I miei corsi
             </Link>
             <Link
               href="/api/auth/signout"
-              className="font-mono text-[0.75rem] tracking-[0.15em] uppercase hover:opacity-70 transition-opacity no-underline"
+              className="nav-link hover:opacity-70 transition-opacity no-underline"
               style={{ color: "inherit" }}>
               Esci
             </Link>
@@ -62,15 +57,10 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
             <button
               onClick={() => scrollTo(id)}
               title={label}
-              className="rounded-full transition-all duration-300"
+              className="size-[7px] rounded-full border-0 p-0 cursor-pointer transition-all duration-300"
               style={{
-                width: "7px",
-                height: "7px",
                 background: active === id ? dotActive : dotInactive,
                 transform: active === id ? "scale(1.5)" : "scale(1)",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
               }}
             />
           </li>

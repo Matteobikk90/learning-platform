@@ -12,6 +12,7 @@
   --color-ink: #0b1c1a;
   --color-muted: #3d6462;
   --color-subtle: #7aadab;
+  --color-danger: #b91c1c;
 }
 
 /* Fonts injected by Next.js */
@@ -68,35 +69,90 @@
   }
 
   /* Typography */
+  .section-title,
+  .section-title-sm,
+  .hero-title {
+    @apply font-display font-medium leading-[1.05];
+  }
+
   .section-title {
-    @apply font-display font-medium text-navy leading-[1.05] tracking-tight;
+    @apply text-navy tracking-tight;
     font-size: clamp(2.25rem, 4.5vw, 4rem);
   }
 
   .section-title-sm {
-    @apply font-display font-medium text-navy leading-[1.05] tracking-[-0.02em];
+    @apply text-navy tracking-[-0.02em];
     font-size: clamp(1.875rem, 3.5vw, 3rem);
   }
 
   .hero-title {
-    @apply font-display font-medium leading-[1.05] text-white tracking-tight;
+    @apply text-white tracking-tight;
     font-size: clamp(2.75rem, 6.5vw, 5.25rem);
   }
 
+  .label-upper,
+  .form-label {
+    @apply block font-mono text-[0.75rem] tracking-widest uppercase;
+  }
+
   .label-upper {
-    @apply block font-mono font-normal text-[0.75rem] tracking-widest uppercase text-petrol mb-2.5;
+    @apply text-petrol mb-2.5;
+  }
+
+  .form-label {
+    @apply text-muted mb-2;
   }
 
   /* Buttons */
-  .btn-primary {
-    @apply inline-block shrink-0 bg-ocean text-white no-underline rounded-md
-           border-none cursor-pointer font-mono
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger {
+    @apply inline-block shrink-0 no-underline rounded-md cursor-pointer font-mono
            text-[0.75rem] font-bold tracking-[0.12em] uppercase
            px-5.5 py-2.25 transition-colors duration-150;
   }
 
+  .btn-primary {
+    @apply bg-ocean text-white;
+  }
+
   .btn-primary:hover {
     background-color: var(--color-ocean-dark);
+  }
+
+  .btn-secondary {
+    @apply border border-stroke text-muted;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-subtle);
+    color: var(--color-navy);
+  }
+
+  .btn-danger {
+    @apply border border-red-300 text-red-600
+           hover:border-red-400 hover:bg-red-50;
+  }
+
+  /* Page & nav chrome */
+  .page-title {
+    @apply font-display text-[2.75rem] font-normal text-navy mb-2;
+  }
+
+  .nav-brand {
+    @apply font-display text-2xl font-semibold tracking-[0.04em];
+  }
+
+  .nav-link {
+    @apply font-mono text-[0.75rem] tracking-[0.15em] uppercase;
+  }
+
+  .list-row-title {
+    @apply font-display text-xl font-medium text-navy;
+  }
+
+  .list-empty {
+    @apply px-8 py-12 text-center text-muted;
   }
 
   /* Cards */
@@ -138,19 +194,6 @@
   /* Horizontal progress bar (Benefici sticky section) */
   .parallax-scroll-progress {
     transition: width 0.1s linear;
-  }
-
-  /* Secondary / outline button */
-  .btn-secondary {
-    @apply inline-block shrink-0 bg-transparent no-underline rounded-md
-           border border-stroke cursor-pointer font-mono
-           text-[0.75rem] font-bold tracking-[0.12em] uppercase
-           text-muted px-5.5 py-2.25 transition-colors duration-150;
-  }
-
-  .btn-secondary:hover {
-    border-color: var(--color-subtle);
-    color: var(--color-navy);
   }
 
   /* Course banners — horizontal boxes with composite background image */
@@ -215,10 +258,6 @@
   }
 
   /* Form utilities */
-  .form-label {
-    @apply block font-mono font-normal text-[0.75rem] tracking-widest uppercase text-muted mb-2;
-  }
-
   .form-input {
     @apply w-full px-3.5 py-2.5 border border-stroke rounded-md bg-canvas
            text-ink text-[0.9375rem] font-sans outline-none transition-colors duration-150;
