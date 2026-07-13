@@ -111,7 +111,7 @@ export default async function ModuleDetailPage({
         </div>
 
         {/* Danger zone */}
-        <div className="card p-8 border-red-200/70">
+        <div className="card p-8 border-danger/30">
           <span className="form-label text-danger">Zona pericolosa</span>
           <p className="text-sm text-muted mb-4">
             Elimina questo modulo definitivamente. I dati di avanzamento

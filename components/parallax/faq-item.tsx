@@ -20,7 +20,7 @@ export function FaqItem({
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-controls={contentId}>
-        <span className="text-sm font-medium text-navy">{question}</span>
+        <span className="text-sm font-medium text-white">{question}</span>
         <span
           className={`text-petrol shrink-0 text-lg leading-none transition-transform duration-200 ${
             open ? "rotate-45" : ""

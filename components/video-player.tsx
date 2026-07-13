@@ -40,9 +40,9 @@ export function VideoPlayer({
           onSeeked?.(Math.floor(player.currentTime));
         }}
         className="aspect-video w-full"
-        accentColor="#0A7A72"
-        primaryColor="#F7FAFA"
-        secondaryColor="#0D2240"
+        accentColor="#ffffff"
+        primaryColor="#ffffff"
+        secondaryColor="#0a0a0a"
       />
     </div>
   );

@@ -23,7 +23,7 @@ export default async function CheckoutSuccessPage({
       <div className="card w-full px-10 py-14">
         <p className="label-upper">Pagamento completato</p>
 
-        <h1 className="font-display mt-4 text-5xl text-navy">
+        <h1 className="font-display mt-4 text-5xl text-white">
           Grazie per il tuo acquisto
         </h1>
 

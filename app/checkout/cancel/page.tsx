@@ -6,7 +6,7 @@ export default function CheckoutCancelPage() {
       <div className="card w-full px-10 py-14">
         <p className="label-upper">Pagamento annullato</p>
 
-        <h1 className="font-display mt-4 text-5xl text-navy">
+        <h1 className="font-display mt-4 text-5xl text-white">
           Nessun addebito effettuato
         </h1>
 

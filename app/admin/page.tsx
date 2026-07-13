@@ -44,7 +44,7 @@ export default async function AdminPage() {
             <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-muted mb-2">
               {label}
             </p>
-            <p className="font-display text-[1.75rem] font-medium text-navy leading-none">
+            <p className="font-display text-[1.75rem] font-medium text-white leading-none">
               {value}
             </p>
           </div>
@@ -55,7 +55,7 @@ export default async function AdminPage() {
       <div className="card">
         <Link
           href="/admin/courses"
-          className="list-row no-underline hover:bg-canvas transition-colors">
+          className="list-row no-underline hover:bg-white/5 transition-colors">
           <div>
             <h2 className="list-row-title mb-0.5">Corsi</h2>
             <p className="text-sm text-muted">

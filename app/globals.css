@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
-/* Brand colors */
+/* Monochrome palette — black backgrounds, white text, grey hierarchy */
 @theme {
-  --color-navy: #0d2240;
-  --color-ocean: #1a5f9c;
-  --color-ocean-dark: #134a7d;
-  --color-petrol: #0a7a72;
-  --color-canvas: #ebf1f0;
-  --color-surface: #f7fafa;
-  --color-stroke: #b8cecc;
-  --color-ink: #0b1c1a;
-  --color-muted: #3d6462;
-  --color-subtle: #7aadab;
-  --color-danger: #b91c1c;
+  --color-navy: #000000; /* dark backgrounds */
+  --color-ocean: #ffffff; /* primary accent / inverted button */
+  --color-ocean-dark: #d4d4d4; /* button hover */
+  --color-petrol: #b3b3b3; /* eyebrow labels / accents */
+  --color-canvas: #000000; /* page background */
+  --color-surface: #0d0d0d; /* card background */
+  --color-stroke: #2a2a2a; /* borders */
+  --color-ink: #ffffff; /* primary text */
+  --color-muted: #a3a3a3; /* secondary text */
+  --color-subtle: #6b6b6b; /* tertiary text */
+  --color-danger: #dc6b6b; /* destructive actions (desaturated) */
 }
 
 /* Fonts injected by Next.js */
@@ -76,12 +76,12 @@
   }
 
   .section-title {
-    @apply text-navy tracking-tight;
+    @apply text-white tracking-tight;
     font-size: clamp(2.25rem, 4.5vw, 4rem);
   }
 
   .section-title-sm {
-    @apply text-navy tracking-[-0.02em];
+    @apply text-white tracking-[-0.02em];
     font-size: clamp(1.875rem, 3.5vw, 3rem);
   }
 
@@ -113,7 +113,7 @@
   }
 
   .btn-primary {
-    @apply bg-ocean text-white;
+    @apply bg-ocean text-black;
   }
 
   .btn-primary:hover {
@@ -126,17 +126,17 @@
 
   .btn-secondary:hover {
     border-color: var(--color-subtle);
-    color: var(--color-navy);
+    color: var(--color-ink);
   }
 
   .btn-danger {
-    @apply border border-red-300 text-red-600
-           hover:border-red-400 hover:bg-red-50;
+    @apply border border-danger/40 text-danger
+           hover:border-danger hover:bg-danger/10;
   }
 
   /* Page & nav chrome */
   .page-title {
-    @apply font-display text-[2.75rem] font-normal text-navy mb-2;
+    @apply font-display text-[2.75rem] font-normal text-white mb-2;
   }
 
   .nav-brand {
@@ -148,7 +148,7 @@
   }
 
   .list-row-title {
-    @apply font-display text-xl font-medium text-navy;
+    @apply font-display text-xl font-medium text-white;
   }
 
   .list-empty {
@@ -203,14 +203,14 @@
   /* Course banners — horizontal boxes with composite background image */
   .course-banner {
     @apply relative flex overflow-hidden rounded-2xl bg-navy;
-    box-shadow: 0 1px 3px rgba(13, 34, 64, 0.06),
-      0 4px 16px rgba(13, 34, 64, 0.07);
+    box-shadow: 0 1px 3px rgba(0, 0, 0,0.06),
+      0 4px 16px rgba(0, 0, 0,0.07);
     transition: box-shadow 0.35s ease, transform 0.35s ease;
   }
 
   .course-banner:hover {
-    box-shadow: 0 4px 12px rgba(13, 34, 64, 0.09),
-      0 16px 48px rgba(13, 34, 64, 0.14);
+    box-shadow: 0 4px 12px rgba(0, 0, 0,0.09),
+      0 16px 48px rgba(0, 0, 0,0.14);
     transform: translateY(-5px);
   }
 
@@ -229,8 +229,8 @@
     @apply absolute inset-0;
     background: linear-gradient(
       90deg,
-      rgba(13, 34, 64, 0.94) 0%,
-      rgba(13, 34, 64, 0.8) 100%
+      rgba(0, 0, 0,0.94) 0%,
+      rgba(0, 0, 0,0.8) 100%
     );
   }
 
@@ -238,9 +238,9 @@
     .course-banner-overlay {
       background: linear-gradient(
         90deg,
-        rgba(13, 34, 64, 0.94) 0%,
-        rgba(13, 34, 64, 0.85) 45%,
-        rgba(13, 34, 64, 0.62) 100%
+        rgba(0, 0, 0,0.94) 0%,
+        rgba(0, 0, 0,0.85) 45%,
+        rgba(0, 0, 0,0.62) 100%
       );
     }
   }
@@ -258,7 +258,7 @@
 
   /* Tag variant for dark backgrounds */
   .course-price-tag-invert {
-    @apply bg-surface text-navy;
+    @apply bg-white text-black;
   }
 
   /* Form utilities */

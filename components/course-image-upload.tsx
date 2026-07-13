@@ -108,14 +108,14 @@ export function CourseImageUpload({ defaultUrl }: Props) {
           <button
             type="button"
             onClick={() => setUrl("")}
-            className="text-[0.7rem] text-muted hover:text-navy transition-colors tracking-wide">
+            className="text-[0.7rem] text-muted hover:text-white transition-colors tracking-wide">
             Rimuovi
           </button>
         )}
       </div>
 
       {error && (
-        <p className="text-[0.75rem] text-red-600">{error}</p>
+        <p className="text-[0.75rem] text-danger">{error}</p>
       )}
     </div>
   );

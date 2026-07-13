@@ -2,10 +2,10 @@ import type { SectionId } from "@/types/parallax";
 
 export const SECTIONS: { id: SectionId; label: string; dark: boolean }[] = [
   { id: "hero", label: "Home", dark: true },
-  { id: "benefici", label: "Benefici", dark: false },
-  { id: "corsi", label: "Corsi", dark: false },
+  { id: "benefici", label: "Benefici", dark: true },
+  { id: "corsi", label: "Corsi", dark: true },
   { id: "chi-sono", label: "Mi presento", dark: true },
-  { id: "faq", label: "FAQ", dark: false },
+  { id: "faq", label: "FAQ", dark: true },
 ];
 
 export const BENEFITS = [

@@ -30,7 +30,7 @@ export function NavbarAuth() {
   return (
     <Link
       href="/login"
-      className="nav-link no-underline hover:opacity-70 transition-opacity text-navy">
+      className="nav-link no-underline hover:opacity-70 transition-opacity text-white">
       Accedi
     </Link>
   );
