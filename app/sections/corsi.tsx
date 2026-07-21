@@ -36,7 +36,11 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
           "parallax-content relative z-10 w-full max-w-6xl",
           visible.has("corsi") && "visible"
         )}>
-        <div className="mb-16">
+        <div className="mb-12 md:mb-16">
+          <p className="mb-5 flex items-center gap-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.24em] text-white/60">
+            <span className="h-px w-8 bg-white/45" aria-hidden="true" />
+            Percorsi online
+          </p>
           <h2 className="section-title">
             Inizia ora la trasformazione:
             <br />
@@ -50,10 +54,19 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
           </div>
         ) : (
           <div className="flex flex-col gap-8">
-            {courses.map((course) => {
+            {courses.map((course, index) => {
               const purchased = purchasedSet.has(course.id);
+              const titleId = `course-${course.id}-title`;
               return (
-                <article key={course.id} className="course-banner">
+                <article
+                  key={course.id}
+                  aria-labelledby={titleId}
+                  className={cn(
+                    "course-banner",
+                    course.coverImageUrl
+                      ? undefined
+                      : "course-banner-placeholder"
+                  )}>
                   {/* Background composite */}
                   {course.coverImageUrl ? (
                     <Image
@@ -68,26 +81,37 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                   )}
                   <div className="course-banner-overlay" aria-hidden="true" />
 
-                  {/* Content */}
-                  <div className="relative flex flex-col justify-center min-h-80 max-w-2xl px-8 py-14 md:px-14">
+                  <div className="course-banner-corner" aria-hidden="true">
+                    <span className="size-1.5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.75)]" />
+                    Accesso digitale
+                  </div>
+
+                  <div className="course-banner-content">
+                    <div className="course-banner-kicker">
+                      <span className="text-white">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="h-px w-7 bg-white/30" aria-hidden="true" />
+                      Percorso guidato
+                    </div>
+
                     {purchased && (
-                      <span className="self-start font-mono text-[0.625rem] font-bold tracking-[0.18em] uppercase px-2.5 py-1 rounded-full bg-white text-black mb-5">
+                      <span className="mb-5 self-start rounded-full bg-white px-2.5 py-1 font-mono text-[0.625rem] font-bold uppercase tracking-[0.18em] text-black">
                         Acquistato
                       </span>
                     )}
 
-                    {/* Logo placeholder — swap for the course logo asset when delivered */}
-                    <h3 className="font-display text-[clamp(1.375rem,5.5vw,2.5rem)] font-medium text-white tracking-[-0.02em] leading-[1.1] wrap-break-word mb-4">
+                    <h3 id={titleId} className="course-banner-title">
                       {course.title}
                     </h3>
 
                     {course.description && (
-                      <p className="label-upper leading-5 line-clamp-3 mb-8 text-white/85">
+                      <p className="course-banner-description">
                         {course.description}
                       </p>
                     )}
 
-                    <div className="flex flex-wrap items-center gap-5">
+                    <div className="course-banner-actions">
                       <span className="course-price-tag course-price-tag-invert">
                         €{(course.price / 100).toFixed(0)}
                       </span>
