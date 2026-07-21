@@ -1,6 +1,7 @@
 "use client";
 
 import { createCheckoutSession } from "@/features/courses/checkout";
+import { CourseCoverPlaceholder } from "@/components/course-cover-placeholder";
 import { SubmitButton } from "@/components/submit-button";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { cn } from "@/lib/cn";
@@ -63,7 +64,7 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                       className="object-cover course-banner-img"
                     />
                   ) : (
-                    <div className="absolute inset-0 bg-linear-to-br from-navy via-surface to-navy" />
+                    <CourseCoverPlaceholder />
                   )}
                   <div className="course-banner-overlay" aria-hidden="true" />
 
