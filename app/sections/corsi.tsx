@@ -2,7 +2,10 @@
 
 import { createCheckoutSession } from "@/features/courses/checkout";
 import { SubmitButton } from "@/components/submit-button";
+import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { cn } from "@/lib/cn";
+import coursesDesktop from "@/public/images/home/courses-desktop.jpg";
+import coursesMobile from "@/public/images/home/courses-mobile.jpg";
 import type { CorsiSectionProps } from "@/types/parallax";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,10 +14,25 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
   return (
     <section
       id="corsi"
-      className="parallax-section min-h-dvh bg-canvas flex flex-col items-center justify-center px-6 py-28">
+      className="parallax-section relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-canvas px-6 py-28">
+      <ResponsiveBackgroundImage
+        desktopSrc={coursesDesktop}
+        mobileSrc={coursesMobile}
+        className="absolute inset-0 size-full object-cover object-center"
+      />
+      <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.32) 58%, rgba(0,0,0,0.76) 100%)",
+        }}
+        aria-hidden="true"
+      />
+
       <div
         className={cn(
-          "parallax-content max-w-6xl w-full",
+          "parallax-content relative z-10 w-full max-w-6xl",
           visible.has("corsi") && "visible"
         )}>
         <div className="mb-16">

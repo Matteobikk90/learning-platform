@@ -1,3 +1,6 @@
+import heroDesktop from "@/public/images/home/hero-desktop.jpg";
+import heroMobile from "@/public/images/home/hero-mobile.jpg";
+import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { cn } from "@/lib/cn";
 import type { HeroSectionProps } from "@/types/parallax";
 
@@ -5,10 +8,29 @@ export function Hero({ visible, scrollTo }: HeroSectionProps) {
   return (
     <section
       id="hero"
-      className="parallax-section min-h-dvh bg-navy flex flex-col justify-center px-6 relative">
+      className="parallax-section relative flex min-h-dvh flex-col justify-center overflow-hidden bg-navy px-6">
+      <ResponsiveBackgroundImage
+        desktopSrc={heroDesktop}
+        mobileSrc={heroMobile}
+        priority
+        className="absolute inset-0 size-full object-cover object-center"
+      />
+      <div
+        className="absolute inset-0 bg-black/35"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.78) 100%)",
+        }}
+        aria-hidden="true"
+      />
+
       <div
         className={cn(
-          "parallax-content w-full max-w-6xl mx-auto text-left",
+          "parallax-content relative z-10 mx-auto w-full max-w-6xl text-left",
           visible.has("hero") && "visible"
         )}>
         <span className="label-upper mb-8">Osteopatia, Yoga & Breathwork</span>
@@ -33,7 +55,7 @@ export function Hero({ visible, scrollTo }: HeroSectionProps) {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/25">
+      <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-white/40">
         <span className="font-mono text-[0.625rem] tracking-[0.25em] uppercase">
           Scorri
         </span>

@@ -23,6 +23,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840, 5120, 6000],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
