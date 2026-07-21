@@ -1,6 +1,7 @@
 "use client";
 
 import { createModule } from "@/features/modules/actions";
+import { SubmitButton } from "@/components/submit-button";
 
 type ModuleFormProps = {
   courseId: string;
@@ -28,21 +29,9 @@ export function ModuleForm({ courseId }: ModuleFormProps) {
         />
       </div>
 
-      <div>
-        <label className="form-label">Durata (secondi)</label>
-        <input
-          name="durationSeconds"
-          type="number"
-          min="1"
-          required
-          placeholder="1200"
-          className="form-input"
-        />
-      </div>
-
-      <button type="submit" className="btn-primary">
+      <SubmitButton pendingLabel="Creazione…">
         Crea modulo
-      </button>
+      </SubmitButton>
     </form>
   );
 }

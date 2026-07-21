@@ -9,16 +9,19 @@ export default async function AdminPage() {
     prisma.course.count(),
     prisma.module.count(),
     prisma.user.count(),
-    prisma.purchase.findMany({ select: { course: { select: { price: true } } } }),
+    prisma.purchase.aggregate({
+      _count: { id: true },
+      _sum: { amountTotal: true },
+    }),
   ]);
 
-  const revenue = purchases.reduce((sum, p) => sum + p.course.price, 0);
+  const revenue = purchases._sum.amountTotal ?? 0;
 
   const stats = [
     { label: "Corsi", value: courses },
     { label: "Moduli", value: modules },
     { label: "Utenti", value: users },
-    { label: "Acquisti", value: purchases.length },
+    { label: "Acquisti", value: purchases._count.id },
     {
       label: "Fatturato",
       value: `€${(revenue / 100).toLocaleString("it-IT", { minimumFractionDigits: 2 })}`,

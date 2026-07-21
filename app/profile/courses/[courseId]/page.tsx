@@ -3,7 +3,7 @@ import { getUnlockDate, isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 const unlockDateFormatter = new Intl.DateTimeFormat("it-IT", {
   day: "numeric",
@@ -18,14 +18,8 @@ export default async function ProfileCoursePage({
   const session = await requireAuth();
   const { courseId } = await params;
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-  });
-
-  if (!user) redirect("/login");
-
-  const purchase = await prisma.purchase.findFirst({
-    where: { userId: user.id, courseId },
+  const purchase = await prisma.purchase.findUnique({
+    where: { userId_courseId: { userId: session.user.id, courseId } },
     include: {
       course: {
         include: { modules: { orderBy: { order: "asc" } } },
@@ -39,7 +33,7 @@ export default async function ProfileCoursePage({
 
   const progresses = await prisma.moduleProgress.findMany({
     where: {
-      userId: user.id,
+      userId: session.user.id,
       module: { courseId },
     },
     select: { moduleId: true, completedAt: true },
@@ -85,7 +79,7 @@ export default async function ProfileCoursePage({
               const unlocked =
                 isAdmin ||
                 isModuleUnlocked({
-                  moduleOrder: module.order,
+                  isFirstModule: index === 0,
                   previousCompletedAt: prevCompletedAt,
                 });
 
@@ -124,17 +118,21 @@ export default async function ProfileCoursePage({
                     </p>
                   </div>
 
-                  {unlocked ? (
+                  {unlocked && module.videoPlaybackId ? (
                     <Link
                       href={`/profile/courses/${purchase.course.id}/modules/${module.id}`}
                       className="btn-primary">
                       Guarda
                     </Link>
-                  ) : (
+                  ) : !unlocked ? (
                     <span
                       className="inline-block shrink-0 rounded-md border border-stroke px-5.5 py-2.25 text-[0.7rem] font-semibold tracking-[0.12em] uppercase text-subtle"
                       aria-label="Modulo bloccato">
                       🔒
+                    </span>
+                  ) : (
+                    <span className="text-xs uppercase tracking-widest text-subtle">
+                      In preparazione
                     </span>
                   )}
                 </div>

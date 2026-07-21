@@ -1,5 +1,6 @@
-import { updateCourse } from "@/app/admin/courses/[id]/edit/update-course";
+import { updateCourse } from "@/features/courses/actions";
 import { CourseImageUpload } from "@/components/course-image-upload";
+import { SubmitButton } from "@/components/submit-button";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import Link from "next/link";
@@ -55,11 +56,13 @@ export default async function EditCoursePage({
           </div>
 
           <div>
-            <label className="form-label">Prezzo (centesimi)</label>
+            <label className="form-label">Prezzo (€)</label>
             <input
               type="number"
               name="price"
-              defaultValue={course.price}
+              min="0.50"
+              step="0.01"
+              defaultValue={(course.price / 100).toFixed(2)}
               required
               className="form-input"
             />
@@ -70,9 +73,9 @@ export default async function EditCoursePage({
             <CourseImageUpload defaultUrl={course.coverImageUrl} />
           </div>
 
-          <button type="submit" className="btn-primary">
+          <SubmitButton>
             Salva modifiche
-          </button>
+          </SubmitButton>
         </form>
       </div>
     </main>

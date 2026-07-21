@@ -14,14 +14,10 @@ export default async function ProfileModulePage({
   const session = await requireAuth();
   const { courseId, moduleId } = await params;
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-  });
-
-  if (!user) redirect("/login");
-
-  const purchase = await prisma.purchase.findFirst({
-    where: { userId: user.id, courseId },
+  const purchase = await prisma.purchase.findUnique({
+    where: {
+      userId_courseId: { userId: session.user.id, courseId },
+    },
   });
 
   if (!purchase) notFound();
@@ -46,14 +42,19 @@ export default async function ProfileModulePage({
 
     const prevProgress = prevModule
       ? await prisma.moduleProgress.findUnique({
-          where: { userId_moduleId: { userId: user.id, moduleId: prevModule.id } },
+          where: {
+            userId_moduleId: {
+              userId: session.user.id,
+              moduleId: prevModule.id,
+            },
+          },
           select: { completedAt: true },
         })
       : null;
 
     if (
       !isModuleUnlocked({
-        moduleOrder: courseModule.order,
+        isFirstModule: !prevModule,
         previousCompletedAt: prevProgress?.completedAt,
       })
     ) {
@@ -64,7 +65,7 @@ export default async function ProfileModulePage({
   const progress = await prisma.moduleProgress.findUnique({
     where: {
       userId_moduleId: {
-        userId: user.id,
+        userId: session.user.id,
 
         moduleId: courseModule.id,
       },

@@ -1,45 +1,92 @@
 "use server";
 
-import { createCourseSchema } from "@/features/courses/schema";
+import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { redirect } from "next/navigation";
+
+import {
+  courseFormSchema,
+  updateCourseSchema,
+} from "@/features/courses/schema";
+import { deleteCourseImage, getCourseImagePath } from "@/lib/course-images";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+
+function getCourseFormData(formData: FormData) {
+  return {
+    title: formData.get("title"),
+    description: formData.get("description"),
+    price: formData.get("price"),
+    coverImageUrl: formData.get("coverImageUrl"),
+  };
+}
+
+function revalidateCoursePages() {
+  revalidatePath("/");
+  revalidatePath("/admin/courses");
+  revalidatePath("/profile");
+}
+
+function assertManagedCoverImage(url: string | null) {
+  if (url && !getCourseImagePath(url)) {
+    throw new Error("L’immagine deve essere caricata dalla piattaforma");
+  }
+}
 
 export async function createCourse(formData: FormData) {
   await requireAdmin();
 
-  const rawPrice = formData.get("price") as string;
-  const normalizedPrice = rawPrice.replace(",", ".");
-  const priceNumber = Number(normalizedPrice);
+  const parsed = courseFormSchema.safeParse(getCourseFormData(formData));
 
-  if (Number.isNaN(priceNumber)) {
-    throw new Error("Invalid price");
+  if (!parsed.success) {
+    throw new Error(parsed.error.issues[0]?.message ?? "Dati del corso non validi");
   }
 
-  const parsed = createCourseSchema.safeParse({
-    title: formData.get("title"),
-    description: formData.get("description"),
-    price: rawPrice,
+  assertManagedCoverImage(parsed.data.coverImageUrl);
+
+  await prisma.course.create({ data: parsed.data });
+
+  revalidateCoursePages();
+  redirect("/admin/courses");
+}
+
+export async function updateCourse(formData: FormData) {
+  await requireAdmin();
+
+  const parsed = updateCourseSchema.safeParse({
+    id: formData.get("id"),
+    ...getCourseFormData(formData),
   });
 
   if (!parsed.success) {
-    throw new Error("Invalid course data");
+    throw new Error(parsed.error.issues[0]?.message ?? "Dati del corso non validi");
   }
 
-  const priceInCents = Math.round(priceNumber * 100);
+  assertManagedCoverImage(parsed.data.coverImageUrl);
 
-  const coverImageUrl = formData.get("coverImageUrl");
+  const existingCourse = await prisma.course.findUnique({
+    where: { id: parsed.data.id },
+    select: { coverImageUrl: true },
+  });
 
-  await prisma.course.create({
+  if (!existingCourse) {
+    throw new Error("Corso non trovato");
+  }
+
+  await prisma.course.update({
+    where: { id: parsed.data.id },
     data: {
       title: parsed.data.title,
-      description: parsed.data.description || null,
-      price: priceInCents,
-      coverImageUrl: coverImageUrl ? String(coverImageUrl) : null,
+      description: parsed.data.description,
+      price: parsed.data.price,
+      coverImageUrl: parsed.data.coverImageUrl,
     },
   });
 
-  revalidatePath("/admin/courses");
+  if (existingCourse.coverImageUrl !== parsed.data.coverImageUrl) {
+    after(() => deleteCourseImage(existingCourse.coverImageUrl));
+  }
+
+  revalidateCoursePages();
   redirect("/admin/courses");
 }

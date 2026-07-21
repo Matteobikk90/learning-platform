@@ -1,12 +1,14 @@
 import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { cache } from "react";
+
+export const getAppSession = cache(() => getServerSession(authOptions));
 
 export async function requireAuth() {
-  const session = await getServerSession(authOptions);
+  const session = await getAppSession();
 
-  if (!session?.user?.email) {
+  if (!session?.user?.id || !session.user.email) {
     redirect("/login");
   }
 
@@ -23,16 +25,7 @@ export async function requireAdmin() {
   return session;
 }
 
-export async function getCurrentUser() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user?.email) {
-    return null;
-  }
-
-  return prisma.user.findUnique({
-    where: {
-      email: session.user.email,
-    },
-  });
+export async function getApiAdmin() {
+  const session = await getAppSession();
+  return session?.user?.role === "ADMIN" ? session.user : null;
 }

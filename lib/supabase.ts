@@ -1,12 +1,20 @@
 import { createClient } from "@supabase/supabase-js";
 
+import { requireEnv } from "@/lib/env";
+
+let supabaseAdmin: ReturnType<typeof createClient> | undefined;
+
 export function getSupabaseAdmin() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  supabaseAdmin ??= createClient(
+    requireEnv("SUPABASE_URL"),
+    requireEnv("SUPABASE_SERVICE_ROLE_KEY"),
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
 
-  if (!url || !key) {
-    throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set");
-  }
-
-  return createClient(url, key);
+  return supabaseAdmin;
 }

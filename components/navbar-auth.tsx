@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export function NavbarAuth() {
   const pathname = usePathname();
@@ -13,16 +13,24 @@ export function NavbarAuth() {
   if (session) {
     return (
       <>
+        {session.user.role === "ADMIN" && (
+          <Link
+            href="/admin"
+            className="nav-link text-muted no-underline">
+            Admin
+          </Link>
+        )}
         <Link
           href="/profile"
           className="nav-link text-muted no-underline">
           I miei corsi
         </Link>
-        <Link
-          href="/api/auth/signout"
-          className="nav-link text-subtle no-underline">
+        <button
+          type="button"
+          onClick={() => signOut({ callbackUrl: "/" })}
+          className="nav-link cursor-pointer border-0 bg-transparent p-0 text-subtle">
           Esci
-        </Link>
+        </button>
       </>
     );
   }

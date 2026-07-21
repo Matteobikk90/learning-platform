@@ -9,7 +9,7 @@ export default async function CoursesPage() {
   const session = await requireAuth();
 
   const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
+    where: { id: session.user.id },
     include: {
       purchases: {
         include: {
@@ -17,7 +17,12 @@ export default async function CoursesPage() {
             include: {
               modules: {
                 orderBy: { order: "asc" },
-                include: { progress: true },
+                include: {
+                  progress: {
+                    where: { userId: session.user.id },
+                    select: { completedAt: true },
+                  },
+                },
               },
             },
           },

@@ -1,4 +1,5 @@
 import { formatDuration } from "@/lib/format-duration";
+import { getVideoStatusLabel } from "@/features/modules/video-state";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import Link from "next/link";
@@ -52,13 +53,11 @@ export default async function ModulesPage({ params }: ModulesPageProps) {
                   <h2 className="list-row-title">{module.title}</h2>
                 </div>
                 <p className="text-sm text-muted">
-                  {formatDuration(module.durationSeconds)}
+                  {module.durationSeconds > 0
+                    ? formatDuration(module.durationSeconds)
+                    : "Durata da rilevare"}
                   {" · "}
-                  {module.videoPlaybackId
-                    ? "Video pronto"
-                    : module.muxUploadId
-                    ? "Video in elaborazione"
-                    : "Nessun video caricato"}
+                  {getVideoStatusLabel(module)}
                 </p>
               </div>
               <Link

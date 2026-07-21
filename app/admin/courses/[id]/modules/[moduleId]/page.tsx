@@ -1,7 +1,12 @@
 import { DeleteModuleButton } from "@/components/delete-module-button";
 import { VideoPlayer } from "@/components/video-player";
 import { VideoUpload } from "@/components/video-upload";
+import { SubmitButton } from "@/components/submit-button";
 import { updateModule } from "@/features/modules/actions";
+import {
+  getVideoState,
+  getVideoStatusLabel,
+} from "@/features/modules/video-state";
 import { formatDuration } from "@/lib/format-duration";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
@@ -24,11 +29,8 @@ export default async function ModuleDetailPage({
 
   if (!courseModule || courseModule.courseId !== id) notFound();
 
-  const videoStatus = courseModule.videoPlaybackId
-    ? "Video pronto"
-    : courseModule.muxUploadId
-    ? "Video in elaborazione"
-    : "Nessun video caricato";
+  const videoState = getVideoState(courseModule);
+  const videoStatus = getVideoStatusLabel(courseModule);
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-14">
@@ -44,7 +46,9 @@ export default async function ModuleDetailPage({
         </span>
         <h1 className="page-title">{courseModule.title}</h1>
         <p className="text-sm text-muted">
-          Durata: {formatDuration(courseModule.durationSeconds)}
+          Durata: {courseModule.durationSeconds > 0
+            ? formatDuration(courseModule.durationSeconds)
+            : "da rilevare dal video"}
           {" · "}
           {videoStatus}
         </p>
@@ -56,7 +60,6 @@ export default async function ModuleDetailPage({
           <span className="label-upper">Dettagli</span>
           <form action={updateModule} className="mt-4 space-y-5">
             <input type="hidden" name="moduleId" value={courseModule.id} />
-            <input type="hidden" name="courseId" value={courseModule.courseId} />
             <div>
               <label className="form-label">Titolo</label>
               <input name="title" required defaultValue={courseModule.title} className="form-input" />
@@ -68,10 +71,13 @@ export default async function ModuleDetailPage({
               </div>
               <div className="flex-1">
                 <label className="form-label">Durata (secondi)</label>
-                <input name="durationSeconds" type="number" min="1" required defaultValue={courseModule.durationSeconds} className="form-input" />
+                <input name="durationSeconds" type="number" min="0" required defaultValue={courseModule.durationSeconds} className="form-input" />
+                <p className="mt-2 text-xs text-subtle">
+                  Viene aggiornata automaticamente quando Mux prepara il video.
+                </p>
               </div>
             </div>
-            <button type="submit" className="btn-primary">Salva</button>
+            <SubmitButton>Salva</SubmitButton>
           </form>
         </div>
 
@@ -91,7 +97,11 @@ export default async function ModuleDetailPage({
                 <p className="text-sm text-muted mb-4">
                   Sostituisci il video corrente con uno nuovo.
                 </p>
-                <VideoUpload moduleId={courseModule.id} />
+                <VideoUpload
+                  moduleId={courseModule.id}
+                  initialStatus={videoState}
+                  initialError={courseModule.videoError}
+                />
               </div>
             </>
           ) : (
@@ -99,13 +109,11 @@ export default async function ModuleDetailPage({
               <p className="text-sm text-muted mb-4">
                 Carica un video per questo modulo.
               </p>
-              <VideoUpload moduleId={courseModule.id} />
-              {courseModule.muxUploadId && (
-                <p className="mt-3 text-sm text-subtle">
-                  Il video è in elaborazione. Aggiorna la pagina tra qualche
-                  secondo.
-                </p>
-              )}
+              <VideoUpload
+                moduleId={courseModule.id}
+                initialStatus={videoState}
+                initialError={courseModule.videoError}
+              />
             </div>
           )}
         </div>
@@ -119,7 +127,6 @@ export default async function ModuleDetailPage({
           </p>
           <DeleteModuleButton
             moduleId={courseModule.id}
-            courseId={courseModule.courseId}
           />
         </div>
       </div>

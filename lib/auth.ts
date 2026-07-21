@@ -4,7 +4,23 @@ import type { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { requireEnv } from "@/lib/env";
+
+let resendClient: Resend | undefined;
+
+function getResend() {
+  resendClient ??= new Resend(requireEnv("RESEND_API_KEY"));
+  return resendClient;
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -12,15 +28,21 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       from: process.env.EMAIL_FROM,
       async sendVerificationRequest({ identifier, url }) {
-        await resend.emails.send({
-          from: process.env.EMAIL_FROM!,
+        const from = requireEnv("EMAIL_FROM");
+        const { error } = await getResend().emails.send({
+          from,
           to: identifier,
-          subject: "Sign in to Learning Platform",
+          subject: "Accedi alla piattaforma",
+          text: `Apri questo link per accedere: ${url}`,
           html: `
-            <p>Click the link below to sign in:</p>
-            <p><a href="${url}">Sign in</a></p>
+            <p>Apri il link qui sotto per accedere:</p>
+            <p><a href="${escapeHtml(url)}">Accedi alla piattaforma</a></p>
           `,
         });
+
+        if (error) {
+          throw new Error(`Unable to send verification email: ${error.message}`);
+        }
       },
     }),
   ],

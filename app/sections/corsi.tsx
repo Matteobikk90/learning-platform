@@ -1,6 +1,7 @@
 "use client";
 
 import { createCheckoutSession } from "@/features/courses/checkout";
+import { SubmitButton } from "@/components/submit-button";
 import { cn } from "@/lib/cn";
 import type { CorsiSectionProps } from "@/types/parallax";
 import Image from "next/image";
@@ -81,9 +82,9 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                       ) : (
                         <form
                           action={createCheckoutSession.bind(null, course.id)}>
-                          <button type="submit" className="btn-primary">
+                          <SubmitButton pendingLabel="Apertura checkout…">
                             Acquista il corso
-                          </button>
+                          </SubmitButton>
                         </form>
                       )}
                     </div>

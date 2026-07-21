@@ -24,9 +24,9 @@ export function ModuleProgressPlayer({
   const resumeTime = initialTime >= completionThreshold ? 0 : initialTime;
   const lastSavedTime = useRef(resumeTime);
 
-  async function saveProgress(currentTime: number, forceComplete = false) {
+  async function saveProgress(currentTime: number) {
     try {
-      await saveModuleProgress(moduleId, currentTime, forceComplete);
+      await saveModuleProgress(moduleId, currentTime);
     } catch (error) {
       console.error("Failed to save progress", error);
     }
@@ -48,7 +48,7 @@ export function ModuleProgressPlayer({
         saveProgress(currentTime);
       }}
       onEnded={(duration) => {
-        saveProgress(duration, true);
+        saveProgress(duration);
       }}
     />
   );

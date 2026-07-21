@@ -36,21 +36,28 @@ model Module {
   title           String
   order           Int
   videoPlaybackId String?
-  muxUploadId     String?
+  muxUploadId     String?          @unique
   muxAssetId      String?
+  videoError      String?
   durationSeconds Int
   courseId        String
-  course          Course           @relation(fields: [courseId], references: [id])
+  course          Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   progress        ModuleProgress[]
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([courseId, order])
 }
 
 model Purchase {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  courseId  String
-  course    Course   @relation(fields: [courseId], references: [id])
+  id                      String   @id @default(cuid())
+  createdAt               DateTime @default(now())
+  userId                  String
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId                String
+  course                  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  stripeCheckoutSessionId String?  @unique
+  amountTotal             Int?
+  currency                String?
 
   @@unique([userId, courseId])
 }
@@ -60,9 +67,9 @@ model ModuleProgress {
   progressSeconds Int
   completedAt     DateTime?
   userId          String
-  user            User      @relation(fields: [userId], references: [id])
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   moduleId        String
-  module          Module    @relation(fields: [moduleId], references: [id])
+  module          Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
   @@unique([userId, moduleId])
 }

@@ -1,4 +1,5 @@
 import { CourseImageUpload } from "@/components/course-image-upload";
+import { SubmitButton } from "@/components/submit-button";
 import { createCourse } from "@/features/courses/actions";
 import { requireAdmin } from "@/lib/session";
 import Link from "next/link";
@@ -47,9 +48,9 @@ export default async function NewCoursePage() {
             <label className="form-label">Immagine di copertina</label>
             <CourseImageUpload />
           </div>
-          <button type="submit" className="btn-primary">
+          <SubmitButton pendingLabel="Creazione…">
             Crea corso
-          </button>
+          </SubmitButton>
         </form>
       </div>
     </main>

@@ -1,51 +1,71 @@
+import { randomUUID } from "node:crypto";
+
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { requireAdmin } from "@/lib/session";
+import { getApiAdmin } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
-  try {
-    await requireAdmin();
-  } catch {
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const EXTENSIONS_BY_MIME_TYPE: Record<string, string> = {
+  "image/avif": "avif",
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+};
+
+export async function POST(request: NextRequest) {
+  const admin = await getApiAdmin();
+
+  if (!admin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const formData = await req.formData();
-  const file = formData.get("file") as File | null;
+  const formData = await request.formData();
+  const file = formData.get("file");
 
-  if (!file) {
-    return NextResponse.json({ error: "No file provided" }, { status: 400 });
+  if (!(file instanceof File)) {
+    return NextResponse.json({ error: "Nessun file selezionato" }, { status: 400 });
   }
 
-  if (!file.type.startsWith("image/")) {
-    return NextResponse.json({ error: "File must be an image" }, { status: 400 });
+  const extension = EXTENSIONS_BY_MIME_TYPE[file.type];
+
+  if (!extension) {
+    return NextResponse.json(
+      { error: "Sono supportati soltanto JPG, PNG, WebP e AVIF" },
+      { status: 400 }
+    );
   }
 
-  if (file.size > 5 * 1024 * 1024) {
-    return NextResponse.json({ error: "File must be under 5 MB" }, { status: 400 });
+  if (file.size > MAX_FILE_SIZE) {
+    return NextResponse.json(
+      { error: "L’immagine deve pesare meno di 5 MB" },
+      { status: 400 }
+    );
   }
 
-  const ext = file.name.split(".").pop() ?? "jpg";
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-
-  let supabase;
-  try {
-    supabase = getSupabaseAdmin();
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Storage not configured";
-    console.error("[upload-image]", msg);
-    return NextResponse.json({ error: msg }, { status: 500 });
-  }
-
+  const filename = `${randomUUID()}.${extension}`;
+  const supabase = getSupabaseAdmin();
   const { error } = await supabase.storage
     .from("course-images")
-    .upload(filename, file, { contentType: file.type, upsert: false });
+    .upload(filename, file, {
+      cacheControl: "31536000",
+      contentType: file.type,
+      upsert: false,
+    });
 
   if (error) {
-    console.error("[upload-image] Supabase storage error:", error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("[course-images] Upload failed", {
+      filename,
+      message: error.message,
+    });
+    return NextResponse.json(
+      { error: "Impossibile caricare l’immagine" },
+      { status: 500 }
+    );
   }
 
-  const { data } = supabase.storage.from("course-images").getPublicUrl(filename);
+  const { data } = supabase.storage
+    .from("course-images")
+    .getPublicUrl(filename);
 
   return NextResponse.json({ url: data.publicUrl });
 }

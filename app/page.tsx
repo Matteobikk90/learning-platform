@@ -1,12 +1,12 @@
 import { Parallax } from "@/components/parallax";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/session";
+import { getAppSession } from "@/lib/session";
 
 export default async function Home() {
-  const user = await getCurrentUser();
-
-  const [courses, purchases] = await Promise.all([
+  const [session, courses] = await Promise.all([
+    getAppSession(),
     prisma.course.findMany({
+      orderBy: { createdAt: "desc" },
       select: {
         id: true,
         title: true,
@@ -15,13 +15,14 @@ export default async function Home() {
         coverImageUrl: true,
       },
     }),
-    user
-      ? prisma.purchase.findMany({
-          where: { userId: user.id },
-          select: { courseId: true },
-        })
-      : Promise.resolve([]),
   ]);
+
+  const purchases = session?.user.id
+    ? await prisma.purchase.findMany({
+        where: { userId: session.user.id },
+        select: { courseId: true },
+      })
+    : [];
 
   return (
     <Parallax

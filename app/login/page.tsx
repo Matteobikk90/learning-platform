@@ -5,14 +5,24 @@ import { useState } from "react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    await signIn("email", {
-      email,
-      callbackUrl: "/profile",
-    });
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      await signIn("email", {
+        email: email.trim(),
+        callbackUrl: "/profile",
+      });
+    } catch {
+      setError("Non è stato possibile inviare il link. Riprova tra poco.");
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -36,6 +46,7 @@ export default function LoginPage() {
               name="email"
               type="email"
               required
+              disabled={submitting}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="tu@esempio.com"
@@ -43,9 +54,18 @@ export default function LoginPage() {
             />
           </div>
 
-          <button type="submit" className="btn-primary w-full">
-            Invia link magico
+          <button
+            type="submit"
+            disabled={submitting}
+            className="btn-primary w-full disabled:cursor-wait disabled:opacity-60">
+            {submitting ? "Invio in corso…" : "Invia link magico"}
           </button>
+
+          {error && (
+            <p className="text-sm text-danger" role="alert">
+              {error}
+            </p>
+          )}
         </form>
       </div>
     </main>

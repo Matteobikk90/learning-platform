@@ -1,49 +1,37 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
+import { getAppUrl } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
-import { stripe } from "@/lib/stripe";
-import { redirect } from "next/navigation";
+import { getStripe } from "@/lib/stripe";
 
 export async function createCheckoutSession(courseId: string) {
   const session = await requireAuth();
+  const userId = session.user.id;
 
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session.user.email!,
-    },
-  });
+  const [user, course, existingPurchase] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true },
+    }),
+    prisma.course.findUnique({ where: { id: courseId } }),
+    prisma.purchase.findUnique({
+      where: { userId_courseId: { userId, courseId } },
+      select: { id: true },
+    }),
+  ]);
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
+  if (!course) throw new Error("Corso non trovato");
+  if (existingPurchase) redirect(`/profile/courses/${course.id}`);
 
-  const course = await prisma.course.findUnique({
-    where: {
-      id: courseId,
-    },
-  });
-
-  if (!course) {
-    throw new Error("Course not found");
-  }
-
-  const existingPurchase = await prisma.purchase.findUnique({
-    where: {
-      userId_courseId: {
-        userId: user.id,
-
-        courseId: course.id,
-      },
-    },
-  });
-
-  if (existingPurchase) {
-    redirect(`/profile/courses/${course.id}`);
-  }
-
-  const checkoutSession = await stripe.checkout.sessions.create({
+  const appUrl = getAppUrl();
+  const checkoutSession = await getStripe().checkout.sessions.create({
     mode: "payment",
+    locale: "it",
+    client_reference_id: userId,
     customer_email: user.email,
     line_items: [
       {
@@ -51,23 +39,20 @@ export async function createCheckoutSession(courseId: string) {
           currency: "eur",
           product_data: {
             name: course.title,
-            description: course.description ?? undefined,
+            description: course.description?.slice(0, 500) || undefined,
           },
           unit_amount: course.price,
         },
         quantity: 1,
       },
     ],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?courseId=${course.id}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/cancel`,
-    metadata: {
-      userId: user.id,
-      courseId: course.id,
-    },
+    success_url: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${appUrl}/checkout/cancel`,
+    metadata: { userId, courseId: course.id },
   });
 
   if (!checkoutSession.url) {
-    throw new Error("Checkout session URL not created");
+    throw new Error("Stripe non ha restituito l’indirizzo del checkout");
   }
 
   redirect(checkoutSession.url);

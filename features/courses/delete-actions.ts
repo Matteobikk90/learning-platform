@@ -1,25 +1,49 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { redirect } from "next/navigation";
+
+import { deleteCourseImage } from "@/lib/course-images";
+import { deleteMuxAsset, deletePendingMuxUpload } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
-import { redirect } from "next/navigation";
 
 export async function deleteCourse(formData: FormData) {
   await requireAdmin();
 
-  const courseId = String(formData.get("courseId"));
+  const courseId = String(formData.get("courseId") ?? "");
 
-  const modules = await prisma.module.findMany({
-    where: { courseId },
-    select: { id: true },
+  if (!courseId) {
+    throw new Error("Corso non valido");
+  }
+
+  const course = await prisma.course.findUnique({
+    where: { id: courseId },
+    select: {
+      coverImageUrl: true,
+      modules: { select: { muxAssetId: true, muxUploadId: true } },
+    },
   });
 
-  const moduleIds = modules.map((m) => m.id);
+  if (!course) {
+    redirect("/admin/courses");
+  }
 
-  await prisma.moduleProgress.deleteMany({ where: { moduleId: { in: moduleIds } } });
-  await prisma.module.deleteMany({ where: { courseId } });
-  await prisma.purchase.deleteMany({ where: { courseId } });
   await prisma.course.delete({ where: { id: courseId } });
 
+  after(async () => {
+    await Promise.all([
+      deleteCourseImage(course.coverImageUrl),
+      ...course.modules.map((module) => deleteMuxAsset(module.muxAssetId)),
+      ...course.modules.map((module) =>
+        deletePendingMuxUpload(module.muxUploadId)
+      ),
+    ]);
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin/courses");
+  revalidatePath("/profile");
   redirect("/admin/courses");
 }
