@@ -19,8 +19,12 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Umberto Iglina",
-  description: "La tua piattaforma di apprendimento personalizzata",
+  title: {
+    default: "Umberto Iglina",
+    template: "%s | Umberto Iglina",
+  },
+  description:
+    "Percorsi guidati di respiro, movimento e consapevolezza con Umberto Iglina.",
 };
 
 export default function RootLayout({

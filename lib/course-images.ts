@@ -1,3 +1,5 @@
+import "server-only";
+
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { requireEnv } from "@/lib/env";
 

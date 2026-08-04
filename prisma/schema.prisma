@@ -32,20 +32,31 @@ model Course {
 }
 
 model Module {
-  id              String           @id @default(cuid())
-  title           String
-  order           Int
-  videoPlaybackId String?
-  muxUploadId     String?          @unique
-  muxAssetId      String?
-  videoError      String?
-  durationSeconds Int
-  courseId        String
-  course          Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  progress        ModuleProgress[]
-  updatedAt       DateTime         @updatedAt
+  id                  String            @id @default(cuid())
+  title               String
+  order               Int
+  videoPlaybackId     String?
+  videoPlaybackPolicy MuxPlaybackPolicy @default(PUBLIC)
+  muxUploadId         String?           @unique
+  muxAssetId          String?
+  videoError          String?
+  durationSeconds     Int
+  courseId            String
+  course              Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  chapters            ModuleChapter[]
+  progress            ModuleProgress[]
+  updatedAt           DateTime          @updatedAt
 
   @@unique([courseId, order])
+}
+
+model ModuleChapter {
+  id        String   @id @default(cuid())
+  title     String
+  startTime Int
+  moduleId  String
+  createdAt DateTime @default(now())
+  module    Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 }
 
 model Purchase {
@@ -65,6 +76,7 @@ model Purchase {
 model ModuleProgress {
   id              String    @id @default(cuid())
   progressSeconds Int
+  watchedSeconds  Int       @default(0)
   completedAt     DateTime?
   userId          String
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -72,6 +84,15 @@ model ModuleProgress {
   module          Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
   @@unique([userId, moduleId])
+}
+
+model RateLimitBucket {
+  key       String   @id
+  count     Int
+  resetAt   DateTime
+  updatedAt DateTime @updatedAt
+
+  @@index([resetAt])
 }
 
 model Account {
@@ -111,4 +132,9 @@ model VerificationToken {
 enum UserRole {
   USER
   ADMIN
+}
+
+enum MuxPlaybackPolicy {
+  PUBLIC
+  SIGNED
 }

@@ -1,3 +1,5 @@
+import "server-only";
+
 import Stripe from "stripe";
 
 import { requireEnv } from "@/lib/env";

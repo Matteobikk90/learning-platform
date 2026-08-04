@@ -1,20 +1,38 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
+import { MAX_WATCHED_DELTA_SECONDS } from "@/features/modules/progress-constants";
 import { isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
 
+const progressSchema = z.object({
+  moduleId: z.string().min(1).max(128),
+  progressSeconds: z.number().finite().nonnegative(),
+  watchedDeltaSeconds: z
+    .number()
+    .finite()
+    .nonnegative()
+    .max(MAX_WATCHED_DELTA_SECONDS),
+});
+
 export async function saveModuleProgress(
   moduleId: string,
-  progressSeconds: number
+  progressSeconds: number,
+  watchedDeltaSeconds: number
 ) {
+  const input = progressSchema.parse({
+    moduleId,
+    progressSeconds,
+    watchedDeltaSeconds,
+  });
   const session = await requireAuth();
   const userId = session.user.id;
 
   const courseModule = await prisma.module.findUnique({
-    where: { id: moduleId },
+    where: { id: input.moduleId },
     select: {
       id: true,
       courseId: true,
@@ -67,7 +85,11 @@ export async function saveModuleProgress(
 
   const safeProgressSeconds = Math.min(
     courseModule.durationSeconds,
-    Math.max(0, Math.floor(progressSeconds))
+    Math.max(0, Math.floor(input.progressSeconds))
+  );
+  const safeWatchedDelta = Math.min(
+    courseModule.durationSeconds,
+    Math.floor(input.watchedDeltaSeconds)
   );
   const completionThreshold = Math.ceil(courseModule.durationSeconds * 0.9);
 
@@ -78,24 +100,27 @@ export async function saveModuleProgress(
       userId,
       moduleId,
       progressSeconds: safeProgressSeconds,
+      watchedSeconds: 0,
     },
   });
 
-  await prisma.moduleProgress.updateMany({
-    where: {
-      userId,
-      moduleId,
-      progressSeconds: { lt: safeProgressSeconds },
-    },
-    data: { progressSeconds: safeProgressSeconds },
-  });
+  await prisma.$executeRaw`
+    UPDATE "ModuleProgress"
+    SET
+      "progressSeconds" = GREATEST("progressSeconds", ${safeProgressSeconds}),
+      "watchedSeconds" = LEAST(
+        ${courseModule.durationSeconds},
+        "watchedSeconds" + ${safeWatchedDelta}
+      )
+    WHERE "userId" = ${userId} AND "moduleId" = ${input.moduleId}
+  `;
 
   const completion = await prisma.moduleProgress.updateMany({
     where: {
       userId,
       moduleId,
       completedAt: null,
-      progressSeconds: { gte: completionThreshold },
+      watchedSeconds: { gte: completionThreshold },
     },
     data: { completedAt: new Date() },
   });

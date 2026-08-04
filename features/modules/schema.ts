@@ -6,12 +6,12 @@ const moduleFields = {
 };
 
 export const createModuleSchema = z.object({
-  courseId: z.string().min(1, "Corso non valido"),
+  courseId: z.string().min(1, "Corso non valido").max(128, "Corso non valido"),
   ...moduleFields,
 });
 
 export const updateModuleSchema = z.object({
-  moduleId: z.string().min(1, "Modulo non valido"),
+  moduleId: z.string().min(1, "Modulo non valido").max(128, "Modulo non valido"),
   ...moduleFields,
   durationSeconds: z.coerce
     .number()

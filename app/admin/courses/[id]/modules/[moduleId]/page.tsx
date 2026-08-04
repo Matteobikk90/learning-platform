@@ -8,6 +8,7 @@ import {
   getVideoStatusLabel,
 } from "@/features/modules/video-state";
 import { formatDuration } from "@/lib/format-duration";
+import { createPlaybackTokens } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import Link from "next/link";
@@ -31,6 +32,13 @@ export default async function ModuleDetailPage({
 
   const videoState = getVideoState(courseModule);
   const videoStatus = getVideoStatusLabel(courseModule);
+  const playbackTokens = courseModule.videoPlaybackId
+    ? await createPlaybackTokens(
+        courseModule.videoPlaybackId,
+        courseModule.videoPlaybackPolicy,
+        courseModule.durationSeconds
+      )
+    : undefined;
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-14">
@@ -61,17 +69,17 @@ export default async function ModuleDetailPage({
           <form action={updateModule} className="mt-4 space-y-5">
             <input type="hidden" name="moduleId" value={courseModule.id} />
             <div>
-              <label className="form-label">Titolo</label>
-              <input name="title" required defaultValue={courseModule.title} className="form-input" />
+              <label htmlFor="module-title" className="form-label">Titolo</label>
+              <input id="module-title" name="title" required maxLength={160} defaultValue={courseModule.title} className="form-input" />
             </div>
             <div className="flex gap-4">
               <div className="flex-1">
-                <label className="form-label">Ordine</label>
-                <input name="order" type="number" min="1" required defaultValue={courseModule.order} className="form-input" />
+                <label htmlFor="module-order" className="form-label">Ordine</label>
+                <input id="module-order" name="order" type="number" min="1" required defaultValue={courseModule.order} className="form-input" />
               </div>
               <div className="flex-1">
-                <label className="form-label">Durata (secondi)</label>
-                <input name="durationSeconds" type="number" min="0" required defaultValue={courseModule.durationSeconds} className="form-input" />
+                <label htmlFor="module-duration" className="form-label">Durata (secondi)</label>
+                <input id="module-duration" name="durationSeconds" type="number" min="0" max={60 * 60 * 12} required defaultValue={courseModule.durationSeconds} className="form-input" />
                 <p className="mt-2 text-xs text-subtle">
                   Viene aggiornata automaticamente quando Mux prepara il video.
                 </p>
@@ -90,6 +98,7 @@ export default async function ModuleDetailPage({
               <div className="mt-4">
                 <VideoPlayer
                   playbackId={courseModule.videoPlaybackId}
+                  playbackTokens={playbackTokens}
                   title={courseModule.title}
                 />
               </div>

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Prisma } from "@prisma/client";
 
 import {
   createModuleSchema,
@@ -18,6 +19,17 @@ function revalidateModulePages(courseId: string, moduleId?: string) {
     revalidatePath(`/admin/courses/${courseId}/modules/${moduleId}`);
     revalidatePath(`/profile/courses/${courseId}/modules/${moduleId}`);
   }
+}
+
+function throwFriendlyModuleError(error: unknown): never {
+  if (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2002"
+  ) {
+    throw new Error("Esiste già un modulo con questo ordine");
+  }
+
+  throw error;
 }
 
 export async function createModule(formData: FormData) {
@@ -50,15 +62,17 @@ export async function createModule(formData: FormData) {
   if (!course) throw new Error("Corso non trovato");
   if (duplicateOrder) throw new Error("Esiste già un modulo con questo ordine");
 
-  const courseModule = await prisma.module.create({
-    data: {
-      courseId: parsed.data.courseId,
-      title: parsed.data.title,
-      order: parsed.data.order,
-      durationSeconds: 0,
-    },
-    select: { id: true },
-  });
+  const courseModule = await prisma.module
+    .create({
+      data: {
+        courseId: parsed.data.courseId,
+        title: parsed.data.title,
+        order: parsed.data.order,
+        durationSeconds: 0,
+      },
+      select: { id: true },
+    })
+    .catch(throwFriendlyModuleError);
 
   revalidateModulePages(parsed.data.courseId, courseModule.id);
   redirect(
@@ -98,14 +112,16 @@ export async function updateModule(formData: FormData) {
 
   if (duplicateOrder) throw new Error("Esiste già un modulo con questo ordine");
 
-  await prisma.module.update({
-    where: { id: parsed.data.moduleId },
-    data: {
-      title: parsed.data.title,
-      order: parsed.data.order,
-      durationSeconds: parsed.data.durationSeconds,
-    },
-  });
+  await prisma.module
+    .update({
+      where: { id: parsed.data.moduleId },
+      data: {
+        title: parsed.data.title,
+        order: parsed.data.order,
+        durationSeconds: parsed.data.durationSeconds,
+      },
+    })
+    .catch(throwFriendlyModuleError);
 
   revalidateModulePages(courseModule.courseId, parsed.data.moduleId);
   redirect(

@@ -2,27 +2,34 @@
 
 import MuxPlayer from "@mux/mux-player-react";
 
+import type { MuxPlaybackTokens } from "@/lib/mux";
+
 type VideoPlayerProps = {
   playbackId: string;
+  playbackTokens?: MuxPlaybackTokens;
   title: string;
   initialTime?: number;
   onTimeUpdate?: (currentTime: number) => void;
   onEnded?: (duration: number) => void;
   onSeeked?: (currentTime: number) => void;
+  onPause?: (currentTime: number) => void;
 };
 
 export function VideoPlayer({
   playbackId,
+  playbackTokens,
   title,
   initialTime = 0,
   onTimeUpdate,
   onEnded,
   onSeeked,
+  onPause,
 }: VideoPlayerProps) {
   return (
     <div className="mt-4 flex overflow-hidden rounded-lg">
       <MuxPlayer
         playbackId={playbackId}
+        tokens={playbackTokens}
         startTime={initialTime}
         metadata={{
           video_title: title,
@@ -38,6 +45,10 @@ export function VideoPlayer({
         onSeeked={(event) => {
           const player = event.currentTarget as HTMLVideoElement;
           onSeeked?.(Math.floor(player.currentTime));
+        }}
+        onPause={(event) => {
+          const player = event.currentTarget as HTMLVideoElement;
+          onPause?.(Math.floor(player.currentTime));
         }}
         className="aspect-video w-full"
         accentColor="#ffffff"

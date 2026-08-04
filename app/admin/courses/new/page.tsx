@@ -21,23 +21,25 @@ export default async function NewCoursePage() {
       <div className="card p-8">
         <form action={createCourse} className="space-y-6">
           <div>
-            <label className="form-label">Titolo</label>
-            <input name="title" required className="form-input" />
+            <label htmlFor="course-title" className="form-label">Titolo</label>
+            <input id="course-title" name="title" required maxLength={120} className="form-input" />
           </div>
           <div>
-            <label className="form-label">Descrizione</label>
+            <label htmlFor="course-description" className="form-label">Descrizione</label>
             <textarea
+              id="course-description"
               name="description"
               rows={4}
               className="form-input"
             />
           </div>
           <div>
-            <label className="form-label">Prezzo (€)</label>
+            <label htmlFor="course-price" className="form-label">Prezzo (€)</label>
             <input
+              id="course-price"
               name="price"
               type="number"
-              min="0"
+              min="0.50"
               step="0.01"
               required
               placeholder="49.99"
@@ -45,7 +47,7 @@ export default async function NewCoursePage() {
             />
           </div>
           <div>
-            <label className="form-label">Immagine di copertina</label>
+            <span className="form-label">Immagine di copertina</span>
             <CourseImageUpload />
           </div>
           <SubmitButton pendingLabel="Creazione…">

@@ -2,6 +2,7 @@ import { ModuleProgressPlayer } from "@/components/module-progress-layer";
 import { formatDuration } from "@/lib/format-duration";
 import { isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
+import { createPlaybackTokens } from "@/lib/mux";
 import { requireAuth } from "@/lib/session";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -72,6 +73,14 @@ export default async function ProfileModulePage({
     },
   });
 
+  const playbackTokens = courseModule.videoPlaybackId
+    ? await createPlaybackTokens(
+        courseModule.videoPlaybackId,
+        courseModule.videoPlaybackPolicy,
+        courseModule.durationSeconds
+      )
+    : undefined;
+
   return (
     <main className="mx-auto max-w-5xl px-6 py-14">
       <Link href={`/profile/courses/${courseId}`} className="back-link">
@@ -93,10 +102,11 @@ export default async function ProfileModulePage({
           <div className="card">
             <ModuleProgressPlayer
               playbackId={courseModule.videoPlaybackId}
+              playbackTokens={playbackTokens}
               title={courseModule.title}
               moduleId={courseModule.id}
-              durationSeconds={courseModule.durationSeconds}
               initialTime={progress?.progressSeconds ?? 0}
+              isCompleted={Boolean(progress?.completedAt)}
             />
           </div>
         ) : (

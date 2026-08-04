@@ -15,10 +15,23 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      await signIn("email", {
+      const result = await signIn("email", {
         email: email.trim(),
         callbackUrl: "/profile",
+        redirect: false,
       });
+
+      if (!result?.ok) {
+        setError(
+          result?.status === 429
+            ? "Hai richiesto troppi link. Attendi qualche minuto e riprova."
+            : "Non è stato possibile inviare il link. Riprova tra poco."
+        );
+        setSubmitting(false);
+        return;
+      }
+
+      if (result.url) window.location.assign(result.url);
     } catch {
       setError("Non è stato possibile inviare il link. Riprova tra poco.");
       setSubmitting(false);
@@ -46,6 +59,7 @@ export default function LoginPage() {
               name="email"
               type="email"
               required
+              autoComplete="email"
               disabled={submitting}
               value={email}
               onChange={(event) => setEmail(event.target.value)}

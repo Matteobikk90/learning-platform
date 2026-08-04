@@ -7,6 +7,14 @@ type Props = {
   defaultUrl?: string | null;
 };
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_TYPES = new Set([
+  "image/avif",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
+
 export function CourseImageUpload({ defaultUrl }: Props) {
   const [url, setUrl] = useState(defaultUrl ?? "");
   const [uploading, setUploading] = useState(false);
@@ -14,7 +22,19 @@ export function CourseImageUpload({ defaultUrl }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = async (file: File) => {
+    if (uploading) return;
     setError(null);
+
+    if (!ALLOWED_TYPES.has(file.type)) {
+      setError("Sono supportati soltanto JPG, PNG, WebP e AVIF.");
+      return;
+    }
+
+    if (file.size === 0 || file.size > MAX_FILE_SIZE) {
+      setError("L’immagine deve pesare meno di 5 MB.");
+      return;
+    }
+
     setUploading(true);
 
     const body = new FormData();
@@ -22,9 +42,27 @@ export function CourseImageUpload({ defaultUrl }: Props) {
 
     try {
       const res = await fetch("/api/upload-image", { method: "POST", body });
-      const json = await res.json();
+      const json: unknown = await res.json().catch(() => null);
 
-      if (!res.ok) throw new Error(json.error ?? "Upload failed");
+      if (!res.ok) {
+        const message =
+          json &&
+          typeof json === "object" &&
+          "error" in json &&
+          typeof json.error === "string"
+            ? json.error
+            : "Impossibile caricare l’immagine";
+        throw new Error(message);
+      }
+
+      if (
+        !json ||
+        typeof json !== "object" ||
+        !("url" in json) ||
+        typeof json.url !== "string"
+      ) {
+        throw new Error("Risposta del server non valida");
+      }
 
       setUrl(json.url);
     } catch (err) {
@@ -39,9 +77,12 @@ export function CourseImageUpload({ defaultUrl }: Props) {
       {/* Hidden input carries the URL into the form submission */}
       <input type="hidden" name="coverImageUrl" value={url} />
 
-      {/* Preview / drop zone */}
-      <div
-        className="relative rounded-lg border-2 border-dashed border-stroke overflow-hidden cursor-pointer min-h-44 bg-canvas"
+      <button
+        type="button"
+        disabled={uploading}
+        aria-label={url ? "Cambia immagine di copertina" : "Scegli immagine di copertina"}
+        aria-busy={uploading}
+        className="relative block w-full rounded-lg border-2 border-dashed border-stroke overflow-hidden cursor-pointer min-h-44 bg-canvas disabled:cursor-wait"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
@@ -53,7 +94,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
           <div className="relative h-44 w-full">
             <Image
               src={url}
-              alt="Cover preview"
+              alt="Anteprima della copertina del corso"
               fill
               sizes="(max-width: 768px) 100vw, 608px"
               className="object-cover"
@@ -69,7 +110,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
             <span className="text-xs text-muted tracking-wide">
               Clicca o trascina un&apos;immagine
             </span>
-            <span className="text-[0.7rem] text-subtle">JPG, PNG, WebP — max 5 MB</span>
+            <span className="text-[0.7rem] text-subtle">JPG, PNG, WebP, AVIF — max 5 MB</span>
           </div>
         )}
 
@@ -81,7 +122,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
             </span>
           </div>
         )}
-      </div>
+      </button>
 
       {/* File input (hidden) */}
       <input
@@ -115,7 +156,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
       </div>
 
       {error && (
-        <p className="text-[0.75rem] text-danger">{error}</p>
+        <p className="text-[0.75rem] text-danger" role="alert">{error}</p>
       )}
     </div>
   );

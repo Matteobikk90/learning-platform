@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@/lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { NextAuthOptions } from "next-auth";
@@ -23,6 +25,7 @@ function escapeHtml(value: string) {
 }
 
 export const authOptions: NextAuthOptions = {
+  secret: requireEnv("AUTH_SECRET"),
   adapter: PrismaAdapter(prisma),
   providers: [
     EmailProvider({

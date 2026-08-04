@@ -1,7 +1,9 @@
 import { getVideoState } from "@/features/modules/video-state";
+import { reconcileMuxUpload } from "@/features/modules/mux-processing";
+import { deleteMuxAsset } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
 import { getApiAdmin } from "@/lib/session";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 export async function GET(
   _request: Request,
@@ -14,7 +16,7 @@ export async function GET(
   }
 
   const { moduleId } = await params;
-  const courseModule = await prisma.module.findUnique({
+  const initialModule = await prisma.module.findUnique({
     where: { id: moduleId },
     select: {
       muxUploadId: true,
@@ -23,8 +25,50 @@ export async function GET(
     },
   });
 
-  if (!courseModule) {
+  if (!initialModule) {
     return NextResponse.json({ error: "Module not found" }, { status: 404 });
+  }
+
+  let courseModule = initialModule;
+
+  if (courseModule.muxUploadId) {
+    const pendingUploadId = courseModule.muxUploadId;
+
+    try {
+      const transition = await reconcileMuxUpload(pendingUploadId);
+
+      if (transition) {
+        if (transition.assetIdsToDelete.length > 0) {
+          after(() =>
+            Promise.all(transition.assetIdsToDelete.map(deleteMuxAsset))
+          );
+        }
+
+        const refreshedModule = await prisma.module.findUnique({
+          where: { id: moduleId },
+          select: {
+            muxUploadId: true,
+            videoPlaybackId: true,
+            videoError: true,
+          },
+        });
+
+        if (!refreshedModule) {
+          return NextResponse.json(
+            { error: "Module not found" },
+            { status: 404 }
+          );
+        }
+
+        courseModule = refreshedModule;
+      }
+    } catch (error) {
+      console.error("[mux] Failed to reconcile video status", {
+        moduleId,
+        uploadId: pendingUploadId,
+        error,
+      });
+    }
   }
 
   return NextResponse.json(

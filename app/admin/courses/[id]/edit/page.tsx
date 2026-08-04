@@ -36,18 +36,21 @@ export default async function EditCoursePage({
           <input type="hidden" name="id" value={course.id} />
 
           <div>
-            <label className="form-label">Titolo</label>
+            <label htmlFor="course-title" className="form-label">Titolo</label>
             <input
+              id="course-title"
               name="title"
               defaultValue={course.title}
               required
+              maxLength={120}
               className="form-input"
             />
           </div>
 
           <div>
-            <label className="form-label">Descrizione</label>
+            <label htmlFor="course-description" className="form-label">Descrizione</label>
             <textarea
+              id="course-description"
               name="description"
               defaultValue={course.description ?? ""}
               rows={4}
@@ -56,8 +59,9 @@ export default async function EditCoursePage({
           </div>
 
           <div>
-            <label className="form-label">Prezzo (€)</label>
+            <label htmlFor="course-price" className="form-label">Prezzo (€)</label>
             <input
+              id="course-price"
               type="number"
               name="price"
               min="0.50"
@@ -69,7 +73,7 @@ export default async function EditCoursePage({
           </div>
 
           <div>
-            <label className="form-label">Immagine di copertina</label>
+            <span className="form-label">Immagine di copertina</span>
             <CourseImageUpload defaultUrl={course.coverImageUrl} />
           </div>
 

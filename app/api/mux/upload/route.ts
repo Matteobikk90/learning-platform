@@ -1,5 +1,5 @@
 import { getAppUrl, requireEnv } from "@/lib/env";
-import { getMux } from "@/lib/mux";
+import { getMux, getNewAssetPlaybackPolicy } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
 import { getApiAdmin } from "@/lib/session";
 import { NextResponse } from "next/server";
@@ -92,11 +92,12 @@ export async function POST(request: Request) {
   let uploadId: string | null = null;
 
   try {
+    const playbackPolicy = getNewAssetPlaybackPolicy();
     const upload = await mux.video.uploads.create({
       cors_origin: new URL(getAppUrl()).origin,
       timeout: 60 * 60,
       new_asset_settings: {
-        playback_policies: ["public"],
+        playback_policies: [playbackPolicy.toLowerCase() as "public" | "signed"],
         passthrough: courseModule.id,
         meta: {
           creator_id: admin.id,

@@ -33,12 +33,12 @@ export function Parallax({ courses, purchasedIds }: ParallaxProps) {
         className="fixed inset-0 overflow-y-scroll parallax-scroll">
         <Hero visible={visible} scrollTo={scrollTo} />
         <Benefici visible={visible} scrollContainerRef={containerRef} />
+        <ChiSono visible={visible} />
         <Corsi
           visible={visible}
           courses={courses}
           purchasedSet={purchasedSet}
         />
-        <ChiSono visible={visible} />
         <Faq visible={visible} />
       </main>
     </>

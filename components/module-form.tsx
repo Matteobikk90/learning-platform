@@ -13,13 +13,14 @@ export function ModuleForm({ courseId }: ModuleFormProps) {
       <input type="hidden" name="courseId" value={courseId} />
 
       <div>
-        <label className="form-label">Titolo</label>
-        <input name="title" required className="form-input" />
+        <label htmlFor="module-title" className="form-label">Titolo</label>
+        <input id="module-title" name="title" required maxLength={160} className="form-input" />
       </div>
 
       <div>
-        <label className="form-label">Ordine</label>
+        <label htmlFor="module-order" className="form-label">Ordine</label>
         <input
+          id="module-order"
           name="order"
           type="number"
           min="1"

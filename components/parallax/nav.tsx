@@ -3,10 +3,10 @@
 import { SECTIONS } from "@/constants/parallax";
 import type { ParallaxNavProps } from "@/types/parallax";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const textColor = isDark ? "rgba(255,255,255,0.9)" : "var(--color-navy)";
   const dotActive = isDark ? "#ffffff" : "var(--color-navy)";
@@ -18,29 +18,40 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
     <>
       {/* ── Overlay header ─────────────────────────────────────────── */}
       <nav
+        aria-label="Navigazione principale"
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5"
         style={{ color: textColor, transition: "color 0.5s ease" }}>
         <button
+          type="button"
           onClick={() => scrollTo("hero")}
           className="nav-brand hover:opacity-70 transition-opacity cursor-pointer"
           style={{ color: "inherit", background: "none", border: "none" }}>
           Umberto Iglina
         </button>
 
-        {session ? (
+        {status === "loading" ? null : session ? (
           <div className="flex items-center gap-5">
+            {session.user.role === "ADMIN" && (
+              <Link
+                href="/admin"
+                className="nav-link hover:opacity-70 transition-opacity no-underline"
+                style={{ color: "inherit" }}>
+                Admin
+              </Link>
+            )}
             <Link
               href="/profile"
               className="nav-link hover:opacity-70 transition-opacity no-underline"
               style={{ color: "inherit" }}>
               I miei corsi
             </Link>
-            <Link
-              href="/api/auth/signout"
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/" })}
               className="nav-link hover:opacity-70 transition-opacity no-underline"
-              style={{ color: "inherit" }}>
+              style={{ color: "inherit", background: "none", border: 0 }}>
               Esci
-            </Link>
+            </button>
           </div>
         ) : (
           <Link
@@ -53,21 +64,26 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
       </nav>
 
       {/* ── Section dots ───────────────────────────────────────────── */}
-      <ul className="fixed right-7 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
-        {SECTIONS.map(({ id, label }) => (
-          <li key={id}>
-            <button
-              onClick={() => scrollTo(id)}
-              title={label}
-              className="size-[7px] rounded-full border-0 p-0 cursor-pointer transition-all duration-300"
-              style={{
-                background: active === id ? dotActive : dotInactive,
-                transform: active === id ? "scale(1.5)" : "scale(1)",
-              }}
-            />
-          </li>
-        ))}
-      </ul>
+      <nav aria-label="Sezioni della pagina">
+        <ul className="fixed right-7 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
+          {SECTIONS.map(({ id, label }) => (
+            <li key={id}>
+              <button
+                type="button"
+                onClick={() => scrollTo(id)}
+                title={label}
+                aria-label={`Vai alla sezione ${label}`}
+                aria-current={active === id ? "page" : undefined}
+                className="size-[7px] rounded-full border-0 p-0 cursor-pointer transition-all duration-300"
+                style={{
+                  background: active === id ? dotActive : dotInactive,
+                  transform: active === id ? "scale(1.5)" : "scale(1)",
+                }}
+              />
+            </li>
+          ))}
+        </ul>
+      </nav>
     </>
   );
 }

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 import { deleteMuxAsset, deletePendingMuxUpload } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
@@ -11,11 +12,12 @@ import { requireAdmin } from "@/lib/session";
 export async function deleteModule(formData: FormData) {
   await requireAdmin();
 
-  const moduleId = String(formData.get("moduleId") ?? "");
+  const parsedId = z.string().min(1).max(128).safeParse(formData.get("moduleId"));
 
-  if (!moduleId) {
+  if (!parsedId.success) {
     throw new Error("Modulo non valido");
   }
+  const moduleId = parsedId.data;
 
   const courseModule = await prisma.module.findUnique({
     where: { id: moduleId },
