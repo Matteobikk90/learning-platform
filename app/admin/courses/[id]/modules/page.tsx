@@ -1,3 +1,4 @@
+import { MuxDurationSync } from "@/components/mux-duration-sync";
 import { formatDuration } from "@/lib/format-duration";
 import { getVideoStatusLabel } from "@/functions/video/get-video-state";
 import { prisma } from "@/lib/prisma";
@@ -18,8 +19,16 @@ export default async function ModulesPage({ params }: CourseRouteProps) {
 
   if (!course) notFound();
 
+  const missingDurationModuleIds = course.modules
+    .filter(
+      (courseModule) =>
+        courseModule.videoPlaybackId && courseModule.durationSeconds <= 0
+    )
+    .map((courseModule) => courseModule.id);
+
   return (
     <main className="mx-auto max-w-5xl px-6 py-14">
+      <MuxDurationSync moduleIds={missingDurationModuleIds} />
       <Link href="/admin/courses" className="back-link">
         ← Corsi
       </Link>

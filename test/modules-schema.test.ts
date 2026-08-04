@@ -35,27 +35,12 @@ describe("updateModuleSchema", () => {
     moduleId: "module_1",
     title: "Modulo 1",
     order: "2",
-    durationSeconds: "3600",
   };
 
   it("accepts a valid update", () => {
     const parsed = updateModuleSchema.parse(validInput);
 
-    expect(parsed.durationSeconds).toBe(3600);
     expect(parsed.order).toBe(2);
-  });
-
-  it("bounds the duration between zero and twelve hours", () => {
-    expect(
-      updateModuleSchema.safeParse({ ...validInput, durationSeconds: "-1" })
-        .success
-    ).toBe(false);
-    expect(
-      updateModuleSchema.safeParse({
-        ...validInput,
-        durationSeconds: String(12 * 60 * 60 + 1),
-      }).success
-    ).toBe(false);
   });
 
   it("rejects oversized module identifiers", () => {

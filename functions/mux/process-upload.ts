@@ -1,10 +1,10 @@
 import "server-only";
 
-import { MAX_MODULE_DURATION_SECONDS } from "@/constants/modules";
 import {
   MUX_ERROR_MESSAGES,
   MUX_MAX_VIDEO_ERROR_LENGTH,
 } from "@/constants/mux";
+import { resolveMuxDuration } from "@/functions/mux/duration";
 import { isMuxNotFoundError } from "@/functions/mux/is-mux-not-found-error";
 import { getMux } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
@@ -35,12 +35,7 @@ export async function markMuxAssetReady({
 
   if (!courseModule) return null;
 
-  const duration =
-    typeof durationSeconds === "number" &&
-    Number.isFinite(durationSeconds) &&
-    durationSeconds > 0
-      ? Math.min(Math.ceil(durationSeconds), MAX_MODULE_DURATION_SECONDS)
-      : undefined;
+  const duration = await resolveMuxDuration(assetId, durationSeconds);
 
   const updated = await prisma.module.updateMany({
     where: {

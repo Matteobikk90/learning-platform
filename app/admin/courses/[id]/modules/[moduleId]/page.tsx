@@ -88,6 +88,7 @@ export default async function ModuleDetailPage({ params }: ModuleRouteProps) {
                 <VideoUpload
                   moduleId={courseModule.id}
                   initialStatus={videoState}
+                  initialDurationSeconds={courseModule.durationSeconds}
                   initialError={courseModule.videoError}
                 />
               </div>
@@ -100,6 +101,7 @@ export default async function ModuleDetailPage({ params }: ModuleRouteProps) {
               <VideoUpload
                 moduleId={courseModule.id}
                 initialStatus={videoState}
+                initialDurationSeconds={courseModule.durationSeconds}
                 initialError={courseModule.videoError}
               />
             </div>

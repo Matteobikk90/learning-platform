@@ -1,6 +1,7 @@
 import "server-only";
 
 import { applyMuxProcessingTransition } from "@/functions/mux/apply-processing-transition";
+import { syncModuleMuxDuration } from "@/functions/mux/duration";
 import { reconcileMuxUpload } from "@/functions/mux/process-upload";
 import { getVideoState } from "@/functions/video/get-video-state";
 import { prisma } from "@/lib/prisma";
@@ -10,6 +11,9 @@ function findModuleVideoStatus(moduleId: string) {
   return prisma.module.findUnique({
     where: { id: moduleId },
     select: {
+      id: true,
+      durationSeconds: true,
+      muxAssetId: true,
       muxUploadId: true,
       videoPlaybackId: true,
       videoError: true,
@@ -50,8 +54,21 @@ export async function getModuleVideoStatus(
     }
   }
 
+  const status = getVideoState(courseModule);
+  const durationSeconds =
+    status === "ready" &&
+    courseModule.durationSeconds <= 0 &&
+    courseModule.muxAssetId
+      ? await syncModuleMuxDuration(
+          courseModule.id,
+          courseModule.muxAssetId,
+          courseModule.durationSeconds
+        )
+      : courseModule.durationSeconds;
+
   return {
-    status: getVideoState(courseModule),
+    status,
     error: courseModule.videoError,
+    durationSeconds,
   };
 }

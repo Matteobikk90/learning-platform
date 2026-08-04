@@ -1,9 +1,9 @@
 "use client";
 
 import { SubmitButton } from "@/components/submit-button";
-import { MAX_MODULE_DURATION_SECONDS } from "@/constants/modules";
 import { updateModule } from "@/features/modules/actions";
 import { useFormAction } from "@/hooks/use-form-action";
+import { formatDuration } from "@/lib/format-duration";
 import type { ModuleEditFormProps } from "@/types/module";
 
 export function ModuleEditForm({
@@ -42,19 +42,14 @@ export function ModuleEditForm({
           />
         </div>
         <div className="flex-1">
-          <label htmlFor="module-duration" className="form-label">Durata (secondi)</label>
-          <input
-            id="module-duration"
-            name="durationSeconds"
-            type="number"
-            min="0"
-            max={MAX_MODULE_DURATION_SECONDS}
-            required
-            defaultValue={state.values?.durationSeconds ?? durationSeconds}
-            className="form-input"
-          />
+          <span className="form-label">Durata</span>
+          <div className="form-input text-muted" role="status">
+            {durationSeconds > 0
+              ? formatDuration(durationSeconds)
+              : "Rilevamento automatico in corso"}
+          </div>
           <p className="mt-2 text-xs text-subtle">
-            Viene aggiornata automaticamente quando Mux prepara il video.
+            Viene rilevata automaticamente dal video caricato su Mux.
           </p>
         </div>
       </div>

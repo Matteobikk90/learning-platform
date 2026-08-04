@@ -11,6 +11,7 @@ export type VideoStateInput = {
 export type VideoStatusResponse = {
   status: VideoState;
   error: string | null;
+  durationSeconds: number;
 };
 
 export type VideoUploadEndpointResponse = {
@@ -21,10 +22,18 @@ export type VideoUploadEndpointResponse = {
 export type VideoUploadProps = {
   moduleId: string;
   initialStatus: VideoState;
+  initialDurationSeconds: number;
   initialError?: string | null;
 };
 
-export type UseVideoUploadOptions = VideoUploadProps;
+export type UseVideoUploadOptions = Omit<
+  VideoUploadProps,
+  "initialDurationSeconds"
+>;
+
+export type MuxDurationSyncProps = {
+  moduleIds: string[];
+};
 
 export type VideoPlayerProps = {
   playbackId: string;

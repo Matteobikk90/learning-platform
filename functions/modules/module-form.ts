@@ -19,7 +19,6 @@ export function getUpdateModuleFormData(formData: FormData) {
     moduleId: formData.get("moduleId"),
     title: formData.get("title"),
     order: formData.get("order"),
-    durationSeconds: formData.get("durationSeconds"),
   };
 }
 

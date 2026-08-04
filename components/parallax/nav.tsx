@@ -7,6 +7,7 @@ import { signOut, useSession } from "next-auth/react";
 
 export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
   const { data: session, status } = useSession();
+  const isAdmin = session?.user.role === "ADMIN";
 
   const textColor = isDark ? "rgba(255,255,255,0.9)" : "var(--color-navy)";
   const dotActive = isDark ? "#ffffff" : "var(--color-navy)";
@@ -16,7 +17,6 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
 
   return (
     <>
-      {/* ── Overlay header ─────────────────────────────────────────── */}
       <nav
         aria-label="Navigazione principale"
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5"
@@ -31,7 +31,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
 
         {status === "loading" ? null : session ? (
           <div className="flex items-center gap-5">
-            {session.user.role === "ADMIN" && (
+            {isAdmin && (
               <Link
                 href="/admin"
                 className="nav-link hover:opacity-70 transition-opacity no-underline"
@@ -39,12 +39,14 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
                 Admin
               </Link>
             )}
-            <Link
-              href="/profile"
-              className="nav-link hover:opacity-70 transition-opacity no-underline"
-              style={{ color: "inherit" }}>
-              I miei corsi
-            </Link>
+            {!isAdmin && (
+              <Link
+                href="/profile"
+                className="nav-link hover:opacity-70 transition-opacity no-underline"
+                style={{ color: "inherit" }}>
+                I miei corsi
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/" })}
@@ -63,7 +65,6 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
         )}
       </nav>
 
-      {/* ── Section dots ───────────────────────────────────────────── */}
       <nav aria-label="Sezioni della pagina">
         <ul className="fixed right-7 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
           {SECTIONS.map(({ id, label }) => (

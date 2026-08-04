@@ -17,7 +17,10 @@ const muxMock = vi.hoisted(() => ({
 vi.mock("@/lib/prisma", () => ({ prisma: prismaMock }));
 vi.mock("@/lib/mux", () => ({ getMux: () => muxMock }));
 
-import { reconcileMuxUpload } from "@/functions/mux/process-upload";
+import {
+  markMuxAssetReady,
+  reconcileMuxUpload,
+} from "@/functions/mux/process-upload";
 
 const pendingModule = {
   id: "module_1",
@@ -69,6 +72,24 @@ describe("reconcileMuxUpload", () => {
         durationSeconds: 92,
       },
     });
+  });
+
+  it("retrieves a missing duration before marking the asset ready", async () => {
+    muxMock.video.assets.retrieve.mockResolvedValue({ duration: 47.1 });
+
+    await markMuxAssetReady({
+      uploadId: "upload_1",
+      assetId: "new_asset",
+      playbackId: "playback_1",
+      playbackPolicy: "signed",
+    });
+
+    expect(muxMock.video.assets.retrieve).toHaveBeenCalledWith("new_asset");
+    expect(prismaMock.module.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ durationSeconds: 48 }),
+      })
+    );
   });
 
   it("does not report success when another request won the database race", async () => {

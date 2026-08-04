@@ -3,7 +3,6 @@ export const CREATE_MODULE_FORM_VALUE_FIELDS = ["title", "order"] as const;
 export const UPDATE_MODULE_FORM_VALUE_FIELDS = [
   "title",
   "order",
-  "durationSeconds",
 ] as const;
 
 export const MODULE_FORM_ERRORS = {

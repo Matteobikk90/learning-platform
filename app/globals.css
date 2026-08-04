@@ -144,7 +144,7 @@
   }
 
   .nav-link {
-    @apply font-mono text-[0.75rem] tracking-[0.15em] uppercase;
+    @apply cursor-pointer font-mono text-[0.75rem] tracking-[0.15em] uppercase;
   }
 
   .list-row-title {

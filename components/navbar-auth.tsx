@@ -11,20 +11,24 @@ export function NavbarAuth() {
   if (status === "loading" || pathname === "/login") return null;
 
   if (session) {
+    const isAdmin = session.user.role === "ADMIN";
+
     return (
       <>
-        {session.user.role === "ADMIN" && (
+        {isAdmin && (
           <Link
             href="/admin"
             className="nav-link text-muted no-underline">
             Admin
           </Link>
         )}
-        <Link
-          href="/profile"
-          className="nav-link text-muted no-underline">
-          I miei corsi
-        </Link>
+        {!isAdmin && (
+          <Link
+            href="/profile"
+            className="nav-link text-muted no-underline">
+            I miei corsi
+          </Link>
+        )}
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: "/" })}

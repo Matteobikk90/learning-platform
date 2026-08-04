@@ -122,7 +122,6 @@ export async function updateModule(
       data: {
         title: parsed.data.title,
         order: parsed.data.order,
-        durationSeconds: parsed.data.durationSeconds,
       },
     });
   } catch (error) {

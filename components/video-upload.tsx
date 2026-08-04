@@ -2,14 +2,20 @@
 
 import MuxUploader from "@mux/mux-uploader-react";
 
+import { useMuxDurationSync } from "@/hooks/use-mux-duration-sync";
 import { useVideoUpload } from "@/hooks/use-video-upload";
 import type { VideoUploadProps } from "@/types/video";
 
 export function VideoUpload({
   moduleId,
   initialStatus,
+  initialDurationSeconds,
   initialError = null,
 }: VideoUploadProps) {
+  useMuxDurationSync(
+    initialStatus === "ready" && initialDurationSeconds <= 0 ? [moduleId] : []
+  );
+
   const {
     error,
     getUploadUrl,
@@ -17,7 +23,11 @@ export function VideoUpload({
     handleUploadSuccess,
     processing,
     ready,
-  } = useVideoUpload({ moduleId, initialStatus, initialError });
+  } = useVideoUpload({
+    moduleId,
+    initialStatus,
+    initialError,
+  });
 
   if (processing) {
     return (
