@@ -1,3 +1,5 @@
+import { MAGIC_LINK_MAX_AGE_MINUTES } from "@/constants/auth";
+
 export default function VerifyRequestPage() {
   return (
     <main className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-6 py-16 text-center">
@@ -24,7 +26,8 @@ export default function VerifyRequestPage() {
       <p className="text-muted leading-relaxed">
         Ti abbiamo inviato un link sicuro per accedere.
         <br />
-        Controlla la tua casella di posta.
+        Controlla la tua casella di posta: il link è valido per{" "}
+        {MAGIC_LINK_MAX_AGE_MINUTES} minuti.
       </p>
     </main>
   );

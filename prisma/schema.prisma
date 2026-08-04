@@ -43,20 +43,10 @@ model Module {
   durationSeconds     Int
   courseId            String
   course              Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  chapters            ModuleChapter[]
   progress            ModuleProgress[]
   updatedAt           DateTime          @updatedAt
 
   @@unique([courseId, order])
-}
-
-model ModuleChapter {
-  id        String   @id @default(cuid())
-  title     String
-  startTime Int
-  moduleId  String
-  createdAt DateTime @default(now())
-  module    Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 }
 
 model Purchase {

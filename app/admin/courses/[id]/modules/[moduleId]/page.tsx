@@ -1,24 +1,20 @@
 import { DeleteModuleButton } from "@/components/delete-module-button";
+import { ModuleEditForm } from "@/components/module-edit-form";
 import { VideoPlayer } from "@/components/video-player";
 import { VideoUpload } from "@/components/video-upload";
-import { SubmitButton } from "@/components/submit-button";
-import { updateModule } from "@/features/modules/actions";
 import {
   getVideoState,
   getVideoStatusLabel,
-} from "@/features/modules/video-state";
+} from "@/functions/video/get-video-state";
 import { formatDuration } from "@/lib/format-duration";
 import { createPlaybackTokens } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
+import type { ModuleRouteProps } from "@/types/routes";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function ModuleDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string; moduleId: string }>;
-}) {
+export default async function ModuleDetailPage({ params }: ModuleRouteProps) {
   await requireAdmin();
 
   const { id, moduleId } = await params;
@@ -63,33 +59,16 @@ export default async function ModuleDetailPage({
       </div>
 
       <div className="space-y-6">
-        {/* Dettagli */}
         <div className="card p-8">
           <span className="label-upper">Dettagli</span>
-          <form action={updateModule} className="mt-4 space-y-5">
-            <input type="hidden" name="moduleId" value={courseModule.id} />
-            <div>
-              <label htmlFor="module-title" className="form-label">Titolo</label>
-              <input id="module-title" name="title" required maxLength={160} defaultValue={courseModule.title} className="form-input" />
-            </div>
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <label htmlFor="module-order" className="form-label">Ordine</label>
-                <input id="module-order" name="order" type="number" min="1" required defaultValue={courseModule.order} className="form-input" />
-              </div>
-              <div className="flex-1">
-                <label htmlFor="module-duration" className="form-label">Durata (secondi)</label>
-                <input id="module-duration" name="durationSeconds" type="number" min="0" max={60 * 60 * 12} required defaultValue={courseModule.durationSeconds} className="form-input" />
-                <p className="mt-2 text-xs text-subtle">
-                  Viene aggiornata automaticamente quando Mux prepara il video.
-                </p>
-              </div>
-            </div>
-            <SubmitButton>Salva</SubmitButton>
-          </form>
+          <ModuleEditForm
+            moduleId={courseModule.id}
+            title={courseModule.title}
+            order={courseModule.order}
+            durationSeconds={courseModule.durationSeconds}
+          />
         </div>
 
-        {/* Video */}
         <div className="card p-8">
           <span className="label-upper">Video</span>
 
@@ -127,7 +106,6 @@ export default async function ModuleDetailPage({
           )}
         </div>
 
-        {/* Danger zone */}
         <div className="card p-8 border-danger/30">
           <span className="form-label text-danger">Zona pericolosa</span>
           <p className="text-sm text-muted mb-4">

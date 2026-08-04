@@ -1,15 +1,12 @@
 import { formatDuration } from "@/lib/format-duration";
-import { getVideoStatusLabel } from "@/features/modules/video-state";
+import { getVideoStatusLabel } from "@/functions/video/get-video-state";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
+import type { CourseRouteProps } from "@/types/routes";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-type ModulesPageProps = {
-  params: Promise<{ id: string }>;
-};
-
-export default async function ModulesPage({ params }: ModulesPageProps) {
+export default async function ModulesPage({ params }: CourseRouteProps) {
   await requireAdmin();
 
   const { id } = await params;

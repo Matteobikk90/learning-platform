@@ -1,32 +1,14 @@
-import { revalidatePath } from "next/cache";
-import { after, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
+import { MUX_ERROR_MESSAGES } from "@/constants/mux";
+import { applyMuxProcessingTransition } from "@/functions/mux/apply-processing-transition";
 import {
   markMuxAssetReady,
   markMuxUploadFailed,
-  type MuxProcessingTransition,
-} from "@/features/modules/mux-processing";
+} from "@/functions/mux/process-upload";
 import { requireEnv } from "@/lib/env";
-import { deleteMuxAsset, getMux } from "@/lib/mux";
-
-function revalidateModule(courseId: string, moduleId: string) {
-  revalidatePath(`/admin/courses/${courseId}/modules`);
-  revalidatePath(`/admin/courses/${courseId}/modules/${moduleId}`);
-  revalidatePath(`/profile/courses/${courseId}`);
-  revalidatePath(`/profile/courses/${courseId}/modules/${moduleId}`);
-}
-
-function applyTransition(transition: MuxProcessingTransition | null) {
-  if (!transition) return false;
-
-  revalidateModule(transition.courseId, transition.moduleId);
-
-  if (transition.assetIdsToDelete.length > 0) {
-    after(() => Promise.all(transition.assetIdsToDelete.map(deleteMuxAsset)));
-  }
-
-  return true;
-}
+import { getMux } from "@/lib/mux";
+import type { MuxWebhookEvent } from "@/types/mux";
 
 export async function POST(request: Request) {
   if (!request.headers.get("mux-signature")) {
@@ -36,7 +18,7 @@ export async function POST(request: Request) {
   const body = await request.text();
   const mux = getMux();
 
-  let event: Awaited<ReturnType<typeof mux.webhooks.unwrap>>;
+  let event: MuxWebhookEvent;
 
   try {
     event = await mux.webhooks.unwrap(
@@ -70,11 +52,11 @@ export async function POST(request: Request) {
         })
       : await markMuxUploadFailed(
           uploadId,
-          "Mux non ha generato un identificativo di riproduzione.",
+          MUX_ERROR_MESSAGES.missingPlaybackId,
           event.data.id
         );
 
-    if (!applyTransition(transition)) {
+    if (!applyMuxProcessingTransition(transition)) {
       console.warn("[mux] Ready asset has no pending module", {
         assetId: event.data.id,
         uploadId,
@@ -98,10 +80,10 @@ export async function POST(request: Request) {
           ? event.data.errors?.messages?.join(" ")
           : "Il caricamento non è stato completato.";
 
-      applyTransition(
+      applyMuxProcessingTransition(
         await markMuxUploadFailed(
           uploadId,
-          errorMessage ?? "Mux non è riuscito a elaborare il video.",
+          errorMessage ?? MUX_ERROR_MESSAGES.processingFailed,
           event.type === "video.asset.errored" ? event.data.id : undefined
         )
       );

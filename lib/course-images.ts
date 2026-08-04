@@ -1,10 +1,11 @@
 import "server-only";
 
+import {
+  COURSE_IMAGES_BUCKET,
+  COURSE_IMAGES_PUBLIC_PATH,
+} from "@/constants/courses";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { requireEnv } from "@/lib/env";
-
-const COURSE_IMAGES_BUCKET = "course-images";
-const PUBLIC_PATH = `/storage/v1/object/public/${COURSE_IMAGES_BUCKET}/`;
 
 export function getCourseImagePath(url: string | null | undefined) {
   if (!url) return null;
@@ -15,12 +16,12 @@ export function getCourseImagePath(url: string | null | undefined) {
 
     if (parsed.origin !== storageOrigin) return null;
 
-    const markerIndex = parsed.pathname.indexOf(PUBLIC_PATH);
+    const markerIndex = parsed.pathname.indexOf(COURSE_IMAGES_PUBLIC_PATH);
 
     if (markerIndex === -1) return null;
 
     return decodeURIComponent(
-      parsed.pathname.slice(markerIndex + PUBLIC_PATH.length)
+      parsed.pathname.slice(markerIndex + COURSE_IMAGES_PUBLIC_PATH.length)
     );
   } catch {
     return null;

@@ -1,48 +1,42 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 import { redirect } from "next/navigation";
 
+import { COURSE_FORM_ERRORS } from "@/constants/courses";
 import {
   courseFormSchema,
   updateCourseSchema,
 } from "@/features/courses/schema";
-import { deleteCourseImage, getCourseImagePath } from "@/lib/course-images";
+import {
+  getCourseCoverImageError,
+  getCourseFormData,
+  getCourseFormValues,
+} from "@/functions/courses/course-form";
+import { revalidateCoursePages } from "@/functions/courses/revalidate-course-pages";
+import { deleteCourseImage } from "@/lib/course-images";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
+import type { FormState } from "@/types/forms";
 
-function getCourseFormData(formData: FormData) {
-  return {
-    title: formData.get("title"),
-    description: formData.get("description"),
-    price: formData.get("price"),
-    coverImageUrl: formData.get("coverImageUrl"),
-  };
-}
-
-function revalidateCoursePages() {
-  revalidatePath("/");
-  revalidatePath("/admin/courses");
-  revalidatePath("/profile");
-}
-
-function assertManagedCoverImage(url: string | null) {
-  if (url && !getCourseImagePath(url)) {
-    throw new Error("L’immagine deve essere caricata dalla piattaforma");
-  }
-}
-
-export async function createCourse(formData: FormData) {
+export async function createCourse(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
   await requireAdmin();
 
+  const values = getCourseFormValues(formData);
   const parsed = courseFormSchema.safeParse(getCourseFormData(formData));
 
   if (!parsed.success) {
-    throw new Error(parsed.error.issues[0]?.message ?? "Dati del corso non validi");
+    return {
+      error: parsed.error.issues[0]?.message ?? COURSE_FORM_ERRORS.invalidData,
+      values,
+    };
   }
 
-  assertManagedCoverImage(parsed.data.coverImageUrl);
+  const imageError = getCourseCoverImageError(parsed.data.coverImageUrl);
+  if (imageError) return { error: imageError, values };
 
   await prisma.course.create({ data: parsed.data });
 
@@ -50,19 +44,27 @@ export async function createCourse(formData: FormData) {
   redirect("/admin/courses");
 }
 
-export async function updateCourse(formData: FormData) {
+export async function updateCourse(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
   await requireAdmin();
 
+  const values = getCourseFormValues(formData);
   const parsed = updateCourseSchema.safeParse({
     id: formData.get("id"),
     ...getCourseFormData(formData),
   });
 
   if (!parsed.success) {
-    throw new Error(parsed.error.issues[0]?.message ?? "Dati del corso non validi");
+    return {
+      error: parsed.error.issues[0]?.message ?? COURSE_FORM_ERRORS.invalidData,
+      values,
+    };
   }
 
-  assertManagedCoverImage(parsed.data.coverImageUrl);
+  const imageError = getCourseCoverImageError(parsed.data.coverImageUrl);
+  if (imageError) return { error: imageError, values };
 
   const existingCourse = await prisma.course.findUnique({
     where: { id: parsed.data.id },
@@ -70,7 +72,7 @@ export async function updateCourse(formData: FormData) {
   });
 
   if (!existingCourse) {
-    throw new Error("Corso non trovato");
+    return { error: COURSE_FORM_ERRORS.notFound, values };
   }
 
   await prisma.course.update({

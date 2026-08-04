@@ -1,16 +1,12 @@
 import { updateCourse } from "@/features/courses/actions";
-import { CourseImageUpload } from "@/components/course-image-upload";
-import { SubmitButton } from "@/components/submit-button";
+import { CourseForm } from "@/components/course-form";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
+import type { CourseRouteProps } from "@/types/routes";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function EditCoursePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function EditCoursePage({ params }: CourseRouteProps) {
   await requireAdmin();
   const { id } = await params;
   const course = await prisma.course.findUnique({
@@ -32,55 +28,11 @@ export default async function EditCoursePage({
       </div>
 
       <div className="card p-8">
-        <form action={updateCourse} className="space-y-6">
-          <input type="hidden" name="id" value={course.id} />
-
-          <div>
-            <label htmlFor="course-title" className="form-label">Titolo</label>
-            <input
-              id="course-title"
-              name="title"
-              defaultValue={course.title}
-              required
-              maxLength={120}
-              className="form-input"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="course-description" className="form-label">Descrizione</label>
-            <textarea
-              id="course-description"
-              name="description"
-              defaultValue={course.description ?? ""}
-              rows={4}
-              className="form-input"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="course-price" className="form-label">Prezzo (€)</label>
-            <input
-              id="course-price"
-              type="number"
-              name="price"
-              min="0.50"
-              step="0.01"
-              defaultValue={(course.price / 100).toFixed(2)}
-              required
-              className="form-input"
-            />
-          </div>
-
-          <div>
-            <span className="form-label">Immagine di copertina</span>
-            <CourseImageUpload defaultUrl={course.coverImageUrl} />
-          </div>
-
-          <SubmitButton>
-            Salva modifiche
-          </SubmitButton>
-        </form>
+        <CourseForm
+          action={updateCourse}
+          defaults={course}
+          submitLabel="Salva modifiche"
+        />
       </div>
     </main>
   );

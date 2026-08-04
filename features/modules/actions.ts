@@ -1,48 +1,38 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Prisma } from "@prisma/client";
 
+import { MODULE_FORM_ERRORS } from "@/constants/modules";
 import {
   createModuleSchema,
   updateModuleSchema,
 } from "@/features/modules/schema";
+import {
+  getCreateModuleFormData,
+  getCreateModuleFormValues,
+  getUpdateModuleFormData,
+  getUpdateModuleFormValues,
+  isDuplicateModuleOrderError,
+} from "@/functions/modules/module-form";
+import { revalidateModulePages } from "@/functions/modules/revalidate-module-pages";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
+import type { FormState } from "@/types/forms";
 
-function revalidateModulePages(courseId: string, moduleId?: string) {
-  revalidatePath(`/admin/courses/${courseId}/modules`);
-  revalidatePath(`/profile/courses/${courseId}`);
-
-  if (moduleId) {
-    revalidatePath(`/admin/courses/${courseId}/modules/${moduleId}`);
-    revalidatePath(`/profile/courses/${courseId}/modules/${moduleId}`);
-  }
-}
-
-function throwFriendlyModuleError(error: unknown): never {
-  if (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2002"
-  ) {
-    throw new Error("Esiste già un modulo con questo ordine");
-  }
-
-  throw error;
-}
-
-export async function createModule(formData: FormData) {
+export async function createModule(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
   await requireAdmin();
 
-  const parsed = createModuleSchema.safeParse({
-    courseId: formData.get("courseId"),
-    title: formData.get("title"),
-    order: formData.get("order"),
-  });
+  const values = getCreateModuleFormValues(formData);
+  const parsed = createModuleSchema.safeParse(getCreateModuleFormData(formData));
 
   if (!parsed.success) {
-    throw new Error(parsed.error.issues[0]?.message ?? "Dati del modulo non validi");
+    return {
+      error: parsed.error.issues[0]?.message ?? MODULE_FORM_ERRORS.invalidData,
+      values,
+    };
   }
 
   const [course, duplicateOrder] = await Promise.all([
@@ -59,11 +49,15 @@ export async function createModule(formData: FormData) {
     }),
   ]);
 
-  if (!course) throw new Error("Corso non trovato");
-  if (duplicateOrder) throw new Error("Esiste già un modulo con questo ordine");
+  if (!course) return { error: MODULE_FORM_ERRORS.courseNotFound, values };
+  if (duplicateOrder) {
+    return { error: MODULE_FORM_ERRORS.duplicateOrder, values };
+  }
 
-  const courseModule = await prisma.module
-    .create({
+  let courseModuleId: string;
+
+  try {
+    const courseModule = await prisma.module.create({
       data: {
         courseId: parsed.data.courseId,
         title: parsed.data.title,
@@ -71,27 +65,35 @@ export async function createModule(formData: FormData) {
         durationSeconds: 0,
       },
       select: { id: true },
-    })
-    .catch(throwFriendlyModuleError);
+    });
+    courseModuleId = courseModule.id;
+  } catch (error) {
+    if (isDuplicateModuleOrderError(error)) {
+      return { error: MODULE_FORM_ERRORS.duplicateOrder, values };
+    }
+    throw error;
+  }
 
-  revalidateModulePages(parsed.data.courseId, courseModule.id);
+  revalidateModulePages(parsed.data.courseId, courseModuleId);
   redirect(
-    `/admin/courses/${parsed.data.courseId}/modules/${courseModule.id}`
+    `/admin/courses/${parsed.data.courseId}/modules/${courseModuleId}`
   );
 }
 
-export async function updateModule(formData: FormData) {
+export async function updateModule(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
   await requireAdmin();
 
-  const parsed = updateModuleSchema.safeParse({
-    moduleId: formData.get("moduleId"),
-    title: formData.get("title"),
-    order: formData.get("order"),
-    durationSeconds: formData.get("durationSeconds"),
-  });
+  const values = getUpdateModuleFormValues(formData);
+  const parsed = updateModuleSchema.safeParse(getUpdateModuleFormData(formData));
 
   if (!parsed.success) {
-    throw new Error(parsed.error.issues[0]?.message ?? "Dati del modulo non validi");
+    return {
+      error: parsed.error.issues[0]?.message ?? MODULE_FORM_ERRORS.invalidData,
+      values,
+    };
   }
 
   const courseModule = await prisma.module.findUnique({
@@ -99,7 +101,7 @@ export async function updateModule(formData: FormData) {
     select: { courseId: true },
   });
 
-  if (!courseModule) throw new Error("Modulo non trovato");
+  if (!courseModule) return { error: MODULE_FORM_ERRORS.notFound, values };
 
   const duplicateOrder = await prisma.module.findFirst({
     where: {
@@ -110,18 +112,25 @@ export async function updateModule(formData: FormData) {
     select: { id: true },
   });
 
-  if (duplicateOrder) throw new Error("Esiste già un modulo con questo ordine");
+  if (duplicateOrder) {
+    return { error: MODULE_FORM_ERRORS.duplicateOrder, values };
+  }
 
-  await prisma.module
-    .update({
+  try {
+    await prisma.module.update({
       where: { id: parsed.data.moduleId },
       data: {
         title: parsed.data.title,
         order: parsed.data.order,
         durationSeconds: parsed.data.durationSeconds,
       },
-    })
-    .catch(throwFriendlyModuleError);
+    });
+  } catch (error) {
+    if (isDuplicateModuleOrderError(error)) {
+      return { error: MODULE_FORM_ERRORS.duplicateOrder, values };
+    }
+    throw error;
+  }
 
   revalidateModulePages(courseModule.courseId, parsed.data.moduleId);
   redirect(

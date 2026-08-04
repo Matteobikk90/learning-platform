@@ -1,21 +1,17 @@
 import "server-only";
 
+import { MAX_MODULE_DURATION_SECONDS } from "@/constants/modules";
+import {
+  MUX_ERROR_MESSAGES,
+  MUX_MAX_VIDEO_ERROR_LENGTH,
+} from "@/constants/mux";
+import { isMuxNotFoundError } from "@/functions/mux/is-mux-not-found-error";
 import { getMux } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
-
-export type MuxProcessingTransition = {
-  moduleId: string;
-  courseId: string;
-  assetIdsToDelete: string[];
-};
-
-type ReadyAsset = {
-  uploadId: string;
-  assetId: string;
-  playbackId: string;
-  playbackPolicy: "public" | "signed";
-  durationSeconds?: number;
-};
+import type {
+  MuxProcessingTransition,
+  ReadyMuxAsset,
+} from "@/types/mux";
 
 async function getPendingModule(uploadId: string) {
   return prisma.module.findUnique({
@@ -34,7 +30,7 @@ export async function markMuxAssetReady({
   playbackId,
   playbackPolicy,
   durationSeconds,
-}: ReadyAsset): Promise<MuxProcessingTransition | null> {
+}: ReadyMuxAsset): Promise<MuxProcessingTransition | null> {
   const courseModule = await getPendingModule(uploadId);
 
   if (!courseModule) return null;
@@ -43,7 +39,7 @@ export async function markMuxAssetReady({
     typeof durationSeconds === "number" &&
     Number.isFinite(durationSeconds) &&
     durationSeconds > 0
-      ? Math.min(Math.ceil(durationSeconds), 12 * 60 * 60)
+      ? Math.min(Math.ceil(durationSeconds), MAX_MODULE_DURATION_SECONDS)
       : undefined;
 
   const updated = await prisma.module.updateMany({
@@ -90,7 +86,7 @@ export async function markMuxUploadFailed(
     },
     data: {
       muxUploadId: null,
-      videoError: message.slice(0, 500),
+      videoError: message.slice(0, MUX_MAX_VIDEO_ERROR_LENGTH),
     },
   });
 
@@ -116,7 +112,7 @@ export async function reconcileMuxUpload(
     if (upload.status !== "asset_created") {
       return markMuxUploadFailed(
         uploadId,
-        upload.error?.message ?? "Il caricamento Mux non è stato completato."
+        upload.error?.message ?? MUX_ERROR_MESSAGES.uploadIncomplete
       );
     }
 
@@ -129,8 +125,7 @@ export async function reconcileMuxUpload(
     if (asset.status === "errored") {
       return markMuxUploadFailed(
         uploadId,
-        asset.errors?.messages?.join(" ") ??
-          "Mux non è riuscito a elaborare il video.",
+        asset.errors?.messages?.join(" ") ?? MUX_ERROR_MESSAGES.processingFailed,
         asset.id
       );
     }
@@ -145,7 +140,7 @@ export async function reconcileMuxUpload(
     ) {
       return markMuxUploadFailed(
         uploadId,
-        "Mux non ha generato un identificativo di riproduzione.",
+        MUX_ERROR_MESSAGES.missingPlaybackId,
         asset.id
       );
     }
@@ -158,11 +153,8 @@ export async function reconcileMuxUpload(
       durationSeconds: asset.duration,
     });
   } catch (error) {
-    if ((error as { status?: number }).status === 404) {
-      return markMuxUploadFailed(
-        uploadId,
-        "Mux non trova più il caricamento associato al modulo."
-      );
+    if (isMuxNotFoundError(error)) {
+      return markMuxUploadFailed(uploadId, MUX_ERROR_MESSAGES.missingUpload);
     }
 
     throw error;

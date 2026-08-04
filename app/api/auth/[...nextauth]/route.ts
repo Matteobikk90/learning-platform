@@ -1,5 +1,8 @@
+import { MAGIC_LINK_RATE_LIMIT } from "@/constants/auth";
+import { readSignInBody } from "@/functions/auth/read-sign-in-body";
 import { authOptions } from "@/lib/auth";
 import { consumeRateLimit, getRequestIp } from "@/lib/rate-limit";
+import type { NextAuthRouteContext } from "@/types/routes";
 import { NextResponse } from "next/server";
 import NextAuth from "next-auth";
 
@@ -7,43 +10,9 @@ const handler = NextAuth(authOptions);
 
 export { handler as GET };
 
-// next-auth accepts both JSON and form-encoded sign-in bodies, so the rate
-// limiter must read the email from whichever format the request uses.
-async function readSignInBody(
-  request: Request
-): Promise<{ email?: string; json?: string }> {
-  try {
-    const contentType = request.headers.get("content-type") ?? "";
-
-    if (contentType.includes("application/json")) {
-      const body: unknown = await request.clone().json();
-
-      if (!body || typeof body !== "object") return {};
-
-      const { email, json } = body as Record<string, unknown>;
-
-      return {
-        email: typeof email === "string" ? email : undefined,
-        json: typeof json === "string" ? json : undefined,
-      };
-    }
-
-    const formData = await request.clone().formData();
-    const email = formData.get("email");
-    const json = formData.get("json");
-
-    return {
-      email: typeof email === "string" ? email : undefined,
-      json: typeof json === "string" ? json : undefined,
-    };
-  } catch {
-    return {};
-  }
-}
-
 export async function POST(
   request: Request,
-  context: { params: Promise<{ nextauth: string[] }> }
+  context: NextAuthRouteContext
 ) {
   const { nextauth } = await context.params;
 
@@ -54,8 +23,8 @@ export async function POST(
       consumeRateLimit({
         scope: "magic-link-ip",
         value: getRequestIp(request),
-        limit: 10,
-        windowSeconds: 15 * 60,
+        limit: MAGIC_LINK_RATE_LIMIT.ip,
+        windowSeconds: MAGIC_LINK_RATE_LIMIT.windowSeconds,
       }),
     ];
 
@@ -64,8 +33,8 @@ export async function POST(
         consumeRateLimit({
           scope: "magic-link-email",
           value: email,
-          limit: 3,
-          windowSeconds: 15 * 60,
+          limit: MAGIC_LINK_RATE_LIMIT.email,
+          windowSeconds: MAGIC_LINK_RATE_LIMIT.windowSeconds,
         })
       );
     }
@@ -79,8 +48,6 @@ export async function POST(
       const url = new URL("/login?error=RateLimit", request.url).toString();
       const headers = { "Retry-After": String(retryAfter) };
 
-      // Mirror next-auth's own response contract: JSON for its client
-      // (json=true), a redirect for plain form posts.
       return json === "true"
         ? NextResponse.json({ url }, { status: 429, headers })
         : NextResponse.redirect(url, { status: 302, headers });

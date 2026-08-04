@@ -1,20 +1,27 @@
 "use client";
 
-import { createModule } from "@/features/modules/actions";
 import { SubmitButton } from "@/components/submit-button";
-
-type ModuleFormProps = {
-  courseId: string;
-};
+import { createModule } from "@/features/modules/actions";
+import { useFormAction } from "@/hooks/use-form-action";
+import type { ModuleFormProps } from "@/types/module";
 
 export function ModuleForm({ courseId }: ModuleFormProps) {
+  const [state, formAction] = useFormAction(createModule);
+
   return (
-    <form action={createModule} className="space-y-6">
+    <form action={formAction} className="space-y-6">
       <input type="hidden" name="courseId" value={courseId} />
 
       <div>
         <label htmlFor="module-title" className="form-label">Titolo</label>
-        <input id="module-title" name="title" required maxLength={160} className="form-input" />
+        <input
+          id="module-title"
+          name="title"
+          required
+          maxLength={160}
+          defaultValue={state.values?.title ?? ""}
+          className="form-input"
+        />
       </div>
 
       <div>
@@ -26,9 +33,14 @@ export function ModuleForm({ courseId }: ModuleFormProps) {
           min="1"
           required
           placeholder="1"
+          defaultValue={state.values?.order ?? ""}
           className="form-input"
         />
       </div>
+
+      {state.error && (
+        <p className="text-[0.8rem] text-danger" role="alert">{state.error}</p>
+      )}
 
       <SubmitButton pendingLabel="Creazione…">
         Crea modulo

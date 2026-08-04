@@ -1,80 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
 
-type Props = {
-  defaultUrl?: string | null;
-};
+import { useCourseImageUpload } from "@/hooks/use-course-image-upload";
+import type { CourseImageUploadProps } from "@/types/course";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_TYPES = new Set([
-  "image/avif",
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-]);
-
-export function CourseImageUpload({ defaultUrl }: Props) {
-  const [url, setUrl] = useState(defaultUrl ?? "");
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleFile = async (file: File) => {
-    if (uploading) return;
-    setError(null);
-
-    if (!ALLOWED_TYPES.has(file.type)) {
-      setError("Sono supportati soltanto JPG, PNG, WebP e AVIF.");
-      return;
-    }
-
-    if (file.size === 0 || file.size > MAX_FILE_SIZE) {
-      setError("L’immagine deve pesare meno di 5 MB.");
-      return;
-    }
-
-    setUploading(true);
-
-    const body = new FormData();
-    body.append("file", file);
-
-    try {
-      const res = await fetch("/api/upload-image", { method: "POST", body });
-      const json: unknown = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        const message =
-          json &&
-          typeof json === "object" &&
-          "error" in json &&
-          typeof json.error === "string"
-            ? json.error
-            : "Impossibile caricare l’immagine";
-        throw new Error(message);
-      }
-
-      if (
-        !json ||
-        typeof json !== "object" ||
-        !("url" in json) ||
-        typeof json.url !== "string"
-      ) {
-        throw new Error("Risposta del server non valida");
-      }
-
-      setUrl(json.url);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
-    } finally {
-      setUploading(false);
-    }
-  };
+export function CourseImageUpload({ defaultUrl }: CourseImageUploadProps) {
+  const {
+    error,
+    handleFile,
+    inputRef,
+    removeImage,
+    selectFile,
+    uploading,
+    url,
+  } = useCourseImageUpload(defaultUrl);
 
   return (
     <div className="space-y-3">
-      {/* Hidden input carries the URL into the form submission */}
       <input type="hidden" name="coverImageUrl" value={url} />
 
       <button
@@ -83,7 +26,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
         aria-label={url ? "Cambia immagine di copertina" : "Scegli immagine di copertina"}
         aria-busy={uploading}
         className="relative block w-full rounded-lg border-2 border-dashed border-stroke overflow-hidden cursor-pointer min-h-44 bg-canvas disabled:cursor-wait"
-        onClick={() => inputRef.current?.click()}
+        onClick={selectFile}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault();
@@ -114,7 +57,6 @@ export function CourseImageUpload({ defaultUrl }: Props) {
           </div>
         )}
 
-        {/* Loading overlay */}
         {uploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface/85">
             <span className="font-mono text-xs tracking-widest uppercase text-petrol animate-pulse">
@@ -124,7 +66,6 @@ export function CourseImageUpload({ defaultUrl }: Props) {
         )}
       </button>
 
-      {/* File input (hidden) */}
       <input
         ref={inputRef}
         type="file"
@@ -136,11 +77,10 @@ export function CourseImageUpload({ defaultUrl }: Props) {
         }}
       />
 
-      {/* Actions row */}
       <div className="flex items-center gap-3">
         <button
           type="button"
-          onClick={() => inputRef.current?.click()}
+          onClick={selectFile}
           disabled={uploading}
           className="btn-secondary text-[0.7rem]">
           {url ? "Cambia immagine" : "Scegli file"}
@@ -148,7 +88,7 @@ export function CourseImageUpload({ defaultUrl }: Props) {
         {url && (
           <button
             type="button"
-            onClick={() => setUrl("")}
+            onClick={removeImage}
             className="text-[0.7rem] text-muted hover:text-white transition-colors tracking-wide">
             Rimuovi
           </button>

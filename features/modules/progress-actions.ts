@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import { MAX_WATCHED_DELTA_SECONDS } from "@/features/modules/progress-constants";
+import { MAX_WATCHED_DELTA_SECONDS } from "@/constants/progress";
 import { isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";

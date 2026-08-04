@@ -1,116 +1,23 @@
 "use client";
 
 import MuxUploader from "@mux/mux-uploader-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
-import type { VideoState } from "@/features/modules/video-state";
-
-type VideoUploadProps = {
-  moduleId: string;
-  initialStatus: VideoState;
-  initialError?: string | null;
-};
-
-type VideoStatusResponse = {
-  status: VideoState;
-  error: string | null;
-};
+import { useVideoUpload } from "@/hooks/use-video-upload";
+import type { VideoUploadProps } from "@/types/video";
 
 export function VideoUpload({
   moduleId,
   initialStatus,
   initialError = null,
 }: VideoUploadProps) {
-  const router = useRouter();
-  const [processing, setProcessing] = useState(initialStatus === "processing");
-  const [ready, setReady] = useState(false);
-  const [error, setError] = useState<string | null>(initialError);
-
-  useEffect(() => {
-    if (!processing) return;
-
-    let cancelled = false;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let attempts = 0;
-
-    const poll = async () => {
-      try {
-        const response = await fetch(
-          `/api/admin/modules/${moduleId}/video-status`,
-          { cache: "no-store" }
-        );
-
-        if (!response.ok) {
-          throw new Error("Impossibile controllare lo stato del video.");
-        }
-
-        const result = (await response.json()) as VideoStatusResponse;
-
-        if (cancelled) return;
-
-        if (result.status === "ready") {
-          setProcessing(false);
-          setReady(true);
-          router.refresh();
-          return;
-        }
-
-        if (result.status === "error" || result.status === "empty") {
-          setProcessing(false);
-          setError(
-            result.error ?? "Mux non è riuscito a elaborare il video."
-          );
-          router.refresh();
-          return;
-        }
-
-        attempts += 1;
-      } catch (pollError) {
-        attempts += 1;
-
-        if (attempts >= 6 && !cancelled) {
-          setError(
-            pollError instanceof Error
-              ? pollError.message
-              : "Impossibile controllare lo stato del video."
-          );
-        }
-      }
-
-      if (!cancelled) {
-        timer = setTimeout(poll, attempts < 20 ? 3_000 : 10_000);
-      }
-    };
-
-    void poll();
-
-    return () => {
-      cancelled = true;
-      if (timer) clearTimeout(timer);
-    };
-  }, [moduleId, processing, router]);
-
-  async function getUploadUrl() {
-    setError(null);
-    setReady(false);
-
-    const response = await fetch("/api/mux/upload", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ moduleId }),
-    });
-    const result = (await response.json()) as {
-      uploadUrl?: string;
-      error?: string;
-    };
-
-    if (!response.ok || !result.uploadUrl) {
-      throw new Error(result.error ?? "Impossibile avviare il caricamento.");
-    }
-
-    return result.uploadUrl;
-  }
+  const {
+    error,
+    getUploadUrl,
+    handleUploadError,
+    handleUploadSuccess,
+    processing,
+    ready,
+  } = useVideoUpload({ moduleId, initialStatus, initialError });
 
   if (processing) {
     return (
@@ -144,10 +51,8 @@ export function VideoUpload({
         endpoint={getUploadUrl}
         pausable
         dynamicChunkSize
-        onUploadError={() =>
-          setError("Il caricamento si è interrotto. Riprova dal controllo qui sopra.")
-        }
-        onSuccess={() => setProcessing(true)}
+        onUploadError={handleUploadError}
+        onSuccess={handleUploadSuccess}
         className="mt-3 inline-flex w-full min-h-[160px] rounded-lg border-2 border-dashed border-stroke bg-surface font-sans text-ink [[upload-in-progress]]:border-solid [[upload-in-progress]]:border-ocean [[upload-complete]]:border-petrol"
         style={
           {

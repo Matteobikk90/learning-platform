@@ -30,5 +30,3 @@ export const courseFormSchema = z.object({
 export const updateCourseSchema = courseFormSchema.extend({
   id: z.string().min(1),
 });
-
-export type CourseFormInput = z.infer<typeof courseFormSchema>;

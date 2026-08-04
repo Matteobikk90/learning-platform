@@ -4,25 +4,14 @@ import { prisma } from "@/lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-import { Resend } from "resend";
 
+import {
+  MAGIC_LINK_MAX_AGE_MINUTES,
+  MAGIC_LINK_MAX_AGE_SECONDS,
+} from "@/constants/auth";
+import { escapeHtml } from "@/functions/auth/escape-html";
+import { getResend } from "@/functions/auth/get-resend";
 import { requireEnv } from "@/lib/env";
-
-let resendClient: Resend | undefined;
-
-function getResend() {
-  resendClient ??= new Resend(requireEnv("RESEND_API_KEY"));
-  return resendClient;
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
 
 export const authOptions: NextAuthOptions = {
   secret: requireEnv("AUTH_SECRET"),
@@ -30,15 +19,16 @@ export const authOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
       from: process.env.EMAIL_FROM,
+      maxAge: MAGIC_LINK_MAX_AGE_SECONDS,
       async sendVerificationRequest({ identifier, url }) {
         const from = requireEnv("EMAIL_FROM");
         const { error } = await getResend().emails.send({
           from,
           to: identifier,
           subject: "Accedi alla piattaforma",
-          text: `Apri questo link per accedere: ${url}`,
+          text: `Apri questo link per accedere (valido ${MAGIC_LINK_MAX_AGE_MINUTES} minuti): ${url}`,
           html: `
-            <p>Apri il link qui sotto per accedere:</p>
+            <p>Apri il link qui sotto per accedere. È valido per ${MAGIC_LINK_MAX_AGE_MINUTES} minuti.</p>
             <p><a href="${escapeHtml(url)}">Accedi alla piattaforma</a></p>
           `,
         });

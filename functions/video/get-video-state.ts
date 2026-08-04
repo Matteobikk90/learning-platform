@@ -1,10 +1,4 @@
-export type VideoState = "empty" | "processing" | "ready" | "error";
-
-type VideoStateInput = {
-  muxUploadId: string | null;
-  videoPlaybackId: string | null;
-  videoError: string | null;
-};
+import type { VideoState, VideoStateInput } from "@/types/video";
 
 export function getVideoState(video: VideoStateInput): VideoState {
   if (video.muxUploadId) return "processing";
@@ -13,7 +7,7 @@ export function getVideoState(video: VideoStateInput): VideoState {
   return "empty";
 }
 
-export function getVideoStatusLabel(video: VideoStateInput): string {
+export function getVideoStatusLabel(video: VideoStateInput) {
   const state = getVideoState(video);
 
   if (state === "processing") {

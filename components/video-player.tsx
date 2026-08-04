@@ -2,18 +2,7 @@
 
 import MuxPlayer from "@mux/mux-player-react";
 
-import type { MuxPlaybackTokens } from "@/lib/mux";
-
-type VideoPlayerProps = {
-  playbackId: string;
-  playbackTokens?: MuxPlaybackTokens;
-  title: string;
-  initialTime?: number;
-  onTimeUpdate?: (currentTime: number) => void;
-  onEnded?: (duration: number) => void;
-  onSeeked?: (currentTime: number) => void;
-  onPause?: (currentTime: number) => void;
-};
+import type { VideoPlayerProps } from "@/types/video";
 
 export function VideoPlayer({
   playbackId,
