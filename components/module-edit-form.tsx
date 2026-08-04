@@ -5,6 +5,7 @@ import { updateModule } from "@/features/modules/actions";
 import { useFormAction } from "@/hooks/use-form-action";
 import { formatDuration } from "@/lib/format-duration";
 import type { ModuleEditFormProps } from "@/types/module";
+import { useTranslations } from "next-intl";
 
 export function ModuleEditForm({
   moduleId,
@@ -12,13 +13,16 @@ export function ModuleEditForm({
   order,
   durationSeconds,
 }: ModuleEditFormProps) {
+  const t = useTranslations("Forms");
   const [state, formAction] = useFormAction(updateModule);
 
   return (
     <form action={formAction} className="mt-4 space-y-5">
       <input type="hidden" name="moduleId" value={moduleId} />
       <div>
-        <label htmlFor="module-title" className="form-label">Titolo</label>
+        <label htmlFor="module-title" className="form-label">
+          {t("title")}
+        </label>
         <input
           id="module-title"
           name="title"
@@ -30,7 +34,9 @@ export function ModuleEditForm({
       </div>
       <div className="flex gap-4">
         <div className="flex-1">
-          <label htmlFor="module-order" className="form-label">Ordine</label>
+          <label htmlFor="module-order" className="form-label">
+            {t("order")}
+          </label>
           <input
             id="module-order"
             name="order"
@@ -42,21 +48,21 @@ export function ModuleEditForm({
           />
         </div>
         <div className="flex-1">
-          <span className="form-label">Durata</span>
+          <span className="form-label">{t("duration")}</span>
           <div className="form-input text-muted" role="status">
             {durationSeconds > 0
               ? formatDuration(durationSeconds)
-              : "Rilevamento automatico in corso"}
+              : t("durationDetecting")}
           </div>
           <p className="mt-2 text-xs text-subtle">
-            Viene rilevata automaticamente dal video caricato su Mux.
+            {t("durationAutomatic")}
           </p>
         </div>
       </div>
       {state.error && (
         <p className="text-[0.8rem] text-danger" role="alert">{state.error}</p>
       )}
-      <SubmitButton>Salva</SubmitButton>
+      <SubmitButton>{t("save")}</SubmitButton>
     </form>
   );
 }

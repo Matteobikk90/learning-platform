@@ -9,19 +9,22 @@ export async function readSignInBody(request: Request): Promise<SignInBody> {
 
       if (!body || typeof body !== "object") return {};
 
-      const { email, json } = body as Record<string, unknown>;
+      const { callbackUrl, email, json } = body as Record<string, unknown>;
 
       return {
+        ...(typeof callbackUrl === "string" ? { callbackUrl } : {}),
         email: typeof email === "string" ? email : undefined,
         json: typeof json === "string" ? json : undefined,
       };
     }
 
     const formData = await request.clone().formData();
+    const callbackUrl = formData.get("callbackUrl");
     const email = formData.get("email");
     const json = formData.get("json");
 
     return {
+      ...(typeof callbackUrl === "string" ? { callbackUrl } : {}),
       email: typeof email === "string" ? email : undefined,
       json: typeof json === "string" ? json : undefined,
     };

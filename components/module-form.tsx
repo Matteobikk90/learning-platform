@@ -4,8 +4,10 @@ import { SubmitButton } from "@/components/submit-button";
 import { createModule } from "@/features/modules/actions";
 import { useFormAction } from "@/hooks/use-form-action";
 import type { ModuleFormProps } from "@/types/module";
+import { useTranslations } from "next-intl";
 
 export function ModuleForm({ courseId }: ModuleFormProps) {
+  const t = useTranslations("Forms");
   const [state, formAction] = useFormAction(createModule);
 
   return (
@@ -13,7 +15,9 @@ export function ModuleForm({ courseId }: ModuleFormProps) {
       <input type="hidden" name="courseId" value={courseId} />
 
       <div>
-        <label htmlFor="module-title" className="form-label">Titolo</label>
+        <label htmlFor="module-title" className="form-label">
+          {t("title")}
+        </label>
         <input
           id="module-title"
           name="title"
@@ -25,7 +29,9 @@ export function ModuleForm({ courseId }: ModuleFormProps) {
       </div>
 
       <div>
-        <label htmlFor="module-order" className="form-label">Ordine</label>
+        <label htmlFor="module-order" className="form-label">
+          {t("order")}
+        </label>
         <input
           id="module-order"
           name="order"
@@ -42,8 +48,8 @@ export function ModuleForm({ courseId }: ModuleFormProps) {
         <p className="text-[0.8rem] text-danger" role="alert">{state.error}</p>
       )}
 
-      <SubmitButton pendingLabel="Creazione…">
-        Crea modulo
+      <SubmitButton pendingLabel={t("creating")}>
+        {t("createModule")}
       </SubmitButton>
     </form>
   );

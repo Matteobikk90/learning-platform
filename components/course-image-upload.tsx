@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import { useCourseImageUpload } from "@/hooks/use-course-image-upload";
 import type { CourseImageUploadProps } from "@/types/course";
 
 export function CourseImageUpload({ defaultUrl }: CourseImageUploadProps) {
+  const t = useTranslations("Forms");
   const {
     error,
     handleFile,
@@ -23,7 +25,7 @@ export function CourseImageUpload({ defaultUrl }: CourseImageUploadProps) {
       <button
         type="button"
         disabled={uploading}
-        aria-label={url ? "Cambia immagine di copertina" : "Scegli immagine di copertina"}
+        aria-label={url ? t("changeCover") : t("chooseCover")}
         aria-busy={uploading}
         className="relative block w-full rounded-lg border-2 border-dashed border-stroke overflow-hidden cursor-pointer min-h-44 bg-canvas disabled:cursor-wait"
         onClick={selectFile}
@@ -37,7 +39,7 @@ export function CourseImageUpload({ defaultUrl }: CourseImageUploadProps) {
           <div className="relative h-44 w-full">
             <Image
               src={url}
-              alt="Anteprima della copertina del corso"
+              alt={t("coverPreview")}
               fill
               sizes="(max-width: 768px) 100vw, 608px"
               className="object-cover"
@@ -51,16 +53,18 @@ export function CourseImageUpload({ defaultUrl }: CourseImageUploadProps) {
               <polyline points="21 15 16 10 5 21" />
             </svg>
             <span className="text-xs text-muted tracking-wide">
-              Clicca o trascina un&apos;immagine
+              {t("dropImage")}
             </span>
-            <span className="text-[0.7rem] text-subtle">JPG, PNG, WebP, AVIF — max 5 MB</span>
+            <span className="text-[0.7rem] text-subtle">
+              {t("imageFormats")}
+            </span>
           </div>
         )}
 
         {uploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface/85">
             <span className="font-mono text-xs tracking-widest uppercase text-petrol animate-pulse">
-              Caricamento…
+              {t("uploading")}
             </span>
           </div>
         )}
@@ -83,14 +87,14 @@ export function CourseImageUpload({ defaultUrl }: CourseImageUploadProps) {
           onClick={selectFile}
           disabled={uploading}
           className="btn-secondary text-[0.7rem]">
-          {url ? "Cambia immagine" : "Scegli file"}
+          {url ? t("changeImage") : t("chooseFile")}
         </button>
         {url && (
           <button
             type="button"
             onClick={removeImage}
             className="text-[0.7rem] text-muted hover:text-white transition-colors tracking-wide">
-            Rimuovi
+            {t("remove")}
           </button>
         )}
       </div>

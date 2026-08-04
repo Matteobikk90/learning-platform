@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { MODULE_FORM_ERRORS } from "@/constants/modules";
 import {
@@ -14,23 +14,34 @@ import {
   getUpdateModuleFormValues,
   isDuplicateModuleOrderError,
 } from "@/functions/modules/module-form";
+import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
+import { getValidationMessage } from "@/functions/forms/get-validation-message";
 import { revalidateModulePages } from "@/functions/modules/revalidate-module-pages";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import type { FormState } from "@/types/forms";
+import { redirect } from "next/navigation";
 
 export async function createModule(
   _prevState: FormState,
   formData: FormData
 ): Promise<FormState> {
   await requireAdmin();
+  const [locale, tValidation] = await Promise.all([
+    getLocale(),
+    getTranslations("Validation"),
+  ]);
 
   const values = getCreateModuleFormValues(formData);
   const parsed = createModuleSchema.safeParse(getCreateModuleFormData(formData));
 
   if (!parsed.success) {
     return {
-      error: parsed.error.issues[0]?.message ?? MODULE_FORM_ERRORS.invalidData,
+      error: getValidationMessage(
+        tValidation,
+        parsed.error.issues[0]?.message,
+        MODULE_FORM_ERRORS.invalidData
+      ),
       values,
     };
   }
@@ -49,9 +60,11 @@ export async function createModule(
     }),
   ]);
 
-  if (!course) return { error: MODULE_FORM_ERRORS.courseNotFound, values };
+  if (!course) {
+    return { error: tValidation(MODULE_FORM_ERRORS.courseNotFound), values };
+  }
   if (duplicateOrder) {
-    return { error: MODULE_FORM_ERRORS.duplicateOrder, values };
+    return { error: tValidation(MODULE_FORM_ERRORS.duplicateOrder), values };
   }
 
   let courseModuleId: string;
@@ -69,14 +82,17 @@ export async function createModule(
     courseModuleId = courseModule.id;
   } catch (error) {
     if (isDuplicateModuleOrderError(error)) {
-      return { error: MODULE_FORM_ERRORS.duplicateOrder, values };
+      return { error: tValidation(MODULE_FORM_ERRORS.duplicateOrder), values };
     }
     throw error;
   }
 
   revalidateModulePages(parsed.data.courseId, courseModuleId);
   redirect(
-    `/admin/courses/${parsed.data.courseId}/modules/${courseModuleId}`
+    getLocalizedPath(
+      locale,
+      `/admin/courses/${parsed.data.courseId}/modules/${courseModuleId}`
+    )
   );
 }
 
@@ -85,13 +101,21 @@ export async function updateModule(
   formData: FormData
 ): Promise<FormState> {
   await requireAdmin();
+  const [locale, tValidation] = await Promise.all([
+    getLocale(),
+    getTranslations("Validation"),
+  ]);
 
   const values = getUpdateModuleFormValues(formData);
   const parsed = updateModuleSchema.safeParse(getUpdateModuleFormData(formData));
 
   if (!parsed.success) {
     return {
-      error: parsed.error.issues[0]?.message ?? MODULE_FORM_ERRORS.invalidData,
+      error: getValidationMessage(
+        tValidation,
+        parsed.error.issues[0]?.message,
+        MODULE_FORM_ERRORS.invalidData
+      ),
       values,
     };
   }
@@ -101,7 +125,9 @@ export async function updateModule(
     select: { courseId: true },
   });
 
-  if (!courseModule) return { error: MODULE_FORM_ERRORS.notFound, values };
+  if (!courseModule) {
+    return { error: tValidation(MODULE_FORM_ERRORS.notFound), values };
+  }
 
   const duplicateOrder = await prisma.module.findFirst({
     where: {
@@ -113,7 +139,7 @@ export async function updateModule(
   });
 
   if (duplicateOrder) {
-    return { error: MODULE_FORM_ERRORS.duplicateOrder, values };
+    return { error: tValidation(MODULE_FORM_ERRORS.duplicateOrder), values };
   }
 
   try {
@@ -126,13 +152,16 @@ export async function updateModule(
     });
   } catch (error) {
     if (isDuplicateModuleOrderError(error)) {
-      return { error: MODULE_FORM_ERRORS.duplicateOrder, values };
+      return { error: tValidation(MODULE_FORM_ERRORS.duplicateOrder), values };
     }
     throw error;
   }
 
   revalidateModulePages(courseModule.courseId, parsed.data.moduleId);
   redirect(
-    `/admin/courses/${courseModule.courseId}/modules/${parsed.data.moduleId}`
+    getLocalizedPath(
+      locale,
+      `/admin/courses/${courseModule.courseId}/modules/${parsed.data.moduleId}`
+    )
   );
 }

@@ -1,21 +1,28 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { after } from "next/server";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
+import { routing } from "@/i18n/routing";
 import { deleteMuxAsset, deletePendingMuxUpload } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 
 export async function deleteModule(formData: FormData) {
   await requireAdmin();
+  const [locale, tValidation] = await Promise.all([
+    getLocale(),
+    getTranslations("Validation"),
+  ]);
 
   const parsedId = z.string().min(1).max(128).safeParse(formData.get("moduleId"));
 
   if (!parsedId.success) {
-    throw new Error("Modulo non valido");
+    throw new Error(tValidation("invalidModule"));
   }
   const moduleId = parsedId.data;
 
@@ -25,7 +32,7 @@ export async function deleteModule(formData: FormData) {
   });
 
   if (!courseModule) {
-    redirect("/admin/courses");
+    redirect(getLocalizedPath(locale, "/admin/courses"));
   }
 
   await prisma.module.delete({ where: { id: moduleId } });
@@ -36,7 +43,19 @@ export async function deleteModule(formData: FormData) {
     ]);
   });
 
-  revalidatePath(`/admin/courses/${courseModule.courseId}/modules`);
-  revalidatePath(`/profile/courses/${courseModule.courseId}`);
-  redirect(`/admin/courses/${courseModule.courseId}/modules`);
+  for (const supportedLocale of routing.locales) {
+    revalidatePath(
+      `/${supportedLocale}/admin/courses/${courseModule.courseId}/modules`
+    );
+    revalidatePath(
+      `/${supportedLocale}/profile/courses/${courseModule.courseId}`
+    );
+  }
+
+  redirect(
+    getLocalizedPath(
+      locale,
+      `/admin/courses/${courseModule.courseId}/modules`
+    )
+  );
 }

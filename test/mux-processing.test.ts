@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { MUX_ERROR_MESSAGES } from "@/constants/mux";
+
 const prismaMock = vi.hoisted(() => ({
   module: {
     findUnique: vi.fn(),
@@ -147,7 +149,7 @@ describe("reconcileMuxUpload", () => {
       where: { id: "module_1", muxUploadId: "upload_1" },
       data: {
         muxUploadId: null,
-        videoError: "Mux non trova più il caricamento associato al modulo.",
+        videoError: MUX_ERROR_MESSAGES.missingUpload,
       },
     });
   });
@@ -172,7 +174,7 @@ describe("reconcileMuxUpload", () => {
       where: { id: "module_1", muxUploadId: "upload_1" },
       data: {
         muxUploadId: null,
-        videoError: "Mux non ha generato un identificativo di riproduzione.",
+        videoError: MUX_ERROR_MESSAGES.missingPlaybackId,
       },
     });
   });

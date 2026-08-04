@@ -5,16 +5,20 @@ export const COURSE_FORM_VALUE_FIELDS = [
 ] as const;
 
 export const COURSE_FORM_ERRORS = {
-  invalidData: "Dati del corso non validi",
-  invalidImage: "L’immagine deve essere caricata dalla piattaforma",
-  notFound: "Corso non trovato",
+  invalidData: "courseInvalidData",
+  invalidImage: "invalidCourseImage",
+  notFound: "courseNotFound",
 } as const;
 
 export const COURSE_IMAGE_ERRORS = {
-  invalidResponse: "Risposta del server non valida",
-  invalidSize: "L’immagine deve pesare meno di 5 MB.",
-  invalidType: "Sono supportati soltanto JPG, PNG, WebP e AVIF.",
-  uploadFailed: "Impossibile caricare l’immagine",
+  invalidResponse: "invalidImageResponse",
+  invalidRequest: "invalidImageRequest",
+  noFileSelected: "noImageSelected",
+  invalidSize: "invalidImageSize",
+  invalidType: "invalidImageType",
+  invalidDimensions: "invalidImageDimensions",
+  invalidFile: "invalidImageFile",
+  uploadFailed: "imageUploadFailed",
 } as const;
 
 export const COURSE_IMAGE_MAX_FILE_SIZE = 5 * 1024 * 1024;

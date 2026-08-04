@@ -1,5 +1,6 @@
 import { MAGIC_LINK_RATE_LIMIT } from "@/constants/auth";
 import { readSignInBody } from "@/functions/auth/read-sign-in-body";
+import { getLocaleFromUrl } from "@/functions/i18n/get-locale-from-url";
 import { authOptions } from "@/lib/auth";
 import { consumeRateLimit, getRequestIp } from "@/lib/rate-limit";
 import type { NextAuthRouteContext } from "@/types/routes";
@@ -17,7 +18,7 @@ export async function POST(
   const { nextauth } = await context.params;
 
   if (nextauth[0] === "signin" && nextauth[1] === "email") {
-    const { email, json } = await readSignInBody(request);
+    const { callbackUrl, email, json } = await readSignInBody(request);
 
     const checks = [
       consumeRateLimit({
@@ -45,7 +46,11 @@ export async function POST(
       const retryAfter = Math.max(
         ...limits.map((limit) => limit.retryAfterSeconds)
       );
-      const url = new URL("/login?error=RateLimit", request.url).toString();
+      const locale = getLocaleFromUrl(callbackUrl ?? request.headers.get("referer"));
+      const url = new URL(
+        `/${locale}/login?error=RateLimit`,
+        request.url
+      ).toString();
       const headers = { "Retry-After": String(retryAfter) };
 
       return json === "true"

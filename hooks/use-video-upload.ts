@@ -1,10 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { MUX_ERROR_MESSAGES, MUX_STATUS_POLLING } from "@/constants/mux";
 import { createVideoUpload } from "@/functions/mux/create-video-upload";
+import { getMuxErrorMessage } from "@/functions/mux/get-mux-error-message";
 import { getVideoStatus } from "@/functions/mux/get-video-status";
 import type { UseVideoUploadOptions } from "@/types/video";
 
@@ -13,10 +15,20 @@ export function useVideoUpload({
   initialStatus,
   initialError = null,
 }: UseVideoUploadOptions) {
+  const t = useTranslations("Video");
+  const tMuxError = useTranslations("MuxErrors");
   const router = useRouter();
   const [processing, setProcessing] = useState(initialStatus === "processing");
   const [ready, setReady] = useState(false);
-  const [error, setError] = useState<string | null>(initialError);
+  const [error, setError] = useState<string | null>(() =>
+    initialError
+      ? getMuxErrorMessage(
+          tMuxError,
+          initialError,
+          MUX_ERROR_MESSAGES.processingFailed
+        )
+      : null
+  );
 
   useEffect(() => {
     if (!processing) return;
@@ -43,7 +55,13 @@ export function useVideoUpload({
 
         if (result.status === "error" || result.status === "empty") {
           setProcessing(false);
-          setError(result.error ?? MUX_ERROR_MESSAGES.processingFailed);
+          setError(
+            getMuxErrorMessage(
+              tMuxError,
+              result.error,
+              MUX_ERROR_MESSAGES.processingFailed
+            )
+          );
           router.refresh();
           return;
         }
@@ -54,9 +72,11 @@ export function useVideoUpload({
 
         if (consecutiveErrors >= MUX_STATUS_POLLING.maxErrors && !cancelled) {
           setError(
-            pollError instanceof Error
-              ? pollError.message
-              : MUX_ERROR_MESSAGES.unavailableStatus
+            getMuxErrorMessage(
+              tMuxError,
+              pollError,
+              MUX_ERROR_MESSAGES.unavailableStatus
+            )
           );
         }
       }
@@ -77,7 +97,7 @@ export function useVideoUpload({
       cancelled = true;
       if (timer) clearTimeout(timer);
     };
-  }, [moduleId, processing, router]);
+  }, [moduleId, processing, router, tMuxError]);
 
   async function getUploadUrl() {
     setError(null);
@@ -91,7 +111,6 @@ export function useVideoUpload({
     processing,
     ready,
     handleUploadSuccess: () => setProcessing(true),
-    handleUploadError: () =>
-      setError("Il caricamento si è interrotto. Riprova dal controllo qui sopra."),
+    handleUploadError: () => setError(t("uploadInterrupted")),
   };
 }

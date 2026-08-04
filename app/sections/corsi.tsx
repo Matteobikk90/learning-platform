@@ -5,13 +5,16 @@ import { CourseCoverPlaceholder } from "@/components/course-cover-placeholder";
 import { SubmitButton } from "@/components/submit-button";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { cn } from "@/lib/cn";
+import { Link } from "@/i18n/navigation";
 import coursesDesktop from "@/public/images/home/courses-desktop.jpg";
 import coursesMobile from "@/public/images/home/courses-mobile.jpg";
 import type { CorsiSectionProps } from "@/types/parallax";
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
+  const t = useTranslations("Home.courses");
+
   return (
     <section
       id="corsi"
@@ -39,18 +42,18 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
         <div className="mb-12 md:mb-16">
           <p className="mb-5 flex items-center gap-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.24em] text-white/60">
             <span className="h-px w-8 bg-white/45" aria-hidden="true" />
-            Percorsi online
+            {t("eyebrow")}
           </p>
           <h2 className="section-title">
-            Inizia ora la trasformazione:
+            {t("title")}
             <br />
-            <em>scegli il tuo percorso</em>
+            <em>{t("titleEmphasis")}</em>
           </h2>
         </div>
 
         {courses.length === 0 ? (
           <div className="card px-8 py-16 text-center text-muted">
-            Nessun corso disponibile al momento.
+            {t("empty")}
           </div>
         ) : (
           <div className="flex flex-col gap-8">
@@ -67,7 +70,6 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                       ? undefined
                       : "course-banner-placeholder"
                   )}>
-                  {/* Background composite */}
                   {course.coverImageUrl ? (
                     <Image
                       src={course.coverImageUrl}
@@ -83,7 +85,7 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
 
                   <div className="course-banner-corner" aria-hidden="true">
                     <span className="size-1.5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.75)]" />
-                    Accesso digitale
+                    {t("digitalAccess")}
                   </div>
 
                   <div className="course-banner-content">
@@ -92,12 +94,12 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span className="h-px w-7 bg-white/30" aria-hidden="true" />
-                      Percorso guidato
+                      {t("guidedPath")}
                     </div>
 
                     {purchased && (
                       <span className="mb-5 self-start rounded-full bg-white px-2.5 py-1 font-mono text-[0.625rem] font-bold uppercase tracking-[0.18em] text-black">
-                        Acquistato
+                        {t("purchased")}
                       </span>
                     )}
 
@@ -120,13 +122,13 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                         <Link
                           href={`/profile/courses/${course.id}`}
                           className="btn-primary">
-                          Vai al corso
+                          {t("goToCourse")}
                         </Link>
                       ) : (
                         <form
                           action={createCheckoutSession.bind(null, course.id)}>
-                          <SubmitButton pendingLabel="Apertura checkout…">
-                            Acquista il corso
+                          <SubmitButton pendingLabel={t("openingCheckout")}>
+                            {t("buyCourse")}
                           </SubmitButton>
                         </form>
                       )}

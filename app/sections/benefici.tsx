@@ -1,12 +1,12 @@
 "use client";
 
-import { BENEFITS } from "@/constants/parallax";
 import benefitsDesktop from "@/public/images/home/benefits-desktop.jpg";
 import benefitsMobile from "@/public/images/home/benefits-mobile.jpg";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { useHorizontalProgress } from "@/hooks/use-horizontal-progress";
 import { cn } from "@/lib/cn";
-import type { BeneficiSectionProps } from "@/types/parallax";
+import type { BenefitContent, BeneficiSectionProps } from "@/types/parallax";
+import { useTranslations } from "next-intl";
 import { useMemo, useRef } from "react";
 
 export function Benefici({
@@ -14,8 +14,10 @@ export function Benefici({
   scrollContainerRef,
 }: BeneficiSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const t = useTranslations("Home.benefits");
+  const benefits = t.raw("items") as BenefitContent[];
   const progress = useHorizontalProgress(sectionRef, scrollContainerRef);
-  const totalSlides = BENEFITS.length;
+  const totalSlides = benefits.length;
 
   const translateX = useMemo(
     () => progress * (totalSlides - 1) * 100,
@@ -31,7 +33,6 @@ export function Benefici({
       style={{
         height: `${totalSlides * 100}dvh`,
       }}>
-      {/* Sticky viewport — stays fixed while user scrolls through the section */}
       <div className="sticky top-0 h-dvh overflow-hidden">
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
           <div
@@ -58,7 +59,6 @@ export function Benefici({
           />
         </div>
 
-        {/* Sliding container — all slides in a row, translated by progress */}
         <div
           className="relative z-10 flex h-full will-change-transform"
           style={{
@@ -66,7 +66,10 @@ export function Benefici({
             transform: sceneTransform,
             transition: "transform 0.05s linear",
           }}>
-          {BENEFITS.map(({ num, title, body }) => (
+          {benefits.map(({ title, body }, index) => {
+            const num = String(index + 1).padStart(2, "0");
+
+            return (
             <article
               key={num}
               className="flex h-dvh w-screen shrink-0 flex-col items-center justify-center px-6 py-24 text-center">
@@ -91,10 +94,10 @@ export function Benefici({
                 </div>
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Progress indicator */}
         <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 text-white/55">
           <div className="h-px w-16 overflow-hidden bg-white/20">
             <div
@@ -103,7 +106,7 @@ export function Benefici({
             />
           </div>
           <span className="font-mono text-[0.625rem] tracking-[0.25em] uppercase">
-            Scorri
+            {t("scroll")}
           </span>
         </div>
       </div>

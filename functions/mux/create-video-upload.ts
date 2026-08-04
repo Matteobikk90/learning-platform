@@ -1,3 +1,4 @@
+import { MUX_ERROR_MESSAGES } from "@/constants/mux";
 import type { VideoUploadEndpointResponse } from "@/types/video";
 
 export async function createVideoUpload(moduleId: string) {
@@ -9,7 +10,7 @@ export async function createVideoUpload(moduleId: string) {
   const result = (await response.json()) as VideoUploadEndpointResponse;
 
   if (!response.ok || !result.uploadUrl) {
-    throw new Error(result.error ?? "Impossibile avviare il caricamento.");
+    throw new Error(result.error ?? MUX_ERROR_MESSAGES.createUploadFailed);
   }
 
   return result.uploadUrl;

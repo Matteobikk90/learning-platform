@@ -1,23 +1,24 @@
 "use client";
 
 import { deleteCourse } from "@/features/courses/delete-actions";
+import { useTranslations } from "next-intl";
 
 export function DeleteCourseButton({ courseId }: { courseId: string }) {
+  const t = useTranslations("Forms");
+
   return (
     <form
       action={deleteCourse}
       onSubmit={(e) => {
         if (
-          !window.confirm(
-            "Eliminare il corso e tutti i suoi moduli? L'operazione non può essere annullata."
-          )
+          !window.confirm(t("deleteCourseConfirm"))
         )
           e.preventDefault();
       }}>
       <input type="hidden" name="courseId" value={courseId} />
       <button
         type="submit"
-        title="Elimina corso"
+        title={t("deleteCourse")}
         className="btn-danger inline-flex items-center gap-2 px-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +36,7 @@ export function DeleteCourseButton({ courseId }: { courseId: string }) {
           <path d="M10 11v6M14 11v6" />
           <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
         </svg>
-        <span className="hidden sm:inline">Elimina</span>
+        <span className="hidden sm:inline">{t("delete")}</span>
       </button>
     </form>
   );

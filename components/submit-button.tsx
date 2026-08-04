@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import { useTranslations } from "next-intl";
 
 type SubmitButtonProps = {
   children: React.ReactNode;
@@ -11,10 +12,11 @@ type SubmitButtonProps = {
 
 export function SubmitButton({
   children,
-  pendingLabel = "Salvataggio…",
+  pendingLabel,
   className = "btn-primary",
   title,
 }: SubmitButtonProps) {
+  const t = useTranslations("Forms");
   const { pending } = useFormStatus();
 
   return (
@@ -24,7 +26,7 @@ export function SubmitButton({
       aria-disabled={pending}
       title={title}
       className={`${className} disabled:cursor-wait disabled:opacity-60`}>
-      {pending ? pendingLabel : children}
+      {pending ? (pendingLabel ?? t("saving")) : children}
     </button>
   );
 }

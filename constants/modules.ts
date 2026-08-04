@@ -6,10 +6,10 @@ export const UPDATE_MODULE_FORM_VALUE_FIELDS = [
 ] as const;
 
 export const MODULE_FORM_ERRORS = {
-  courseNotFound: "Corso non trovato",
-  duplicateOrder: "Esiste già un modulo con questo ordine",
-  invalidData: "Dati del modulo non validi",
-  notFound: "Modulo non trovato",
+  courseNotFound: "moduleCourseNotFound",
+  duplicateOrder: "duplicateModuleOrder",
+  invalidData: "moduleInvalidData",
+  notFound: "moduleNotFound",
 } as const;
 
 export const MAX_MODULE_DURATION_SECONDS = 12 * 60 * 60;

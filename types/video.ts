@@ -2,6 +2,14 @@ import type { MuxPlaybackTokens } from "@/types/mux";
 
 export type VideoState = "empty" | "processing" | "ready" | "error";
 
+export type VideoStatusMessageKey =
+  | "statusProcessingReplacement"
+  | "statusProcessing"
+  | "statusReplacementFailed"
+  | "statusFailed"
+  | "statusReady"
+  | "statusEmpty";
+
 export type VideoStateInput = {
   muxUploadId: string | null;
   videoPlaybackId: string | null;

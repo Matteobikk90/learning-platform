@@ -9,8 +9,9 @@ import {
   MAGIC_LINK_MAX_AGE_MINUTES,
   MAGIC_LINK_MAX_AGE_SECONDS,
 } from "@/constants/auth";
-import { escapeHtml } from "@/functions/auth/escape-html";
+import { getMagicLinkEmail } from "@/functions/auth/get-magic-link-email";
 import { getResend } from "@/functions/auth/get-resend";
+import { getLocaleFromUrl } from "@/functions/i18n/get-locale-from-url";
 import { requireEnv } from "@/lib/env";
 
 export const authOptions: NextAuthOptions = {
@@ -22,15 +23,15 @@ export const authOptions: NextAuthOptions = {
       maxAge: MAGIC_LINK_MAX_AGE_SECONDS,
       async sendVerificationRequest({ identifier, url }) {
         const from = requireEnv("EMAIL_FROM");
+        const message = getMagicLinkEmail(
+          getLocaleFromUrl(url),
+          url,
+          MAGIC_LINK_MAX_AGE_MINUTES
+        );
         const { error } = await getResend().emails.send({
           from,
           to: identifier,
-          subject: "Accedi alla piattaforma",
-          text: `Apri questo link per accedere (valido ${MAGIC_LINK_MAX_AGE_MINUTES} minuti): ${url}`,
-          html: `
-            <p>Apri il link qui sotto per accedere. È valido per ${MAGIC_LINK_MAX_AGE_MINUTES} minuti.</p>
-            <p><a href="${escapeHtml(url)}">Accedi alla piattaforma</a></p>
-          `,
+          ...message,
         });
 
         if (error) {

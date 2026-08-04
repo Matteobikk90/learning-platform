@@ -27,6 +27,17 @@ describe("readSignInBody", () => {
     expect(body).toEqual({ email: "user@example.com", json: "true" });
   });
 
+  it("reads the localized callback URL when provided", async () => {
+    const body = await readSignInBody(
+      formRequest({
+        email: "user@example.com",
+        callbackUrl: "https://example.com/en/profile",
+      })
+    );
+
+    expect(body.callbackUrl).toBe("https://example.com/en/profile");
+  });
+
   it("reads email and json flag from a JSON body", async () => {
     const body = await readSignInBody(
       jsonRequest(JSON.stringify({ email: "user@example.com", json: "true" }))

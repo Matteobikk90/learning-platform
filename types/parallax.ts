@@ -32,6 +32,21 @@ export type BeneficiSectionProps = BaseSectionProps & {
   scrollContainerRef: RefObject<HTMLDivElement | null>;
 };
 
+export type BenefitContent = {
+  title: string;
+  body: string;
+};
+
+export type FaqContent = {
+  question: string;
+  answer: string;
+};
+
+export type TestimonialContent = {
+  name: string;
+  text: string;
+};
+
 export type ParallaxNavProps = {
   active: SectionId;
   isDark: boolean;

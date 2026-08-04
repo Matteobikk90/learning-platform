@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { MAX_WATCHED_DELTA_SECONDS } from "@/constants/progress";
+import { routing } from "@/i18n/routing";
 import { isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
@@ -126,7 +127,9 @@ export async function saveModuleProgress(
   });
 
   if (completion.count > 0) {
-    revalidatePath(`/profile/courses/${courseModule.courseId}`);
-    revalidatePath("/profile");
+    for (const locale of routing.locales) {
+      revalidatePath(`/${locale}/profile/courses/${courseModule.courseId}`);
+      revalidatePath(`/${locale}/profile`);
+    }
   }
 }

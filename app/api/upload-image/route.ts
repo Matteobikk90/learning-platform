@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import sharp from "sharp";
 
+import { COURSE_IMAGE_ERRORS } from "@/constants/courses";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { getApiAdmin } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
@@ -27,31 +28,37 @@ export async function POST(request: NextRequest) {
   const contentLength = Number(request.headers.get("content-length"));
   if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_SIZE) {
     return NextResponse.json(
-      { error: "L’immagine deve pesare meno di 5 MB" },
+      { error: COURSE_IMAGE_ERRORS.invalidSize },
       { status: 413 }
     );
   }
 
   const formData = await request.formData().catch(() => null);
   if (!formData) {
-    return NextResponse.json({ error: "Richiesta non valida" }, { status: 400 });
+    return NextResponse.json(
+      { error: COURSE_IMAGE_ERRORS.invalidRequest },
+      { status: 400 }
+    );
   }
   const file = formData.get("file");
 
   if (!(file instanceof File)) {
-    return NextResponse.json({ error: "Nessun file selezionato" }, { status: 400 });
+    return NextResponse.json(
+      { error: COURSE_IMAGE_ERRORS.noFileSelected },
+      { status: 400 }
+    );
   }
 
   if (!ALLOWED_MIME_TYPES.has(file.type)) {
     return NextResponse.json(
-      { error: "Sono supportati soltanto JPG, PNG, WebP e AVIF" },
+      { error: COURSE_IMAGE_ERRORS.invalidType },
       { status: 400 }
     );
   }
 
   if (file.size === 0 || file.size > MAX_FILE_SIZE) {
     return NextResponse.json(
-      { error: "L’immagine deve pesare meno di 5 MB" },
+      { error: COURSE_IMAGE_ERRORS.invalidSize },
       { status: 400 }
     );
   }
@@ -75,7 +82,7 @@ export async function POST(request: NextRequest) {
       metadata.height > 8_000
     ) {
       return NextResponse.json(
-        { error: "L’immagine deve essere almeno 320×180 px e al massimo 8000 px per lato" },
+        { error: COURSE_IMAGE_ERRORS.invalidDimensions },
         { status: 400 }
       );
     }
@@ -97,7 +104,7 @@ export async function POST(request: NextRequest) {
       error: error instanceof Error ? error.message : "unknown error",
     });
     return NextResponse.json(
-      { error: "Il file non contiene un’immagine valida" },
+      { error: COURSE_IMAGE_ERRORS.invalidFile },
       { status: 400 }
     );
   }
@@ -118,7 +125,7 @@ export async function POST(request: NextRequest) {
       message: error.message,
     });
     return NextResponse.json(
-      { error: "Impossibile caricare l’immagine" },
+      { error: COURSE_IMAGE_ERRORS.uploadFailed },
       { status: 500 }
     );
   }

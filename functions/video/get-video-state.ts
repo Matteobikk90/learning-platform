@@ -1,4 +1,8 @@
-import type { VideoState, VideoStateInput } from "@/types/video";
+import type {
+  VideoState,
+  VideoStateInput,
+  VideoStatusMessageKey,
+} from "@/types/video";
 
 export function getVideoState(video: VideoStateInput): VideoState {
   if (video.muxUploadId) return "processing";
@@ -7,20 +11,22 @@ export function getVideoState(video: VideoStateInput): VideoState {
   return "empty";
 }
 
-export function getVideoStatusLabel(video: VideoStateInput) {
+export function getVideoStatusMessageKey(
+  video: VideoStateInput
+): VideoStatusMessageKey {
   const state = getVideoState(video);
 
   if (state === "processing") {
     return video.videoPlaybackId
-      ? "Nuovo video in elaborazione"
-      : "Video in elaborazione";
+      ? "statusProcessingReplacement"
+      : "statusProcessing";
   }
 
   if (state === "error") {
     return video.videoPlaybackId
-      ? "Video corrente pronto · sostituzione non riuscita"
-      : "Elaborazione video non riuscita";
+      ? "statusReplacementFailed"
+      : "statusFailed";
   }
 
-  return state === "ready" ? "Video pronto" : "Nessun video caricato";
+  return state === "ready" ? "statusReady" : "statusEmpty";
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { after } from "next/server";
-import { redirect } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { COURSE_FORM_ERRORS } from "@/constants/courses";
 import {
@@ -13,35 +13,46 @@ import {
   getCourseFormData,
   getCourseFormValues,
 } from "@/functions/courses/course-form";
+import { getValidationMessage } from "@/functions/forms/get-validation-message";
+import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { revalidateCoursePages } from "@/functions/courses/revalidate-course-pages";
 import { deleteCourseImage } from "@/lib/course-images";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import type { FormState } from "@/types/forms";
+import { redirect } from "next/navigation";
 
 export async function createCourse(
   _prevState: FormState,
   formData: FormData
 ): Promise<FormState> {
   await requireAdmin();
+  const [locale, tValidation] = await Promise.all([
+    getLocale(),
+    getTranslations("Validation"),
+  ]);
 
   const values = getCourseFormValues(formData);
   const parsed = courseFormSchema.safeParse(getCourseFormData(formData));
 
   if (!parsed.success) {
     return {
-      error: parsed.error.issues[0]?.message ?? COURSE_FORM_ERRORS.invalidData,
+      error: getValidationMessage(
+        tValidation,
+        parsed.error.issues[0]?.message,
+        COURSE_FORM_ERRORS.invalidData
+      ),
       values,
     };
   }
 
   const imageError = getCourseCoverImageError(parsed.data.coverImageUrl);
-  if (imageError) return { error: imageError, values };
+  if (imageError) return { error: tValidation(imageError), values };
 
   await prisma.course.create({ data: parsed.data });
 
   revalidateCoursePages();
-  redirect("/admin/courses");
+  redirect(getLocalizedPath(locale, "/admin/courses"));
 }
 
 export async function updateCourse(
@@ -49,6 +60,10 @@ export async function updateCourse(
   formData: FormData
 ): Promise<FormState> {
   await requireAdmin();
+  const [locale, tValidation] = await Promise.all([
+    getLocale(),
+    getTranslations("Validation"),
+  ]);
 
   const values = getCourseFormValues(formData);
   const parsed = updateCourseSchema.safeParse({
@@ -58,13 +73,17 @@ export async function updateCourse(
 
   if (!parsed.success) {
     return {
-      error: parsed.error.issues[0]?.message ?? COURSE_FORM_ERRORS.invalidData,
+      error: getValidationMessage(
+        tValidation,
+        parsed.error.issues[0]?.message,
+        COURSE_FORM_ERRORS.invalidData
+      ),
       values,
     };
   }
 
   const imageError = getCourseCoverImageError(parsed.data.coverImageUrl);
-  if (imageError) return { error: imageError, values };
+  if (imageError) return { error: tValidation(imageError), values };
 
   const existingCourse = await prisma.course.findUnique({
     where: { id: parsed.data.id },
@@ -72,7 +91,7 @@ export async function updateCourse(
   });
 
   if (!existingCourse) {
-    return { error: COURSE_FORM_ERRORS.notFound, values };
+    return { error: tValidation(COURSE_FORM_ERRORS.notFound), values };
   }
 
   await prisma.course.update({
@@ -90,5 +109,5 @@ export async function updateCourse(
   }
 
   revalidateCoursePages();
-  redirect("/admin/courses");
+  redirect(getLocalizedPath(locale, "/admin/courses"));
 }

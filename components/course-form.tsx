@@ -4,6 +4,7 @@ import { CourseImageUpload } from "@/components/course-image-upload";
 import { SubmitButton } from "@/components/submit-button";
 import { useFormAction } from "@/hooks/use-form-action";
 import type { CourseFormProps } from "@/types/course";
+import { useTranslations } from "next-intl";
 
 export function CourseForm({
   action,
@@ -11,6 +12,7 @@ export function CourseForm({
   submitLabel,
   pendingLabel,
 }: CourseFormProps) {
+  const t = useTranslations("Forms");
   const [state, formAction] = useFormAction(action);
 
   return (
@@ -18,7 +20,9 @@ export function CourseForm({
       {defaults && <input type="hidden" name="id" value={defaults.id} />}
 
       <div>
-        <label htmlFor="course-title" className="form-label">Titolo</label>
+        <label htmlFor="course-title" className="form-label">
+          {t("title")}
+        </label>
         <input
           id="course-title"
           name="title"
@@ -30,7 +34,9 @@ export function CourseForm({
       </div>
 
       <div>
-        <label htmlFor="course-description" className="form-label">Descrizione</label>
+        <label htmlFor="course-description" className="form-label">
+          {t("description")}
+        </label>
         <textarea
           id="course-description"
           name="description"
@@ -41,7 +47,9 @@ export function CourseForm({
       </div>
 
       <div>
-        <label htmlFor="course-price" className="form-label">Prezzo (€)</label>
+        <label htmlFor="course-price" className="form-label">
+          {t("price")}
+        </label>
         <input
           id="course-price"
           name="price"
@@ -59,7 +67,7 @@ export function CourseForm({
       </div>
 
       <div>
-        <span className="form-label">Immagine di copertina</span>
+        <span className="form-label">{t("coverImage")}</span>
         <CourseImageUpload defaultUrl={defaults?.coverImageUrl} />
       </div>
 

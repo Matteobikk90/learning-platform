@@ -1,6 +1,7 @@
 "use client";
 
 import MuxUploader from "@mux/mux-uploader-react";
+import { useTranslations } from "next-intl";
 
 import { useMuxDurationSync } from "@/hooks/use-mux-duration-sync";
 import { useVideoUpload } from "@/hooks/use-video-upload";
@@ -12,6 +13,7 @@ export function VideoUpload({
   initialDurationSeconds,
   initialError = null,
 }: VideoUploadProps) {
+  const t = useTranslations("Video");
   useMuxDurationSync(
     initialStatus === "ready" && initialDurationSeconds <= 0 ? [moduleId] : []
   );
@@ -35,10 +37,10 @@ export function VideoUpload({
         className="mt-3 rounded-md border border-stroke bg-surface px-5 py-4"
         role="status">
         <p className="text-sm text-petrol animate-pulse">
-          Upload completato. Mux sta preparando lo streaming…
+          {t("uploadComplete")}
         </p>
         <p className="mt-1 text-xs text-subtle">
-          La pagina si aggiornerà automaticamente appena il video sarà pronto.
+          {t("autoRefresh")}
         </p>
         {error && <p className="mt-2 text-xs text-danger">{error}</p>}
       </div>
@@ -50,7 +52,7 @@ export function VideoUpload({
       <p
         className="mt-3 rounded-md border border-stroke bg-surface px-5 py-3 text-sm text-petrol"
         role="status">
-        Video pronto per lo streaming.
+        {t("ready")}
       </p>
     );
   }
@@ -72,7 +74,7 @@ export function VideoUpload({
           } as React.CSSProperties
         }>
         <button slot="file-select" type="button" className="btn-primary">
-          Seleziona video
+          {t("select")}
         </button>
       </MuxUploader>
 

@@ -3,8 +3,11 @@ import heroMobile from "@/public/images/home/hero-mobile.jpg";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { cn } from "@/lib/cn";
 import type { HeroSectionProps } from "@/types/parallax";
+import { useTranslations } from "next-intl";
 
 export function Hero({ visible, scrollTo }: HeroSectionProps) {
+  const t = useTranslations("Home.hero");
+
   return (
     <section
       id="hero"
@@ -15,10 +18,7 @@ export function Hero({ visible, scrollTo }: HeroSectionProps) {
         priority
         className="absolute inset-0 size-full object-cover object-center"
       />
-      <div
-        className="absolute inset-0 bg-black/35"
-        aria-hidden="true"
-      />
+      <div className="absolute inset-0 bg-black/35" aria-hidden="true" />
       <div
         className="absolute inset-0"
         style={{
@@ -33,31 +33,31 @@ export function Hero({ visible, scrollTo }: HeroSectionProps) {
           "parallax-content relative z-10 mx-auto w-full max-w-6xl text-left",
           visible.has("hero") && "visible"
         )}>
-        <span className="label-upper mb-8">Osteopatia, Yoga & Breathwork</span>
+        <span className="label-upper mb-8">{t("eyebrow")}</span>
         <h1 className="hero-title mb-8">
-          Riprogramma il tuo respiro.
+          {t("titleLine1")}
           <br />
-          Trasforma la tua vita.
+          {t("titleLine2")}
           <br />
           <span className="flex flex-wrap items-center gap-x-8 gap-y-4">
-            <em>Per davvero.</em>
+            <em>{t("titleEmphasis")}</em>
             <button onClick={() => scrollTo("corsi")} className="btn-primary">
-              Scopri di più
+              {t("cta")}
             </button>
           </span>
         </h1>
         <p className="label-upper leading-5 text-white/45">
-          Il mio metodo. 20 anni di ricerca clinica.
+          {t("introLine1")}
           <br />
-          Alta formazione in Osteopatia, Chinesiologia e Yoga Tradizionale.
-          <br />A tua disposizione.
+          {t("introLine2")}
+          <br />
+          {t("introLine3")}
         </p>
       </div>
 
-      {/* Scroll indicator */}
       <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-white/40">
         <span className="font-mono text-[0.625rem] tracking-[0.25em] uppercase">
-          Scorri
+          {t("scroll")}
         </span>
         <div className="w-px h-10 overflow-hidden bg-white/10">
           <div className="w-full h-full parallax-scroll-line bg-white/55" />

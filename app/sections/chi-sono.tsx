@@ -3,8 +3,11 @@ import aboutMobile from "@/public/images/home/about-mobile.jpg";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { cn } from "@/lib/cn";
 import type { BaseSectionProps } from "@/types/parallax";
+import { useTranslations } from "next-intl";
 
 export function ChiSono({ visible }: BaseSectionProps) {
+  const t = useTranslations("Home.about");
+
   return (
     <section
       id="chi-sono"
@@ -30,21 +33,18 @@ export function ChiSono({ visible }: BaseSectionProps) {
           visible.has("chi-sono") && "visible"
         )}>
         <div className="max-w-3xl">
-          <span className="label-upper mb-8 text-white/60">Mi presento</span>
+          <span className="label-upper mb-8 text-white/60">
+            {t("eyebrow")}
+          </span>
           <h2 className="section-title mb-10 text-white">
-            <em>Umberto Iglina</em>
+            <em>{t("name")}</em>
           </h2>
           <div className="border-t border-white/20 pt-8">
             <p className="label-upper w-full text-white/65 leading-6">
-              Come osteopata e specialista nel movimento umano ho sempre cercato
-              strumenti che permettessero ai miei pazienti di vivere al meglio.
+              {t("paragraph1")}
             </p>
             <p className="label-upper mt-6 w-full text-white/65 leading-6">
-              Ho avuto il privilegio di studiare lo Yoga nella sua forma più
-              autentica e da oltre 20 anni studio la scienza del respiro.
-              Nell&apos;unione di tradizioni millenarie e approccio clinico
-              moderno ho scoperto come trasformare concretamente la propria vita.
-              Benvenuto.
+              {t("paragraph2")}
             </p>
           </div>
         </div>

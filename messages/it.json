@@ -1,0 +1,296 @@
+{
+  "Metadata": {
+    "description": "Percorsi guidati di respiro, movimento e consapevolezza con Umberto Iglina."
+  },
+  "Navigation": {
+    "mainLabel": "Navigazione principale",
+    "sectionsLabel": "Sezioni della pagina",
+    "admin": "Admin",
+    "myCourses": "I miei corsi",
+    "logout": "Esci",
+    "login": "Accedi",
+    "switchLanguage": "Passa all’inglese",
+    "sectionHome": "Home",
+    "sectionBenefits": "Benefici",
+    "sectionAbout": "Mi presento",
+    "sectionCourses": "Corsi",
+    "sectionFaq": "FAQ",
+    "goToSection": "Vai alla sezione {section}"
+  },
+  "Home": {
+    "hero": {
+      "eyebrow": "Osteopatia, Yoga & Breathwork",
+      "titleLine1": "Riprogramma il tuo respiro.",
+      "titleLine2": "Trasforma la tua vita.",
+      "titleEmphasis": "Per davvero.",
+      "cta": "Scopri di più",
+      "introLine1": "Il mio metodo. 20 anni di ricerca clinica.",
+      "introLine2": "Alta formazione in Osteopatia, Chinesiologia e Yoga Tradizionale.",
+      "introLine3": "A tua disposizione.",
+      "scroll": "Scorri"
+    },
+    "benefits": {
+      "scroll": "Scorri",
+      "items": [
+        {
+          "title": "Evidenza Clinica",
+          "body": "Ogni modulo si fonda su vent'anni di esperienza terapeutica e studio biomeccanico del movimento umano. Un approccio rigoroso e privo di derive commerciali, dove ogni tecnica è spiegata con logica clinica."
+        },
+        {
+          "title": "Performance & Qualità della vita",
+          "body": "Protocolli avanzati per neuromodulare il tuo organismo. Incrementa le prestazioni sportive scoprendo nuovi aspetti del tuo sistema corpo, scopri come calmare la mente nel quotidiano e nelle situazioni di maggiore stress e regalati un'esperienza di autentica autocura."
+        },
+        {
+          "title": "Rimettiti al centro",
+          "body": "L'unione tra l'antica scienza del respiro estratta dalle pratiche di Yoga Tradizionale e la precisione osteopatica genera un impatto diretto su postura, efficienza cardiovascolare, longevità sistemica e benessere psicofisico. Sei pronto a sviluppare il tuo pieno potenziale?"
+        }
+      ]
+    },
+    "about": {
+      "eyebrow": "Mi presento",
+      "name": "Umberto Iglina",
+      "paragraph1": "Come osteopata e specialista nel movimento umano ho sempre cercato strumenti che permettessero ai miei pazienti di vivere al meglio.",
+      "paragraph2": "Ho avuto il privilegio di studiare lo Yoga nella sua forma più autentica e da oltre 20 anni studio la scienza del respiro. Nell'unione di tradizioni millenarie e approccio clinico moderno ho scoperto come trasformare concretamente la propria vita. Benvenuto."
+    },
+    "courses": {
+      "eyebrow": "Percorsi online",
+      "title": "Inizia ora la trasformazione:",
+      "titleEmphasis": "scegli il tuo percorso",
+      "empty": "Nessun corso disponibile al momento.",
+      "digitalAccess": "Accesso digitale",
+      "guidedPath": "Percorso guidato",
+      "purchased": "Acquistato",
+      "goToCourse": "Vai al corso",
+      "openingCheckout": "Apertura checkout…",
+      "buyCourse": "Acquista il corso"
+    },
+    "faq": {
+      "eyebrow": "Domande frequenti",
+      "title": "Hai delle",
+      "titleEmphasis": "domande?",
+      "testimonialsEyebrow": "Esperienze",
+      "testimonialsTitle": "Cosa dicono",
+      "testimonialsEmphasis": "gli studenti",
+      "items": [
+        {
+          "question": "In cosa consiste il metodo e come unisce scienza e discipline orientali?",
+          "answer": "L'approccio unisce i benefici millenari dello Yoga e del Breathwork alla precisione dell'Osteopatia e della biomeccanica. Ogni tecnica è spiegata con logica clinica per darti benefici concreti, misurabili e duraturi."
+        },
+        {
+          "question": "I corsi sono adatti anche a chi non ha mai praticato tecniche di respiro?",
+          "answer": "Assolutamente sì. I corsi sono strutturati in modo progressivo e modulabile in base al tuo livello di partenza, con percorsi guidati passo dopo passo sia per principianti che per praticanti avanzati."
+        },
+        {
+          "question": "Ho problemi posturali o dolori cronici. Posso seguire i corsi?",
+          "answer": "Sì. Come osteopata, i flussi di movimento sono stati progettati rispettando l'anatomia e la fisiologia del corpo. Per patologie gravi o acute è sempre consigliato un consulto preliminare con il proprio medico."
+        },
+        {
+          "question": "Quanto tempo devo dedicare per vedere i primi risultati?",
+          "answer": "La costanza vince sulla quantità. Trovi pratiche da 10–15 minuti e percorsi completi da 45–60 minuti. Già dopo le prime sessioni di Breathwork noterai una riduzione dello stress e una maggiore chiarezza mentale."
+        },
+        {
+          "question": "Che differenza c'è tra i corsi registrati e le sessioni live?",
+          "answer": "I corsi registrati ti danno totale libertà di gestire il tempo, rivedendo i video quando vuoi. Le sessioni live permettono interazione diretta, domande specifiche e feedback personalizzati su postura e ritmo del respiro."
+        },
+        {
+          "question": "Cos'è il Breathwork e perché è importante dal punto di vista clinico?",
+          "answer": "Il Breathwork è il lavoro consapevole sul respiro. Scientificamente, influenza il sistema nervoso autonomo, la frequenza cardiaca e il cortisolo. È una riprogrammazione neurobiologica per migliorare energia, focus e salute sistemica."
+        },
+        {
+          "question": "Sono un atleta di alto livello: come può migliorare le mie prestazioni?",
+          "answer": "Il metodo agisce su tre pilastri: efficienza biomeccanica e posturale, gestione del Sistema Nervoso Autonomo (switch rapido sympathetic/parasympathetic) e tolleranza alla CO₂ per ritardare la fatica e mantenere il focus sotto sforzo massimale."
+        }
+      ],
+      "testimonials": [
+        {
+          "name": "Sara M.",
+          "text": "Ho iniziato senza alcuna esperienza e dopo tre mesi riesco a fare posizioni che non avrei mai immaginato."
+        },
+        {
+          "name": "Luca P.",
+          "text": "La qualità dei video e la progressione dei corsi è eccellente. Mi sento guidato ad ogni passo."
+        },
+        {
+          "name": "Giulia R.",
+          "text": "Umberto spiega con una chiarezza e una passione che ti trasmette energia. Consigliatissimo!"
+        }
+      ]
+    }
+  },
+  "Auth": {
+    "loginEyebrow": "Accesso",
+    "welcome": "Bentornato",
+    "loginDescription": "Inserisci la tua email per ricevere il link di accesso.",
+    "email": "Email",
+    "emailPlaceholder": "tu@esempio.com",
+    "sending": "Invio in corso…",
+    "sendMagicLink": "Invia link magico",
+    "rateLimited": "Hai richiesto troppi link. Attendi qualche minuto e riprova.",
+    "sendFailed": "Non è stato possibile inviare il link. Riprova tra poco.",
+    "checkEmail": "Controlla la tua email",
+    "linkSent": "Ti abbiamo inviato un link sicuro per accedere.",
+    "linkValidity": "Controlla la tua casella di posta: il link è valido per {minutes} minuti."
+  },
+  "Checkout": {
+    "cancelled": "Pagamento annullato",
+    "noCharge": "Nessun addebito effettuato",
+    "cancelDescription": "Puoi tornare al catalogo corsi in qualsiasi momento.",
+    "backToCourses": "Torna ai corsi",
+    "completed": "Pagamento completato",
+    "processing": "Pagamento in elaborazione",
+    "thankYou": "Grazie per il tuo acquisto",
+    "almostThere": "Ci siamo quasi",
+    "purchasedCourse": "Hai acquistato “{title}”.",
+    "processingDescription": "Stripe sta confermando il pagamento. Il corso apparirà nel tuo profilo appena sarà completato.",
+    "goToCourse": "Vai al corso",
+    "goToProfile": "Vai al profilo"
+  },
+  "Profile": {
+    "eyebrow": "Profilo",
+    "myCourses": "I miei corsi",
+    "continue": "Continua il tuo percorso di pratica.",
+    "noCourses": "Nessun corso ancora",
+    "noCoursesDescription": "I tuoi corsi acquistati appariranno qui.",
+    "progress": "{completed}/{total} moduli completati · {percentage}%",
+    "goToCourse": "Vai al corso",
+    "back": "Profilo",
+    "course": "Corso",
+    "modules": "Moduli ({count})",
+    "noModules": "Nessun modulo disponibile.",
+    "videoUnavailable": "Video non ancora disponibile",
+    "availableOn": "Disponibile il {date}",
+    "completePrevious": "Completa il modulo precedente",
+    "watch": "Guarda",
+    "locked": "Modulo bloccato",
+    "preparing": "In preparazione",
+    "module": "Modulo {number}",
+    "duration": "Durata: {duration}",
+    "videoUnavailableTitle": "Video non ancora disponibile",
+    "videoUnavailableDescription": "Torna presto per guardare questo modulo."
+  },
+  "Admin": {
+    "dashboard": "Dashboard",
+    "administration": "Amministrazione",
+    "dashboardDescription": "Gestisci i contenuti della piattaforma.",
+    "courses": "Corsi",
+    "modules": "Moduli",
+    "users": "Utenti",
+    "purchases": "Acquisti",
+    "revenue": "Fatturato",
+    "coursesDescription": "Crea, modifica ed elimina i corsi della piattaforma.",
+    "manage": "Gestisci",
+    "coursesListDescription": "Gestisci i corsi della piattaforma.",
+    "newCourse": "Nuovo corso",
+    "noCourses": "Nessun corso ancora.",
+    "editCourse": "Modifica corso",
+    "edit": "Modifica",
+    "newCourseTitle": "Nuovo corso",
+    "createCourse": "Crea corso",
+    "creating": "Creazione…",
+    "saveChanges": "Salva modifiche",
+    "newModule": "Nuovo modulo",
+    "noModules": "Nessun modulo ancora.",
+    "editModule": "Modifica modulo",
+    "durationPending": "Durata da rilevare",
+    "module": "Modulo {number}",
+    "duration": "Durata: {duration}",
+    "durationFromVideo": "da rilevare dal video",
+    "details": "Dettagli",
+    "video": "Video",
+    "replaceVideo": "Sostituisci il video corrente con uno nuovo.",
+    "uploadVideo": "Carica un video per questo modulo.",
+    "dangerZone": "Zona pericolosa",
+    "deleteModuleDescription": "Elimina questo modulo definitivamente. I dati di avanzamento associati verranno anch’essi eliminati."
+  },
+  "Forms": {
+    "title": "Titolo",
+    "description": "Descrizione",
+    "price": "Prezzo (€)",
+    "coverImage": "Immagine di copertina",
+    "changeCover": "Cambia immagine di copertina",
+    "chooseCover": "Scegli immagine di copertina",
+    "coverPreview": "Anteprima della copertina del corso",
+    "dropImage": "Clicca o trascina un’immagine",
+    "imageFormats": "JPG, PNG, WebP, AVIF — max 5 MB",
+    "uploading": "Caricamento…",
+    "changeImage": "Cambia immagine",
+    "chooseFile": "Scegli file",
+    "remove": "Rimuovi",
+    "deleteCourse": "Elimina corso",
+    "deleteCourseConfirm": "Eliminare il corso e tutti i suoi moduli? L’operazione non può essere annullata.",
+    "delete": "Elimina",
+    "order": "Ordine",
+    "duration": "Durata",
+    "durationDetecting": "Rilevamento automatico in corso",
+    "durationAutomatic": "Viene rilevata automaticamente dal video caricato su Mux.",
+    "save": "Salva",
+    "saving": "Salvataggio…",
+    "creating": "Creazione…",
+    "createModule": "Crea modulo",
+    "deleteModule": "Elimina modulo",
+    "deleteModuleConfirm": "Sei sicuro di voler eliminare questo modulo? L’operazione non può essere annullata."
+  },
+  "Video": {
+    "uploadComplete": "Upload completato. Mux sta preparando lo streaming…",
+    "autoRefresh": "La pagina si aggiornerà automaticamente appena il video sarà pronto.",
+    "ready": "Video pronto per lo streaming.",
+    "select": "Seleziona video",
+    "uploadInterrupted": "Il caricamento si è interrotto. Riprova dal controllo qui sopra.",
+    "statusProcessingReplacement": "Nuovo video in elaborazione",
+    "statusProcessing": "Video in elaborazione",
+    "statusReplacementFailed": "Video corrente pronto · sostituzione non riuscita",
+    "statusFailed": "Elaborazione video non riuscita",
+    "statusReady": "Video pronto",
+    "statusEmpty": "Nessun video caricato"
+  },
+  "MuxErrors": {
+    "alreadyProcessing": "Il video è già in elaborazione",
+    "concurrentUpload": "Un altro caricamento è già stato avviato",
+    "createUploadFailed": "Impossibile avviare il caricamento del video",
+    "missingModule": "Modulo non trovato",
+    "missingPlaybackId": "Mux non ha generato un identificativo di riproduzione.",
+    "missingUpload": "Mux non trova più il caricamento associato al modulo.",
+    "pendingUploadUnavailable": "Impossibile recuperare il caricamento precedente",
+    "processingFailed": "Mux non è riuscito a elaborare il video.",
+    "uploadIncomplete": "Il caricamento Mux non è stato completato.",
+    "unavailableStatus": "Impossibile controllare lo stato del video.",
+    "webhookRequired": "Configura il segreto webhook Mux prima di caricare video"
+  },
+  "Validation": {
+    "titleRequired": "Il titolo è obbligatorio",
+    "priceMinimum": "Il prezzo minimo è 0,50 €",
+    "priceTooHigh": "Il prezzo è troppo alto",
+    "descriptionTooLong": "La descrizione è troppo lunga",
+    "invalidImageUrl": "Immagine non valida",
+    "courseInvalidData": "Dati del corso non validi",
+    "invalidCourseImage": "L’immagine deve essere caricata dalla piattaforma",
+    "courseNotFound": "Corso non trovato",
+    "moduleInvalidData": "Dati del modulo non validi",
+    "moduleCourseNotFound": "Corso non trovato",
+    "duplicateModuleOrder": "Esiste già un modulo con questo ordine",
+    "moduleNotFound": "Modulo non trovato",
+    "orderMinimum": "L’ordine deve essere almeno 1",
+    "invalidCourse": "Corso non valido",
+    "invalidModule": "Modulo non valido",
+    "invalidImageResponse": "Risposta del server non valida",
+    "invalidImageRequest": "Richiesta non valida",
+    "noImageSelected": "Nessun file selezionato",
+    "invalidImageSize": "L’immagine deve pesare meno di 5 MB.",
+    "invalidImageType": "Sono supportati soltanto JPG, PNG, WebP e AVIF.",
+    "invalidImageDimensions": "L’immagine deve essere almeno 320×180 px e al massimo 8000 px per lato",
+    "invalidImageFile": "Il file non contiene un’immagine valida",
+    "imageUploadFailed": "Impossibile caricare l’immagine"
+  },
+  "Errors": {
+    "label": "Errore",
+    "title": "Qualcosa non ha funzionato",
+    "description": "Riprova: se il problema continua, torna alla home e ripeti l’operazione.",
+    "retry": "Riprova",
+    "notFoundTitle": "Pagina non trovata",
+    "notFoundDescription": "La pagina che stai cercando non esiste o non è più disponibile.",
+    "backHome": "Torna alla home",
+    "adminLabel": "Operazione non riuscita",
+    "adminTitle": "Controlla i dati e riprova",
+    "unexpected": "Si è verificato un errore imprevisto."
+  }
+}

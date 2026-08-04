@@ -1,11 +1,14 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { NavigationIcon } from "@/components/icons/navigation-icon";
+import { Link, usePathname } from "@/i18n/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { useLocale, useTranslations } from "next-intl";
 
 export function NavbarAuth() {
   const pathname = usePathname();
+  const locale = useLocale();
+  const t = useTranslations("Navigation");
   const { data: session, status } = useSession();
 
   if (status === "loading" || pathname === "/login") return null;
@@ -18,22 +21,31 @@ export function NavbarAuth() {
         {isAdmin && (
           <Link
             href="/admin"
-            className="nav-link text-muted no-underline">
-            Admin
+            aria-label={t("admin")}
+            title={t("admin")}
+            className="nav-link inline-flex min-h-9 items-center gap-2 text-muted no-underline">
+            <NavigationIcon name="admin" />
+            <span className="hidden sm:inline">{t("admin")}</span>
           </Link>
         )}
         {!isAdmin && (
           <Link
             href="/profile"
-            className="nav-link text-muted no-underline">
-            I miei corsi
+            aria-label={t("myCourses")}
+            title={t("myCourses")}
+            className="nav-link inline-flex min-h-9 items-center gap-2 text-muted no-underline">
+            <NavigationIcon name="courses" />
+            <span className="hidden sm:inline">{t("myCourses")}</span>
           </Link>
         )}
         <button
           type="button"
-          onClick={() => signOut({ callbackUrl: "/" })}
-          className="nav-link cursor-pointer border-0 bg-transparent p-0 text-subtle">
-          Esci
+          onClick={() => signOut({ callbackUrl: `/${locale}` })}
+          aria-label={t("logout")}
+          title={t("logout")}
+          className="nav-link inline-flex min-h-9 cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-subtle">
+          <NavigationIcon name="logout" />
+          <span className="hidden sm:inline">{t("logout")}</span>
         </button>
       </>
     );
@@ -42,8 +54,11 @@ export function NavbarAuth() {
   return (
     <Link
       href="/login"
-      className="nav-link no-underline hover:opacity-70 transition-opacity text-white">
-      Accedi
+      aria-label={t("login")}
+      title={t("login")}
+      className="nav-link inline-flex min-h-9 items-center gap-2 text-white no-underline transition-opacity hover:opacity-70">
+      <NavigationIcon name="login" />
+      <span className="hidden sm:inline">{t("login")}</span>
     </Link>
   );
 }

@@ -2,6 +2,19 @@ import type Mux from "@mux/mux-node";
 
 export type AppMuxPlaybackPolicy = "PUBLIC" | "SIGNED";
 
+export type MuxErrorMessageKey =
+  | "alreadyProcessing"
+  | "concurrentUpload"
+  | "createUploadFailed"
+  | "missingModule"
+  | "missingPlaybackId"
+  | "missingUpload"
+  | "pendingUploadUnavailable"
+  | "processingFailed"
+  | "uploadIncomplete"
+  | "unavailableStatus"
+  | "webhookRequired";
+
 export type MuxApiError = {
   status?: number;
 };

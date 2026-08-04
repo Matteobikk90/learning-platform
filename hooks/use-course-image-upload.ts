@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { COURSE_IMAGE_ERRORS } from "@/constants/courses";
 import {
@@ -9,6 +10,7 @@ import {
 } from "@/functions/courses/course-image";
 
 export function useCourseImageUpload(defaultUrl?: string | null) {
+  const t = useTranslations("Validation");
   const [url, setUrl] = useState(defaultUrl ?? "");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +24,7 @@ export function useCourseImageUpload(defaultUrl?: string | null) {
     const validationError = getCourseImageValidationError(file);
 
     if (validationError) {
-      setError(validationError);
+      setError(t(validationError));
       return;
     }
 
@@ -31,11 +33,15 @@ export function useCourseImageUpload(defaultUrl?: string | null) {
     try {
       setUrl(await uploadCourseImage(file));
     } catch (uploadError) {
-      setError(
+      const message =
         uploadError instanceof Error
           ? uploadError.message
-          : COURSE_IMAGE_ERRORS.uploadFailed
+          : COURSE_IMAGE_ERRORS.uploadFailed;
+      const errorKey = Object.values(COURSE_IMAGE_ERRORS).find(
+        (key) => key === message
       );
+
+      setError(errorKey ? t(errorKey) : message);
     } finally {
       setUploading(false);
     }

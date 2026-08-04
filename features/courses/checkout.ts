@@ -1,8 +1,10 @@
 "use server";
 
+import { getLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { getAppUrl } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
@@ -10,6 +12,7 @@ import { getStripe } from "@/lib/stripe";
 
 export async function createCheckoutSession(courseId: string) {
   const safeCourseId = z.string().min(1).max(128).parse(courseId);
+  const locale = await getLocale();
   const session = await requireAuth();
   const userId = session.user.id;
 
@@ -25,15 +28,17 @@ export async function createCheckoutSession(courseId: string) {
     }),
   ]);
 
-  if (!user) redirect("/login");
+  if (!user) redirect(getLocalizedPath(locale, "/login"));
   if (!course) throw new Error("Corso non trovato");
-  if (existingPurchase) redirect(`/profile/courses/${course.id}`);
+  if (existingPurchase) {
+    redirect(getLocalizedPath(locale, `/profile/courses/${course.id}`));
+  }
 
   const appUrl = getAppUrl();
   const checkoutSession = await getStripe().checkout.sessions.create(
     {
       mode: "payment",
-      locale: "it",
+      locale,
       client_reference_id: userId,
       customer_email: user.email,
       line_items: [
@@ -49,8 +54,8 @@ export async function createCheckoutSession(courseId: string) {
           quantity: 1,
         },
       ],
-      success_url: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/checkout/cancel`,
+      success_url: `${appUrl}/${locale}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/${locale}/checkout/cancel`,
       metadata: {
         userId,
         courseId: course.id,
