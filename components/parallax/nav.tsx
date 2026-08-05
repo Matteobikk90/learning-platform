@@ -24,8 +24,11 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
     <>
       <nav
         aria-label={t("mainLabel")}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-5 sm:px-8"
-        style={{ color: textColor, transition: "color 0.5s ease" }}>
+        className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b border-white/10 bg-black/70 px-4 py-4 shadow-[0_10px_35px_rgba(0,0,0,0.16)] backdrop-blur-xl sm:bg-black/45 sm:px-8 sm:py-5"
+        style={{
+          color: textColor,
+          transition: "color 0.5s ease, background-color 0.5s ease",
+        }}>
         <button
           type="button"
           onClick={() => scrollTo("hero")}

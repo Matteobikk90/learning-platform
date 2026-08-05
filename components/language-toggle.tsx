@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 
 import { FlagIcon } from "@/components/icons/flag-icon";
+import { getLanguageSwitchHref } from "@/functions/i18n/get-language-switch-href";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { LanguageToggleProps, Locale } from "@/types/i18n";
 
@@ -18,7 +19,11 @@ export function LanguageToggle({
   const nextLocale: Locale = locale === "it" ? "en" : "it";
 
   function changeLanguage() {
-    const href = `${pathname}${window.location.search}`;
+    const href = getLanguageSwitchHref(
+      pathname,
+      window.location.search,
+      window.location.hash
+    );
 
     startTransition(() => {
       router.replace(href, { locale: nextLocale, scroll: false });

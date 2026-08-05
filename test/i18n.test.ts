@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { getLanguageSwitchHref } from "@/functions/i18n/get-language-switch-href";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { getLocaleFromUrl } from "@/functions/i18n/get-locale-from-url";
 import { isSupportedLocale } from "@/functions/i18n/is-supported-locale";
@@ -9,6 +10,12 @@ describe("i18n route helpers", () => {
     expect(getLocalizedPath("it", "/")).toBe("/it");
     expect(getLocalizedPath("en", "/profile")).toBe("/en/profile");
     expect(getLocalizedPath("en", "admin")).toBe("/en/admin");
+  });
+
+  it("preserves query parameters and the active section when switching locale", () => {
+    expect(getLanguageSwitchHref("/", "?preview=true", "#corsi")).toBe(
+      "/?preview=true#corsi"
+    );
   });
 
   it("recognizes only configured locales", () => {

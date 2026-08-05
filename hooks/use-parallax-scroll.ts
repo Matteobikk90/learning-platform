@@ -18,9 +18,15 @@ export function useParallaxScroll(
     if (!hash) return;
     const container = containerRef.current;
     const el = container?.querySelector<HTMLElement>(`#${hash}`);
-    if (container && el) {
-      container.scrollTop = el.offsetTop;
-    }
+    if (!container || !el) return;
+
+    let frameId = window.requestAnimationFrame(() => {
+      frameId = window.requestAnimationFrame(() => {
+        container.scrollTop = el.offsetTop;
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
   }, [containerRef]);
 
   // Track active section and sync URL hash only on section change
