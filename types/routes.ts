@@ -27,7 +27,7 @@ export type CheckoutCourseRouteProps = {
 };
 
 export type CheckoutSuccessRouteProps = {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{ session_id?: string | string[] }>;
 };
 
 export type LoginRouteProps = {

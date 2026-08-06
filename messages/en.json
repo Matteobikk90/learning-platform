@@ -149,6 +149,10 @@
     "almostThere": "Almost there",
     "purchasedCourse": "You purchased “{title}”.",
     "processingDescription": "Stripe is confirming your payment. The course will appear in your profile as soon as it is complete.",
+    "notCompleted": "Payment not completed",
+    "notCompletedTitle": "No charge confirmed",
+    "notCompletedDescription": "This payment session was not completed. If you cancelled, nothing was charged — you can try again whenever you like.",
+    "checkAgain": "Check payment status",
     "goToCourse": "Go to course",
     "goToProfile": "Go to profile"
   },

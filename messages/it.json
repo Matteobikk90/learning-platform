@@ -149,6 +149,10 @@
     "almostThere": "Ci siamo quasi",
     "purchasedCourse": "Hai acquistato “{title}”.",
     "processingDescription": "Stripe sta confermando il pagamento. Il corso apparirà nel tuo profilo appena sarà completato.",
+    "notCompleted": "Pagamento non completato",
+    "notCompletedTitle": "Nessun addebito confermato",
+    "notCompletedDescription": "La sessione di pagamento non risulta completata. Se hai annullato, non è stato addebitato nulla: puoi riprovare quando vuoi.",
+    "checkAgain": "Controlla lo stato",
     "goToCourse": "Vai al corso",
     "goToProfile": "Vai al profilo"
   },
