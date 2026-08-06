@@ -119,8 +119,8 @@
   },
   "Auth": {
     "loginEyebrow": "Access",
-    "welcome": "Welcome back",
-    "loginDescription": "Enter your email to receive a secure sign-in link.",
+    "welcome": "Sign in or register",
+    "loginDescription": "Enter your email. If this is your first time, we will create your account automatically, without a password.",
     "email": "Email",
     "emailPlaceholder": "you@example.com",
     "sending": "Sending…",
@@ -132,6 +132,13 @@
     "linkValidity": "Check your inbox: the link is valid for {minutes} minutes."
   },
   "Checkout": {
+    "reviewEyebrow": "Your order",
+    "reviewTitle": "Confirm your course",
+    "reviewDescription": "Review the selected course before continuing to secure payment.",
+    "total": "Total",
+    "continueToPayment": "Continue to payment",
+    "openingCheckout": "Opening payment…",
+    "secureCheckout": "Payment will be completed through Stripe’s secure checkout.",
     "cancelled": "Payment cancelled",
     "noCharge": "You have not been charged",
     "cancelDescription": "You can return to the course catalog at any time.",

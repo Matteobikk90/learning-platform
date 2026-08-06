@@ -3,3 +3,7 @@ export type SignInBody = {
   email?: string;
   json?: string;
 };
+
+export type LoginFormProps = {
+  callbackUrl: string;
+};

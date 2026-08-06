@@ -1,8 +1,6 @@
 "use client";
 
-import { createCheckoutSession } from "@/features/courses/checkout";
 import { CourseCoverPlaceholder } from "@/components/course-cover-placeholder";
-import { SubmitButton } from "@/components/submit-button";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { cn } from "@/lib/cn";
 import { Link } from "@/i18n/navigation";
@@ -125,12 +123,12 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                           {t("goToCourse")}
                         </Link>
                       ) : (
-                        <form
-                          action={createCheckoutSession.bind(null, course.id)}>
-                          <SubmitButton pendingLabel={t("openingCheckout")}>
-                            {t("buyCourse")}
-                          </SubmitButton>
-                        </form>
+                        <Link
+                          href={`/checkout/${course.id}`}
+                          prefetch={false}
+                          className="btn-primary">
+                          {t("buyCourse")}
+                        </Link>
                       )}
                     </div>
                   </div>

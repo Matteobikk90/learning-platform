@@ -119,8 +119,8 @@
   },
   "Auth": {
     "loginEyebrow": "Accesso",
-    "welcome": "Bentornato",
-    "loginDescription": "Inserisci la tua email per ricevere il link di accesso.",
+    "welcome": "Accedi o registrati",
+    "loginDescription": "Inserisci la tua email: se è la prima volta creeremo automaticamente il tuo account, senza password.",
     "email": "Email",
     "emailPlaceholder": "tu@esempio.com",
     "sending": "Invio in corso…",
@@ -132,6 +132,13 @@
     "linkValidity": "Controlla la tua casella di posta: il link è valido per {minutes} minuti."
   },
   "Checkout": {
+    "reviewEyebrow": "Il tuo ordine",
+    "reviewTitle": "Conferma il percorso",
+    "reviewDescription": "Controlla il corso scelto prima di proseguire al pagamento sicuro.",
+    "total": "Totale",
+    "continueToPayment": "Continua al pagamento",
+    "openingCheckout": "Apertura pagamento…",
+    "secureCheckout": "Il pagamento verrà completato sul checkout sicuro di Stripe.",
     "cancelled": "Pagamento annullato",
     "noCharge": "Nessun addebito effettuato",
     "cancelDescription": "Puoi tornare al catalogo corsi in qualsiasi momento.",

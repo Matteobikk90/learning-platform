@@ -22,8 +22,16 @@ export type ProfileModuleRouteProps = {
   >;
 };
 
+export type CheckoutCourseRouteProps = {
+  params: Promise<LocalizedParams & { courseId: string }>;
+};
+
 export type CheckoutSuccessRouteProps = {
   searchParams: Promise<{ session_id?: string }>;
+};
+
+export type LoginRouteProps = {
+  searchParams: Promise<{ callbackUrl?: string | string[] }>;
 };
 
 export type LocalizedLayoutProps = {
