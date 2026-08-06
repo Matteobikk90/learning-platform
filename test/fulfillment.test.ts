@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fulfillCheckoutSession } from "@/features/courses/fulfillment";
 
 const tx = vi.hoisted(() => ({
-  user: { findUnique: vi.fn() },
+  user: { findUnique: vi.fn(), update: vi.fn() },
   course: { findUnique: vi.fn() },
   purchase: { upsert: vi.fn() },
 }));
@@ -26,6 +26,7 @@ function makeSession(
     client_reference_id: "user_1",
     currency: "eur",
     amount_total: 4999,
+    customer: "cus_123",
     metadata: { userId: "user_1", courseId: "course_1", amountTotal: "4999" },
     ...overrides,
   } as Stripe.Checkout.Session;
@@ -33,7 +34,11 @@ function makeSession(
 
 beforeEach(() => {
   vi.clearAllMocks();
-  tx.user.findUnique.mockResolvedValue({ id: "user_1" });
+  tx.user.findUnique.mockResolvedValue({
+    id: "user_1",
+    stripeCustomerId: null,
+  });
+  tx.user.update.mockResolvedValue({});
   tx.course.findUnique.mockResolvedValue({ id: "course_1" });
   tx.purchase.upsert.mockResolvedValue({});
 });
@@ -102,6 +107,41 @@ describe("fulfillCheckoutSession", () => {
         currency: "eur",
       },
     });
+    expect(tx.user.update).toHaveBeenCalledWith({
+      where: { id: "user_1" },
+      data: { stripeCustomerId: "cus_123" },
+    });
+  });
+
+  it("keeps the existing matching Stripe customer", async () => {
+    tx.user.findUnique.mockResolvedValue({
+      id: "user_1",
+      stripeCustomerId: "cus_123",
+    });
+
+    await fulfillCheckoutSession(makeSession());
+
+    expect(tx.user.update).not.toHaveBeenCalled();
+    expect(tx.purchase.upsert).toHaveBeenCalledOnce();
+  });
+
+  it("rejects a Stripe customer belonging to a different account", async () => {
+    tx.user.findUnique.mockResolvedValue({
+      id: "user_1",
+      stripeCustomerId: "cus_other",
+    });
+
+    await expect(fulfillCheckoutSession(makeSession())).rejects.toThrow(
+      /customer mismatch/
+    );
+    expect(tx.purchase.upsert).not.toHaveBeenCalled();
+  });
+
+  it("continues to accept legacy sessions without a Stripe customer", async () => {
+    await fulfillCheckoutSession(makeSession({ customer: null }));
+
+    expect(tx.user.update).not.toHaveBeenCalled();
+    expect(tx.purchase.upsert).toHaveBeenCalledOnce();
   });
 
   it("accepts sessions created before amountTotal was added to metadata", async () => {

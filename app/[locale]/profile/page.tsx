@@ -1,3 +1,4 @@
+import { ProfileForm } from "@/components/profile-form";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { Link } from "@/i18n/navigation";
 import { getCourseProgress } from "@/lib/course-progress";
@@ -6,7 +7,7 @@ import { requireAuth } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
-export default async function CoursesPage() {
+export default async function ProfilePage() {
   const session = await requireAuth();
   const [locale, t] = await Promise.all([
     getLocale(),
@@ -45,8 +46,37 @@ export default async function CoursesPage() {
     <main className="mx-auto max-w-5xl px-6 py-14">
       <div className="mb-10">
         <span className="label-upper">{t("eyebrow")}</span>
-        <h1 className="page-title">{t("myCourses")}</h1>
-        <p className="text-sm text-muted">{t("continue")}</p>
+        <h1 className="page-title">{t("title")}</h1>
+        <p className="text-sm text-muted">{t("description")}</p>
+      </div>
+
+      <div className="mb-14 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="card p-7 sm:p-8" aria-labelledby="account-title">
+          <h2 id="account-title" className="mb-6 font-display text-2xl">
+            {t("accountDetails")}
+          </h2>
+          <ProfileForm email={user.email} name={user.name ?? ""} />
+        </section>
+
+        <section className="card p-7 sm:p-8" aria-labelledby="billing-title">
+          <span className="label-upper">{t("billingEyebrow")}</span>
+          <h2 id="billing-title" className="mb-4 font-display text-2xl">
+            {t("billingTitle")}
+          </h2>
+          <p className="text-sm leading-relaxed text-muted">
+            {t("billingDescription")}
+          </p>
+          <div className="mt-7 border-t border-stroke pt-5">
+            <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-subtle">
+              {t("billingProvider")}
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <div className="mb-7">
+        <h2 className="font-display text-3xl">{t("myCourses")}</h2>
+        <p className="mt-2 text-sm text-muted">{t("continue")}</p>
       </div>
 
       <div className="card">

@@ -2,6 +2,7 @@ import "server-only";
 
 import type Stripe from "stripe";
 
+import { getStripeCustomerId } from "@/functions/stripe/get-stripe-customer-id";
 import { prisma } from "@/lib/prisma";
 
 export async function fulfillCheckoutSession(
@@ -15,6 +16,7 @@ export async function fulfillCheckoutSession(
 
   const userId = session.metadata?.userId;
   const courseId = session.metadata?.courseId;
+  const stripeCustomerId = getStripeCustomerId(session.customer);
 
   const expectedAmount = session.metadata?.amountTotal
     ? Number(session.metadata.amountTotal)
@@ -37,7 +39,10 @@ export async function fulfillCheckoutSession(
 
   await prisma.$transaction(async (transaction) => {
     const [user, course] = await Promise.all([
-      transaction.user.findUnique({ where: { id: userId }, select: { id: true } }),
+      transaction.user.findUnique({
+        where: { id: userId },
+        select: { id: true, stripeCustomerId: true },
+      }),
       transaction.course.findUnique({
         where: { id: courseId },
         select: { id: true },
@@ -46,6 +51,21 @@ export async function fulfillCheckoutSession(
 
     if (!user || !course) {
       throw new Error(`Checkout session ${session.id} references missing data`);
+    }
+
+    if (
+      stripeCustomerId &&
+      user.stripeCustomerId &&
+      user.stripeCustomerId !== stripeCustomerId
+    ) {
+      throw new Error(`Checkout session ${session.id} has a customer mismatch`);
+    }
+
+    if (stripeCustomerId && !user.stripeCustomerId) {
+      await transaction.user.update({
+        where: { id: userId },
+        data: { stripeCustomerId },
+      });
     }
 
     await transaction.purchase.upsert({

@@ -1,6 +1,8 @@
 export type FormValues = Record<string, string>;
 
 export type ValidationMessageKey =
+  | "nameTooLong"
+  | "profileInvalidData"
   | "titleRequired"
   | "priceMinimum"
   | "priceTooHigh"
@@ -27,6 +29,7 @@ export type ValidationMessageKey =
 
 export type FormState = {
   error: string | null;
+  success?: string;
   values?: FormValues;
 };
 

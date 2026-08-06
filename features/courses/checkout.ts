@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
+import { getCheckoutCustomerParams } from "@/functions/stripe/get-checkout-customer-params";
 import { getAppUrl } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/session";
@@ -19,7 +20,7 @@ export async function createCheckoutSession(courseId: string) {
   const [user, course, existingPurchase] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
-      select: { email: true },
+      select: { email: true, stripeCustomerId: true },
     }),
     prisma.course.findUnique({ where: { id: safeCourseId } }),
     prisma.purchase.findUnique({
@@ -40,7 +41,7 @@ export async function createCheckoutSession(courseId: string) {
       mode: "payment",
       locale,
       client_reference_id: userId,
-      customer_email: user.email,
+      ...getCheckoutCustomerParams(user),
       line_items: [
         {
           price_data: {

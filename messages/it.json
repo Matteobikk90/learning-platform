@@ -154,6 +154,19 @@
   },
   "Profile": {
     "eyebrow": "Profilo",
+    "title": "Il tuo spazio personale",
+    "description": "Gestisci i tuoi dati e continua i percorsi acquistati.",
+    "accountDetails": "Dati dell’account",
+    "name": "Nome e cognome",
+    "email": "Email",
+    "emailDescription": "L’email è collegata al tuo accesso sicuro tramite magic link.",
+    "saveProfile": "Salva dati",
+    "savingProfile": "Salvataggio…",
+    "profileSaved": "Profilo aggiornato.",
+    "billingEyebrow": "Fatturazione",
+    "billingTitle": "Dati protetti da Stripe",
+    "billingDescription": "L’indirizzo di fatturazione viene richiesto nel checkout e conservato direttamente da Stripe. Non salviamo una copia di questi dati sensibili sulla piattaforma.",
+    "billingProvider": "Pagamento e fatturazione gestiti da Stripe",
     "myCourses": "I miei corsi",
     "continue": "Continua il tuo percorso di pratica.",
     "noCourses": "Nessun corso ancora",
@@ -264,6 +277,8 @@
     "webhookRequired": "Configura il segreto webhook Mux prima di caricare video"
   },
   "Validation": {
+    "nameTooLong": "Il nome può contenere al massimo 120 caratteri",
+    "profileInvalidData": "I dati del profilo non sono validi",
     "titleRequired": "Il titolo è obbligatorio",
     "priceMinimum": "Il prezzo minimo è 0,50 €",
     "priceTooHigh": "Il prezzo è troppo alto",

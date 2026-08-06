@@ -7,17 +7,18 @@ datasource db {
 }
 
 model User {
-  id            String           @id @default(cuid())
-  email         String           @unique
-  emailVerified DateTime?
-  name          String?
-  image         String?
-  createdAt     DateTime         @default(now())
-  accounts      Account[]
-  sessions      Session[]
-  purchases     Purchase[]
-  progress      ModuleProgress[]
-  role          UserRole         @default(USER)
+  id               String           @id @default(cuid())
+  email            String           @unique
+  emailVerified    DateTime?
+  name             String?
+  image            String?
+  stripeCustomerId String?          @unique
+  createdAt        DateTime         @default(now())
+  accounts         Account[]
+  sessions         Session[]
+  purchases        Purchase[]
+  progress         ModuleProgress[]
+  role             UserRole         @default(USER)
 }
 
 model Course {

@@ -154,6 +154,19 @@
   },
   "Profile": {
     "eyebrow": "Profile",
+    "title": "Your personal space",
+    "description": "Manage your details and continue your purchased courses.",
+    "accountDetails": "Account details",
+    "name": "Full name",
+    "email": "Email",
+    "emailDescription": "Your email is linked to secure magic-link access.",
+    "saveProfile": "Save details",
+    "savingProfile": "Saving…",
+    "profileSaved": "Profile updated.",
+    "billingEyebrow": "Billing",
+    "billingTitle": "Protected by Stripe",
+    "billingDescription": "Your billing address is collected during checkout and stored directly by Stripe. We do not keep a copy of this sensitive information on the platform.",
+    "billingProvider": "Payments and billing managed by Stripe",
     "myCourses": "My courses",
     "continue": "Continue your practice journey.",
     "noCourses": "No courses yet",
@@ -264,6 +277,8 @@
     "webhookRequired": "Configure the Mux webhook secret before uploading videos"
   },
   "Validation": {
+    "nameTooLong": "The name can contain at most 120 characters",
+    "profileInvalidData": "The profile information is invalid",
     "titleRequired": "A title is required",
     "priceMinimum": "The minimum price is €0.50",
     "priceTooHigh": "The price is too high",
