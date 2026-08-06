@@ -30,6 +30,10 @@ export type CheckoutSuccessRouteProps = {
   searchParams: Promise<{ session_id?: string | string[] }>;
 };
 
+export type AdminPurchasesRouteProps = {
+  searchParams: Promise<{ page?: string | string[] }>;
+};
+
 export type LoginRouteProps = {
   searchParams: Promise<{ callbackUrl?: string | string[] }>;
 };

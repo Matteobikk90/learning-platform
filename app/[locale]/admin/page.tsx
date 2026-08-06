@@ -62,13 +62,25 @@ export default async function AdminPage() {
       <div className="card">
         <Link
           href="/admin/courses"
-          className="list-row no-underline hover:bg-white/5 transition-colors">
+          className="list-row no-underline transition-colors hover:bg-white/5">
           <div>
             <h2 className="list-row-title mb-0.5">{t("courses")}</h2>
             <p className="text-sm text-muted">{t("coursesDescription")}</p>
           </div>
           <span className="btn-secondary pointer-events-none">
             {t("manage")}
+          </span>
+        </Link>
+
+        <Link
+          href="/admin/purchases"
+          className="list-row no-underline transition-colors hover:bg-white/5">
+          <div>
+            <h2 className="list-row-title mb-0.5">{t("purchases")}</h2>
+            <p className="text-sm text-muted">{t("salesDescription")}</p>
+          </div>
+          <span className="btn-secondary pointer-events-none">
+            {t("view")}
           </span>
         </Link>
       </div>
