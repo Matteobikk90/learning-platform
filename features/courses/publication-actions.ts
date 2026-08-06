@@ -33,6 +33,7 @@ export async function updateCoursePublication(
     where: { id: parsed.data.courseId },
     select: {
       id: true,
+      publishedAt: true,
       modules: { select: { videoPlaybackId: true } },
     },
   });
@@ -50,7 +51,11 @@ export async function updateCoursePublication(
 
   await prisma.course.update({
     where: { id: course.id },
-    data: { isPublished: shouldPublish },
+    data: {
+      isPublished: shouldPublish,
+      publishedAt:
+        shouldPublish && !course.publishedAt ? new Date() : undefined,
+    },
   });
 
   revalidateCoursePages();

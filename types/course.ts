@@ -28,3 +28,14 @@ export type CoursePublicationControlProps = {
   courseId: string;
   isPublished: boolean;
 };
+
+export type CourseDeletionState = {
+  isPublished: boolean;
+  publishedAt: Date | null;
+  purchaseCount: number;
+};
+
+export type DeleteCourseButtonProps = {
+  canDelete: boolean;
+  courseId: string;
+};
