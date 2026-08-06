@@ -1,13 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { getLocale, getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { revalidateCoursePages } from "@/functions/courses/revalidate-course-pages";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
-import { routing } from "@/i18n/routing";
+import { revalidateModulePages } from "@/functions/modules/revalidate-module-pages";
 import { deleteMuxAsset, deletePendingMuxUpload } from "@/lib/mux";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
@@ -35,7 +35,13 @@ export async function deleteModule(formData: FormData) {
     redirect(getLocalizedPath(locale, "/admin/courses"));
   }
 
-  await prisma.module.delete({ where: { id: moduleId } });
+  await prisma.$transaction([
+    prisma.module.delete({ where: { id: moduleId } }),
+    prisma.course.update({
+      where: { id: courseModule.courseId },
+      data: { isPublished: false },
+    }),
+  ]);
   after(async () => {
     await Promise.all([
       deleteMuxAsset(courseModule.muxAssetId),
@@ -43,14 +49,8 @@ export async function deleteModule(formData: FormData) {
     ]);
   });
 
-  for (const supportedLocale of routing.locales) {
-    revalidatePath(
-      `/${supportedLocale}/admin/courses/${courseModule.courseId}/modules`
-    );
-    revalidatePath(
-      `/${supportedLocale}/profile/courses/${courseModule.courseId}`
-    );
-  }
+  revalidateModulePages(courseModule.courseId);
+  revalidateCoursePages();
 
   redirect(
     getLocalizedPath(

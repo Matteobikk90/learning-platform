@@ -6,6 +6,7 @@ Production-oriented course platform built with Next.js 16, Prisma 7, Supabase Po
 
 - Email magic-link authentication with user and admin roles
 - Admin CRUD for courses and modules
+- Draft/publish workflow that exposes only courses with ready videos
 - Resumable direct video uploads to Mux with verified webhooks
 - Automatic video processing status and duration synchronization
 - Stripe Checkout with webhook-based, idempotent course fulfillment

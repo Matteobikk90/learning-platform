@@ -6,6 +6,7 @@ export default async function Home() {
   const [session, courses] = await Promise.all([
     getAppSession(),
     prisma.course.findMany({
+      where: { isPublished: true },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -19,7 +20,10 @@ export default async function Home() {
 
   const purchases = session?.user.id
     ? await prisma.purchase.findMany({
-        where: { userId: session.user.id },
+        where: {
+          userId: session.user.id,
+          course: { isPublished: true },
+        },
         select: { courseId: true },
       })
     : [];

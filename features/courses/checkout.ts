@@ -4,6 +4,7 @@ import { getLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+import { getPublishedCourse } from "@/functions/courses/get-published-course";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { getCheckoutCustomerParams } from "@/functions/stripe/get-checkout-customer-params";
 import { getAppUrl } from "@/lib/env";
@@ -22,7 +23,7 @@ export async function createCheckoutSession(courseId: string) {
       where: { id: userId },
       select: { email: true, stripeCustomerId: true },
     }),
-    prisma.course.findUnique({ where: { id: safeCourseId } }),
+    getPublishedCourse(safeCourseId),
     prisma.purchase.findUnique({
       where: { userId_courseId: { userId, courseId: safeCourseId } },
       select: { id: true },
@@ -30,9 +31,11 @@ export async function createCheckoutSession(courseId: string) {
   ]);
 
   if (!user) redirect(getLocalizedPath(locale, "/login"));
-  if (!course) throw new Error("Corso non trovato");
   if (existingPurchase) {
-    redirect(getLocalizedPath(locale, `/profile/courses/${course.id}`));
+    redirect(getLocalizedPath(locale, `/profile/courses/${safeCourseId}`));
+  }
+  if (!course) {
+    redirect(`${getLocalizedPath(locale, "/")}#corsi`);
   }
 
   const appUrl = getAppUrl();

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { COURSE_PUBLICATION_ACTIONS } from "@/constants/courses";
+
 const euroPriceSchema = z.preprocess(
   (value) =>
     typeof value === "string" ? value.trim().replace(",", ".") : value,
@@ -29,4 +31,12 @@ export const courseFormSchema = z.object({
 
 export const updateCourseSchema = courseFormSchema.extend({
   id: z.string().min(1),
+});
+
+export const coursePublicationSchema = z.object({
+  courseId: z.string().min(1).max(128),
+  publicationAction: z.enum([
+    COURSE_PUBLICATION_ACTIONS.publish,
+    COURSE_PUBLICATION_ACTIONS.unpublish,
+  ]),
 });

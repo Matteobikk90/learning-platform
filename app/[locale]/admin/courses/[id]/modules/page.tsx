@@ -1,4 +1,6 @@
+import { CoursePublicationControl } from "@/components/course-publication-control";
 import { MuxDurationSync } from "@/components/mux-duration-sync";
+import { canPublishCourse } from "@/functions/courses/can-publish-course";
 import { formatDuration } from "@/lib/format-duration";
 import { getVideoStatusMessageKey } from "@/functions/video/get-video-state";
 import { Link } from "@/i18n/navigation";
@@ -38,16 +40,23 @@ export default async function ModulesPage({ params }: CourseRouteProps) {
         ← {t("courses")}
       </Link>
 
-      <div className="mb-10 flex items-end justify-between gap-6">
+      <div className="mb-10 flex flex-col items-stretch justify-between gap-6 sm:flex-row sm:items-end">
         <div>
           <span className="label-upper">{t("modules")}</span>
           <h1 className="page-title">{course.title}</h1>
         </div>
-        <Link
-          href={`/admin/courses/${course.id}/modules/new`}
-          className="btn-primary">
-          {t("newModule")}
-        </Link>
+        <div className="flex flex-wrap items-end justify-between gap-3 sm:justify-end">
+          <CoursePublicationControl
+            courseId={course.id}
+            isPublished={course.isPublished}
+            canPublish={canPublishCourse(course.modules)}
+          />
+          <Link
+            href={`/admin/courses/${course.id}/modules/new`}
+            className="btn-primary">
+            {t("newModule")}
+          </Link>
+        </div>
       </div>
 
       <div className="card">

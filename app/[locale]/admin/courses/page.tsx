@@ -1,4 +1,6 @@
+import { CoursePublicationControl } from "@/components/course-publication-control";
 import { DeleteCourseButton } from "@/components/delete-course-button";
+import { canPublishCourse } from "@/functions/courses/can-publish-course";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
@@ -10,6 +12,14 @@ export default async function AdminCoursesPage() {
 
   const courses = await prisma.course.findMany({
     orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      price: true,
+      isPublished: true,
+      modules: { select: { videoPlaybackId: true } },
+    },
   });
 
   return (
@@ -30,7 +40,9 @@ export default async function AdminCoursesPage() {
           <p className="list-empty">{t("noCourses")}</p>
         ) : (
           courses.map((course) => (
-            <div key={course.id} className="list-row">
+            <div
+              key={course.id}
+              className="list-row flex-col items-stretch sm:flex-row sm:items-center">
               <div>
                 <h2 className="list-row-title mb-0.5">{course.title}</h2>
                 {course.description && (
@@ -40,7 +52,12 @@ export default async function AdminCoursesPage() {
                   €{(course.price / 100).toFixed(2)}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3 sm:justify-end">
+                <CoursePublicationControl
+                  courseId={course.id}
+                  isPublished={course.isPublished}
+                  canPublish={canPublishCourse(course.modules)}
+                />
                 <DeleteCourseButton courseId={course.id} />
                 <Link
                   href={`/admin/courses/${course.id}/edit`}

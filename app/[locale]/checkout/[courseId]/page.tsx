@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import { SubmitButton } from "@/components/submit-button";
 import { createCheckoutSession } from "@/features/courses/checkout";
+import { getPublishedCourse } from "@/functions/courses/get-published-course";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
@@ -26,10 +27,7 @@ export default async function CourseCheckoutPage({
   }
 
   const [course, existingPurchase] = await Promise.all([
-    prisma.course.findUnique({
-      where: { id: courseId },
-      select: { id: true, title: true, description: true, price: true },
-    }),
+    getPublishedCourse(courseId),
     prisma.purchase.findUnique({
       where: {
         userId_courseId: { userId: session.user.id, courseId },
@@ -38,11 +36,11 @@ export default async function CourseCheckoutPage({
     }),
   ]);
 
-  if (!course) notFound();
-
   if (existingPurchase) {
-    redirect(getLocalizedPath(locale, `/profile/courses/${course.id}`));
+    redirect(getLocalizedPath(locale, `/profile/courses/${courseId}`));
   }
+
+  if (!course) notFound();
 
   return (
     <main className="mx-auto flex min-h-[75vh] max-w-2xl flex-col justify-center px-6 py-16">

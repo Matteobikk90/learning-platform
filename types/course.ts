@@ -18,3 +18,13 @@ export type CourseFormProps = {
 export type CourseImageUploadProps = {
   defaultUrl?: string | null;
 };
+
+export type CoursePublicationModule = {
+  videoPlaybackId: string | null;
+};
+
+export type CoursePublicationControlProps = {
+  canPublish: boolean;
+  courseId: string;
+  isPublished: boolean;
+};

@@ -16,6 +16,7 @@ import {
 } from "@/functions/modules/module-form";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { getValidationMessage } from "@/functions/forms/get-validation-message";
+import { revalidateCoursePages } from "@/functions/courses/revalidate-course-pages";
 import { revalidateModulePages } from "@/functions/modules/revalidate-module-pages";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
@@ -70,14 +71,23 @@ export async function createModule(
   let courseModuleId: string;
 
   try {
-    const courseModule = await prisma.module.create({
-      data: {
-        courseId: parsed.data.courseId,
-        title: parsed.data.title,
-        order: parsed.data.order,
-        durationSeconds: 0,
-      },
-      select: { id: true },
+    const courseModule = await prisma.$transaction(async (transaction) => {
+      const createdModule = await transaction.module.create({
+        data: {
+          courseId: parsed.data.courseId,
+          title: parsed.data.title,
+          order: parsed.data.order,
+          durationSeconds: 0,
+        },
+        select: { id: true },
+      });
+
+      await transaction.course.update({
+        where: { id: parsed.data.courseId },
+        data: { isPublished: false },
+      });
+
+      return createdModule;
     });
     courseModuleId = courseModule.id;
   } catch (error) {
@@ -88,6 +98,7 @@ export async function createModule(
   }
 
   revalidateModulePages(parsed.data.courseId, courseModuleId);
+  revalidateCoursePages();
   redirect(
     getLocalizedPath(
       locale,

@@ -27,6 +27,7 @@ model Course {
   description   String?
   price         Int
   coverImageUrl String?
+  isPublished   Boolean    @default(false)
   createdAt     DateTime   @default(now())
   modules       Module[]
   purchases     Purchase[]

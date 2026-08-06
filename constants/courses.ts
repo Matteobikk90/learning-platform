@@ -10,6 +10,11 @@ export const COURSE_FORM_ERRORS = {
   notFound: "courseNotFound",
 } as const;
 
+export const COURSE_PUBLICATION_ACTIONS = {
+  publish: "publish",
+  unpublish: "unpublish",
+} as const;
+
 export const COURSE_IMAGE_ERRORS = {
   invalidResponse: "invalidImageResponse",
   invalidRequest: "invalidImageRequest",
