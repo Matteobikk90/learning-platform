@@ -1,7 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
-import { SubmitButton } from "@/components/submit-button";
+import { CheckoutConsentForm } from "@/components/checkout-consent-form";
+import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { createCheckoutSession } from "@/features/courses/checkout";
 import { getPublishedCourse } from "@/functions/courses/get-published-course";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
@@ -28,9 +29,11 @@ export default async function CourseCheckoutPage({
 
   const [course, existingPurchase] = await Promise.all([
     getPublishedCourse(courseId),
-    prisma.purchase.findUnique({
+    prisma.purchase.findFirst({
       where: {
-        userId_courseId: { userId: session.user.id, courseId },
+        ...ACTIVE_PURCHASE_FILTER,
+        userId: session.user.id,
+        courseId,
       },
       select: { id: true },
     }),
@@ -71,13 +74,9 @@ export default async function CourseCheckoutPage({
           </strong>
         </div>
 
-        <form action={createCheckoutSession.bind(null, course.id)}>
-          <SubmitButton
-            pendingLabel={t("openingCheckout")}
-            className="btn-primary w-full">
-            {t("continueToPayment")}
-          </SubmitButton>
-        </form>
+        <CheckoutConsentForm
+          action={createCheckoutSession.bind(null, course.id)}
+        />
 
         <p className="mt-4 text-center text-xs leading-relaxed text-subtle">
           {t("secureCheckout")}

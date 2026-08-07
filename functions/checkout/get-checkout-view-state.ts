@@ -5,8 +5,10 @@ import type {
 
 export function getCheckoutViewState({
   isFulfilled,
+  isRefunded = false,
   sessionStatus,
 }: CheckoutViewStateInput): CheckoutViewState {
+  if (isRefunded) return "refunded";
   if (isFulfilled) return "ready";
 
   if (sessionStatus !== null && sessionStatus !== "complete") {

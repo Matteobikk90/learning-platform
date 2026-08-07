@@ -11,6 +11,8 @@ Production-oriented course platform built with Next.js 16, Prisma 7, Supabase Po
 - Resumable direct video uploads to Mux with verified webhooks
 - Automatic video processing status and duration synchronization
 - Stripe Checkout with webhook-based, idempotent course fulfillment
+- Versioned checkout consent for immediate digital access and withdrawal waiver
+- Transactional purchase confirmation and authenticated online withdrawal flow
 - Purchased-course area under `/profile`
 - Monotonic learner progress, 90% completion, and 10-day module unlocks
 
@@ -35,6 +37,11 @@ Configure these public endpoints in the matching service environment:
 - Stripe: `/api/stripe/webhook`
 
 Set `MUX_WEBHOOK_SECRET` and `STRIPE_WEBHOOK_SECRET` to the signing secrets for those exact endpoints. For Mux, enable direct-upload and asset lifecycle events, including ready, errored, and cancelled events.
+For Stripe, enable checkout completion events plus `charge.refunded`, `refund.created`, and `refund.updated` so full refunds revoke course access and partial refunds remain visible without revoking it.
+
+## Legal content
+
+The pages under `/[locale]/legal` are operational drafts and are excluded from search indexing. Before production, replace the placeholder seller, privacy, support, jurisdiction, and retention details with professionally reviewed copy. Bump `LEGAL_DOCUMENT_VERSION` whenever accepted legal wording changes so each purchase keeps the exact accepted version.
 
 ## Production deployment
 
@@ -44,6 +51,7 @@ Before releasing a new version:
 2. Set both application URLs to the production HTTPS origin.
 3. Run `pnpm db:deploy` against the production database.
 4. Run `pnpm check`.
-5. Verify one magic-link login, one Mux upload through playback, and one Stripe test purchase using production webhook URLs with test-mode credentials before enabling live payments.
+5. Replace and approve all draft legal content, then bump its document version.
+6. Verify one magic-link login, one Mux upload through playback, one Stripe test purchase with confirmation email, and one eligible withdrawal/refund using production webhook URLs with test-mode credentials before enabling live payments.
 
 Never commit `.env` files or service credentials.

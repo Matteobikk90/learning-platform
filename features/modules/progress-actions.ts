@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { MAX_WATCHED_DELTA_SECONDS } from "@/constants/progress";
+import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { routing } from "@/i18n/routing";
 import { isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
@@ -49,8 +50,12 @@ export async function saveModuleProgress(
 
   if (session.user.role !== "ADMIN") {
     const [purchase, previousModule] = await Promise.all([
-      prisma.purchase.findUnique({
-        where: { userId_courseId: { userId, courseId: courseModule.courseId } },
+      prisma.purchase.findFirst({
+        where: {
+          ...ACTIVE_PURCHASE_FILTER,
+          userId,
+          courseId: courseModule.courseId,
+        },
         select: { id: true },
       }),
       prisma.module.findFirst({

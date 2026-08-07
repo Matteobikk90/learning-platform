@@ -1,21 +1,32 @@
 import type { UserRole } from "@prisma/client";
 
 export type AdminPurchaseListItem = {
+  amountRefunded: number;
   amountTotal: number | null;
   course: { title: string };
   createdAt: Date;
   currency: string | null;
   id: string;
+  refundedAt: Date | null;
   stripeCheckoutSessionId: string | null;
+  withdrawalAcknowledgementSentAt: Date | null;
+  withdrawalRequestedAt: Date | null;
   user: { email: string; name: string | null };
 };
 
 export type AdminPurchaseLabels = {
   amount: string;
+  confirmationEmailPending: string;
   course: string;
   customer: string;
   date: string;
+  paid: string;
+  partiallyRefunded: string;
+  paymentStatus: string;
+  refunded: string;
+  refundedAmount: string;
   stripeSession: string;
+  withdrawalRequested: string;
 };
 
 export type AdminPurchasesListProps = {
@@ -81,6 +92,7 @@ export type AdminUsersListProps = {
 };
 
 export type AdminUserPurchaseItem = {
+  amountRefunded: number;
   amountTotal: number | null;
   course: {
     id: string;
@@ -93,6 +105,9 @@ export type AdminUserPurchaseItem = {
   createdAt: Date;
   currency: string | null;
   id: string;
+  refundedAt: Date | null;
+  withdrawalAcknowledgementSentAt: Date | null;
+  withdrawalRequestedAt: Date | null;
 };
 
 export type AdminUserCoursesListProps = {

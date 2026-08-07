@@ -53,7 +53,8 @@ export default async function CheckoutSuccessPage({
     : null;
 
   const state = getCheckoutViewState({
-    isFulfilled: Boolean(fulfillment && course),
+    isFulfilled: Boolean(fulfillment?.isActive && course),
+    isRefunded: fulfillment?.isActive === false,
     sessionStatus: checkoutSession?.status ?? null,
   });
 
@@ -72,6 +73,11 @@ export default async function CheckoutSuccessPage({
       eyebrow: t("notCompleted"),
       title: t("notCompletedTitle"),
       description: t("notCompletedDescription"),
+    },
+    refunded: {
+      eyebrow: t("refunded"),
+      title: t("refundedTitle"),
+      description: t("refundedDescription"),
     },
   }[state];
 
@@ -96,6 +102,10 @@ export default async function CheckoutSuccessPage({
           ) : state === "notCompleted" ? (
             <Link href="/" className="btn-primary">
               {t("backToCourses")}
+            </Link>
+          ) : state === "refunded" ? (
+            <Link href="/profile/purchases" className="btn-primary">
+              {t("viewPurchases")}
             </Link>
           ) : (
             <Link href="/profile" className="btn-primary">

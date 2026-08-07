@@ -1,4 +1,4 @@
-import { escapeHtml } from "@/functions/auth/escape-html";
+import { escapeHtml } from "@/functions/email/escape-html";
 import type { Locale } from "@/types/i18n";
 
 export function getMagicLinkEmail(

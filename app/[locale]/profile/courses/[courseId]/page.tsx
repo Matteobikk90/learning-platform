@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { formatDuration } from "@/lib/format-duration";
 import { getUnlockDate, isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
@@ -21,8 +22,12 @@ export default async function ProfileCoursePage({
     month: "long",
   });
 
-  const purchase = await prisma.purchase.findUnique({
-    where: { userId_courseId: { userId: session.user.id, courseId } },
+  const purchase = await prisma.purchase.findFirst({
+    where: {
+      ...ACTIVE_PURCHASE_FILTER,
+      userId: session.user.id,
+      courseId,
+    },
     include: {
       course: {
         include: { modules: { orderBy: { order: "asc" } } },

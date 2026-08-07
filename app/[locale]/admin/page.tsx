@@ -16,11 +16,16 @@ export default async function AdminPage() {
     prisma.user.count(),
     prisma.purchase.aggregate({
       _count: { id: true },
-      _sum: { amountTotal: true },
+      _sum: { amountTotal: true, amountRefunded: true },
     }),
   ]);
 
-  const revenue = purchases._sum.amountTotal ?? 0;
+  const refunded = purchases._sum.amountRefunded ?? 0;
+  const revenue = (purchases._sum.amountTotal ?? 0) - refunded;
+  const currencyFormatter = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "EUR",
+  });
 
   const stats = [
     { label: t("courses"), value: courses },
@@ -29,10 +34,11 @@ export default async function AdminPage() {
     { label: t("purchases"), value: purchases._count.id },
     {
       label: t("revenue"),
-      value: new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency: "EUR",
-      }).format(revenue / 100),
+      value: currencyFormatter.format(revenue / 100),
+    },
+    {
+      label: t("refundedTotal"),
+      value: currencyFormatter.format(refunded / 100),
     },
   ];
 
@@ -44,7 +50,7 @@ export default async function AdminPage() {
         <p className="text-sm text-muted">{t("dashboardDescription")}</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
+      <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {stats.map(({ label, value }) => (
           <div
             key={label}

@@ -6,7 +6,7 @@ import { fulfillCheckoutSession } from "@/features/courses/fulfillment";
 const tx = vi.hoisted(() => ({
   user: { findUnique: vi.fn(), update: vi.fn() },
   course: { findUnique: vi.fn() },
-  purchase: { upsert: vi.fn() },
+  purchase: { findUnique: vi.fn(), upsert: vi.fn() },
 }));
 
 vi.mock("@/lib/prisma", () => ({
@@ -21,12 +21,14 @@ function makeSession(
 ): Stripe.Checkout.Session {
   return {
     id: "cs_test_123",
+    created: 1_800_000_000,
     mode: "payment",
     payment_status: "paid",
     client_reference_id: "user_1",
     currency: "eur",
     amount_total: 4999,
     customer: "cus_123",
+    payment_intent: "pi_123",
     metadata: { userId: "user_1", courseId: "course_1", amountTotal: "4999" },
     ...overrides,
   } as Stripe.Checkout.Session;
@@ -40,7 +42,11 @@ beforeEach(() => {
   });
   tx.user.update.mockResolvedValue({});
   tx.course.findUnique.mockResolvedValue({ id: "course_1" });
-  tx.purchase.upsert.mockResolvedValue({});
+  tx.purchase.findUnique.mockResolvedValue(null);
+  tx.purchase.upsert.mockResolvedValue({
+    id: "purchase_1",
+    refundedAt: null,
+  });
 });
 
 describe("fulfillCheckoutSession", () => {
@@ -62,6 +68,8 @@ describe("fulfillCheckoutSession", () => {
   it.each([
     ["missing userId", { metadata: { courseId: "course_1" } }],
     ["missing courseId", { metadata: { userId: "user_1" } }],
+    ["missing payment intent", { payment_intent: null }],
+    ["invalid creation time", { created: 0 }],
     ["client_reference_id mismatch", { client_reference_id: "someone-else" }],
     ["wrong currency", { currency: "usd" }],
     ["null amount", { amount_total: null }],
@@ -89,23 +97,35 @@ describe("fulfillCheckoutSession", () => {
   it("records the purchase idempotently for a valid session", async () => {
     const result = await fulfillCheckoutSession(makeSession());
 
-    expect(result).toEqual({ userId: "user_1", courseId: "course_1" });
+    expect(result).toEqual({
+      purchaseId: "purchase_1",
+      userId: "user_1",
+      courseId: "course_1",
+      isActive: true,
+    });
     expect(tx.purchase.upsert).toHaveBeenCalledWith({
       where: {
-        userId_courseId: { userId: "user_1", courseId: "course_1" },
+        stripeCheckoutSessionId: "cs_test_123",
       },
       update: {
-        stripeCheckoutSessionId: "cs_test_123",
+        stripePaymentIntentId: "pi_123",
         amountTotal: 4999,
         currency: "eur",
       },
       create: {
+        createdAt: new Date(1_800_000_000 * 1000),
         userId: "user_1",
         courseId: "course_1",
         stripeCheckoutSessionId: "cs_test_123",
+        stripePaymentIntentId: "pi_123",
         amountTotal: 4999,
         currency: "eur",
       },
+      select: { id: true, refundedAt: true },
+    });
+    expect(tx.purchase.findUnique).toHaveBeenCalledWith({
+      where: { stripeCheckoutSessionId: "cs_test_123" },
+      select: { userId: true, courseId: true },
     });
     expect(tx.user.update).toHaveBeenCalledWith({
       where: { id: "user_1" },
@@ -137,6 +157,18 @@ describe("fulfillCheckoutSession", () => {
     expect(tx.purchase.upsert).not.toHaveBeenCalled();
   });
 
+  it("rejects a checkout session already assigned to another purchase", async () => {
+    tx.purchase.findUnique.mockResolvedValue({
+      userId: "user_other",
+      courseId: "course_1",
+    });
+
+    await expect(fulfillCheckoutSession(makeSession())).rejects.toThrow(
+      /purchase mismatch/
+    );
+    expect(tx.purchase.upsert).not.toHaveBeenCalled();
+  });
+
   it("continues to accept legacy sessions without a Stripe customer", async () => {
     await fulfillCheckoutSession(makeSession({ customer: null }));
 
@@ -149,6 +181,84 @@ describe("fulfillCheckoutSession", () => {
       makeSession({ metadata: { userId: "user_1", courseId: "course_1" } })
     );
 
-    expect(result).toEqual({ userId: "user_1", courseId: "course_1" });
+    expect(result).toEqual({
+      purchaseId: "purchase_1",
+      userId: "user_1",
+      courseId: "course_1",
+      isActive: true,
+    });
+  });
+
+  it("stores the versioned legal consent carried by Stripe", async () => {
+    const consentedAt = "2026-08-07T10:15:30.000Z";
+
+    await fulfillCheckoutSession(
+      makeSession({
+        metadata: {
+          userId: "user_1",
+          courseId: "course_1",
+          amountTotal: "4999",
+          legalTermsVersion: "2026-08-07-draft.1",
+          checkoutLocale: "it",
+          legalConsentAt: consentedAt,
+          termsAccepted: "true",
+          immediateAccessConsent: "true",
+          withdrawalWaiverAcknowledged: "true",
+        },
+      })
+    );
+
+    const legalData = {
+      legalTermsVersion: "2026-08-07-draft.1",
+      checkoutLocale: "it",
+      termsAcceptedAt: new Date(consentedAt),
+      immediateAccessConsentAt: new Date(consentedAt),
+      withdrawalWaiverAcknowledgedAt: new Date(consentedAt),
+    };
+    expect(tx.purchase.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining(legalData),
+        create: expect.objectContaining(legalData),
+      })
+    );
+  });
+
+  it("never resets refund state when Stripe replays checkout completion", async () => {
+    await fulfillCheckoutSession(makeSession());
+
+    const update = tx.purchase.upsert.mock.calls[0]?.[0]?.update;
+
+    expect(update).not.toHaveProperty("amountRefunded");
+    expect(update).not.toHaveProperty("createdAt");
+    expect(update).not.toHaveProperty("refundedAt");
+  });
+
+  it("reports a replayed refunded purchase as inactive", async () => {
+    tx.purchase.upsert.mockResolvedValue({
+      id: "purchase_1",
+      refundedAt: new Date("2026-08-08T10:00:00.000Z"),
+    });
+
+    await expect(fulfillCheckoutSession(makeSession())).resolves.toEqual({
+      purchaseId: "purchase_1",
+      userId: "user_1",
+      courseId: "course_1",
+      isActive: false,
+    });
+  });
+
+  it("rejects incomplete legal metadata instead of recording weak evidence", async () => {
+    await expect(
+      fulfillCheckoutSession(
+        makeSession({
+          metadata: {
+            userId: "user_1",
+            courseId: "course_1",
+            legalTermsVersion: "2026-08-07-draft.1",
+          },
+        })
+      )
+    ).rejects.toThrow(/invalid legal consent metadata/);
+    expect(tx.purchase.upsert).not.toHaveBeenCalled();
   });
 });

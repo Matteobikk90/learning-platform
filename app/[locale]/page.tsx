@@ -1,4 +1,5 @@
 import { Parallax } from "@/components/parallax";
+import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { prisma } from "@/lib/prisma";
 import { getAppSession } from "@/lib/session";
 
@@ -21,6 +22,7 @@ export default async function Home() {
   const purchases = session?.user.id
     ? await prisma.purchase.findMany({
         where: {
+          ...ACTIVE_PURCHASE_FILTER,
           userId: session.user.id,
           course: { isPublished: true },
         },

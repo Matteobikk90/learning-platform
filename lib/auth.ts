@@ -10,9 +10,9 @@ import {
   MAGIC_LINK_MAX_AGE_SECONDS,
 } from "@/constants/auth";
 import { getMagicLinkEmail } from "@/functions/auth/get-magic-link-email";
-import { getResend } from "@/functions/auth/get-resend";
 import { getLocaleFromUrl } from "@/functions/i18n/get-locale-from-url";
 import { requireEnv } from "@/lib/env";
+import { getResend } from "@/lib/resend";
 
 export const authOptions: NextAuthOptions = {
   secret: requireEnv("AUTH_SECRET"),

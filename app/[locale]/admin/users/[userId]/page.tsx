@@ -36,7 +36,11 @@ export default async function AdminUserPage({ params }: AdminUserRouteProps) {
           id: true,
           createdAt: true,
           amountTotal: true,
+          amountRefunded: true,
           currency: true,
+          refundedAt: true,
+          withdrawalAcknowledgementSentAt: true,
+          withdrawalRequestedAt: true,
           course: {
             select: {
               id: true,

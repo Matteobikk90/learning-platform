@@ -43,6 +43,10 @@
   body.parallax-active .site-header {
     display: none;
   }
+
+  body.parallax-active .site-footer {
+    display: none;
+  }
 }
 
 @layer components {

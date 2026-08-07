@@ -53,17 +53,31 @@ model Module {
 }
 
 model Purchase {
-  id                      String   @id @default(cuid())
-  createdAt               DateTime @default(now())
-  userId                  String
-  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  courseId                String
-  course                  Course   @relation(fields: [courseId], references: [id], onDelete: Restrict)
-  stripeCheckoutSessionId String?  @unique
-  amountTotal             Int?
-  currency                String?
+  id                                  String   @id @default(cuid())
+  createdAt                           DateTime @default(now())
+  userId                              String
+  user                                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId                            String
+  course                              Course   @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  stripeCheckoutSessionId             String?  @unique
+  stripePaymentIntentId               String?  @unique
+  amountTotal                         Int?
+  amountRefunded                      Int      @default(0)
+  currency                            String?
+  refundedAt                          DateTime?
+  legalTermsVersion                   String?
+  checkoutLocale                      String?
+  termsAcceptedAt                     DateTime?
+  immediateAccessConsentAt            DateTime?
+  withdrawalWaiverAcknowledgedAt      DateTime?
+  purchaseConfirmationSentAt          DateTime?
+  withdrawalRequestedAt               DateTime?
+  withdrawalRequesterName             String?
+  withdrawalRequesterEmail            String?
+  withdrawalAcknowledgementSentAt     DateTime?
 
-  @@unique([userId, courseId])
+  @@index([userId, courseId, refundedAt])
+  @@index([withdrawalRequestedAt, refundedAt])
 }
 
 model ModuleProgress {

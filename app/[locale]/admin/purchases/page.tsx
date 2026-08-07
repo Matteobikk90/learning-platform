@@ -33,8 +33,12 @@ export default async function AdminPurchasesPage({
       id: true,
       createdAt: true,
       amountTotal: true,
+      amountRefunded: true,
       currency: true,
+      refundedAt: true,
       stripeCheckoutSessionId: true,
+      withdrawalAcknowledgementSentAt: true,
+      withdrawalRequestedAt: true,
       user: { select: { name: true, email: true } },
       course: { select: { title: true } },
     },
@@ -64,8 +68,15 @@ export default async function AdminPurchasesPage({
             locale={locale}
             labels={{
               customer: t("customer"),
+              confirmationEmailPending: t("confirmationEmailPending"),
               course: t("course"),
               amount: t("amount"),
+              paymentStatus: t("paymentStatus"),
+              paid: t("paid"),
+              partiallyRefunded: t("partiallyRefunded"),
+              withdrawalRequested: t("withdrawalRequested"),
+              refunded: t("refunded"),
+              refundedAmount: t("refundedAmount"),
               date: t("purchaseDate"),
               stripeSession: t("stripeSession"),
             }}

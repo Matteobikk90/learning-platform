@@ -1,4 +1,5 @@
 import { ModuleProgressPlayer } from "@/components/module-progress-layer";
+import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { Link } from "@/i18n/navigation";
 import { formatDuration } from "@/lib/format-duration";
@@ -20,9 +21,11 @@ export default async function ProfileModulePage({
   ]);
   const { courseId, moduleId } = await params;
 
-  const purchase = await prisma.purchase.findUnique({
+  const purchase = await prisma.purchase.findFirst({
     where: {
-      userId_courseId: { userId: session.user.id, courseId },
+      ...ACTIVE_PURCHASE_FILTER,
+      userId: session.user.id,
+      courseId,
     },
   });
 

@@ -1,4 +1,5 @@
 import { ProfileForm } from "@/components/profile-form";
+import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { Link } from "@/i18n/navigation";
 import { getCourseProgress } from "@/lib/course-progress";
@@ -18,6 +19,7 @@ export default async function ProfilePage() {
     where: { id: session.user.id },
     include: {
       purchases: {
+        where: ACTIVE_PURCHASE_FILTER,
         include: {
           course: {
             include: {
@@ -40,7 +42,9 @@ export default async function ProfilePage() {
 
   if (!user) redirect(getLocalizedPath(locale, "/login"));
 
-  const courses = user.purchases.map((p) => p.course);
+  const courses = Array.from(
+    new Map(user.purchases.map(({ course }) => [course.id, course])).values()
+  );
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-14">
@@ -70,6 +74,11 @@ export default async function ProfilePage() {
             <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-subtle">
               {t("billingProvider")}
             </p>
+            <Link
+              href="/profile/purchases"
+              className="mt-4 inline-flex text-xs text-white underline underline-offset-4">
+              {t("viewPurchases")}
+            </Link>
           </div>
         </section>
       </div>

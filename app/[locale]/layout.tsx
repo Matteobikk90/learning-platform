@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/components/auth-provider";
+import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { isSupportedLocale } from "@/functions/i18n/is-supported-locale";
 import { routing } from "@/i18n/routing";
@@ -70,6 +71,7 @@ async function LocaleLayout({
           <AuthProvider>
             <Navbar />
             <div className="flex-1">{children}</div>
+            <Footer />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

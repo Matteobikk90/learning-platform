@@ -6,6 +6,7 @@ import {
   ADMIN_USERS_PAGE_SIZE,
   ADMIN_USER_SEARCH_MAX_LENGTH,
 } from "@/constants/admin";
+import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { getAdminPagination } from "@/functions/admin/get-admin-pagination";
 import { getAdminUserWhere } from "@/functions/admin/get-admin-user-where";
 import { normalizeAdminPage } from "@/functions/admin/normalize-admin-page";
@@ -45,7 +46,10 @@ export default async function AdminUsersPage({
       role: true,
       emailVerified: true,
       createdAt: true,
-      _count: { select: { purchases: true } },
+      purchases: {
+        where: ACTIVE_PURCHASE_FILTER,
+        select: { courseId: true },
+      },
     },
   });
 
@@ -110,7 +114,9 @@ export default async function AdminUsersPage({
               role: user.role,
               emailVerified: user.emailVerified,
               createdAt: user.createdAt,
-              purchaseCount: user._count.purchases,
+              purchaseCount: new Set(
+                user.purchases.map((purchase) => purchase.courseId)
+              ).size,
             }))}
             locale={locale}
             labels={{

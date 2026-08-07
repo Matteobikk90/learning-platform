@@ -9,6 +9,16 @@ describe("getCheckoutViewState", () => {
     ).toBe("ready");
   });
 
+  it("does not reactivate a checkout that was later refunded", () => {
+    expect(
+      getCheckoutViewState({
+        isFulfilled: false,
+        isRefunded: true,
+        sessionStatus: "complete",
+      })
+    ).toBe("refunded");
+  });
+
   it("keeps async payments in processing until the webhook confirms", () => {
     expect(
       getCheckoutViewState({ isFulfilled: false, sessionStatus: "complete" })
