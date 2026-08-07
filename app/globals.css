@@ -61,6 +61,11 @@
     overscroll-behavior: contain;
   }
 
+  .parallax-footer {
+    scroll-snap-align: end;
+    scroll-snap-stop: always;
+  }
+
   .parallax-content {
     opacity: 0;
     transform: translateY(1.5rem);
@@ -74,36 +79,47 @@
 
   .breath-wind {
     position: fixed;
-    top: 17vh;
-    left: -14vw;
-    z-index: 5;
-    width: 128vw;
-    height: min(32vh, 23rem);
+    z-index: 15;
+    width: min(82vw, 76rem);
+    height: min(30vh, 22rem);
     overflow: hidden;
     pointer-events: none;
     opacity: 0;
     mix-blend-mode: screen;
-    animation: breath-wind-reveal 7s ease-out both;
   }
 
-  .breath-wind[data-section="corsi"] {
-    top: 8vh;
+  .breath-wind[data-position="high"] {
+    top: 14vh;
   }
 
-  .breath-wind[data-section="faq"] {
-    top: auto;
-    bottom: 10vh;
+  .breath-wind[data-position="middle"] {
+    top: 38vh;
   }
 
-  .breath-wind[data-section="chi-sono"] {
-    top: 12vh;
+  .breath-wind[data-position="low"] {
+    top: 62vh;
+  }
+
+  .breath-wind[data-direction="from-left"] {
+    left: 0;
+    animation: breath-wind-from-left 3.8s cubic-bezier(0.2, 0.68, 0.25, 1)
+      both;
+  }
+
+  .breath-wind[data-direction="from-right"] {
+    right: 0;
+    animation: breath-wind-from-right 3.8s cubic-bezier(0.2, 0.68, 0.25, 1)
+      both;
   }
 
   .breath-wind svg {
     width: 100%;
     height: 100%;
     overflow: visible;
-    animation: breath-wind-drift 7s cubic-bezier(0.2, 0.6, 0.3, 1) both;
+  }
+
+  .breath-wind[data-direction="from-left"] svg {
+    transform: scaleX(-1);
   }
 
   .breath-wind-path {
@@ -115,7 +131,7 @@
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
     vector-effect: non-scaling-stroke;
-    animation: breath-wind-draw 5.8s cubic-bezier(0.2, 0.65, 0.25, 1)
+    animation: breath-wind-draw 2.9s cubic-bezier(0.2, 0.65, 0.25, 1)
       forwards;
   }
 
@@ -209,12 +225,14 @@
   }
 
   .nav-action {
-    @apply inline-flex min-h-9 cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-muted no-underline;
-    transition: color 0.2s ease, opacity 0.2s ease;
+    @apply inline-flex min-h-9 cursor-pointer items-center gap-2 border-0 bg-transparent p-0 no-underline;
+    color: rgba(255, 255, 255, 0.78);
+    transition: color 0.2s ease, opacity 0.2s ease, text-shadow 0.2s ease;
   }
 
   .nav-action:hover {
     color: var(--color-ink);
+    text-shadow: 0 0 18px rgba(255, 255, 255, 0.22);
   }
 
   .nav-action:focus-visible {
@@ -229,14 +247,14 @@
   }
 
   .nav-action-flag {
-    filter: grayscale(1);
-    opacity: 0.72;
-    transition: filter 0.2s ease, opacity 0.2s ease;
+    filter: saturate(1);
+    opacity: 1;
+    transition: filter 0.2s ease, transform 0.2s ease;
   }
 
   .nav-action:hover .nav-action-flag {
-    filter: grayscale(0);
-    opacity: 1;
+    filter: saturate(1.15) brightness(1.08);
+    transform: translateY(-1px);
   }
 
   .list-row-title {
@@ -287,28 +305,45 @@
     }
   }
 
-  @keyframes breath-wind-reveal {
+  @keyframes breath-wind-from-left {
     0% {
       opacity: 0;
+      transform: translate3d(-105%, 0, 0) scale(0.97);
     }
 
-    14%,
-    72% {
+    18% {
+      opacity: 0.82;
+    }
+
+    68% {
       opacity: 1;
+      transform: translate3d(-12%, 0, 0) scale(1);
     }
 
     100% {
       opacity: 0;
+      transform: translate3d(2%, 0, 0) scale(1.01);
     }
   }
 
-  @keyframes breath-wind-drift {
-    from {
-      transform: translate3d(7vw, 0, 0) scale(1.01);
+  @keyframes breath-wind-from-right {
+    0% {
+      opacity: 0;
+      transform: translate3d(105%, 0, 0) scale(0.97);
     }
 
-    to {
-      transform: translate3d(-7vw, 0, 0) scale(1);
+    18% {
+      opacity: 0.82;
+    }
+
+    68% {
+      opacity: 1;
+      transform: translate3d(12%, 0, 0) scale(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate3d(-2%, 0, 0) scale(1.01);
     }
   }
 
@@ -325,18 +360,20 @@
 
   @media (max-width: 767px) {
     .breath-wind {
-      top: 18vh;
-      left: -62vw;
-      width: 220vw;
-      height: 25vh;
+      width: 145vw;
+      height: 27vh;
     }
 
-    .breath-wind[data-section="corsi"] {
-      top: 9vh;
+    .breath-wind[data-position="high"] {
+      top: 12vh;
     }
 
-    .breath-wind[data-section="faq"] {
-      bottom: 12vh;
+    .breath-wind[data-position="middle"] {
+      top: 37vh;
+    }
+
+    .breath-wind[data-position="low"] {
+      top: 63vh;
     }
 
     .breath-wind-path {
@@ -349,18 +386,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .breath-wind {
-      opacity: 0.55;
-      animation: none;
-    }
-
-    .breath-wind svg,
-    .breath-wind-path {
-      animation: none;
-    }
-
-    .breath-wind-path {
-      stroke-dashoffset: 0;
+    .breath-wind-path-3 {
+      display: none;
     }
   }
 

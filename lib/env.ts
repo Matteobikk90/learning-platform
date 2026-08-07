@@ -1,21 +1,7 @@
 import "server-only";
 
-type ServerEnvName =
-  | "AUTH_SECRET"
-  | "DATABASE_URL"
-  | "EMAIL_FROM"
-  | "MUX_TOKEN_ID"
-  | "MUX_TOKEN_SECRET"
-  | "MUX_WEBHOOK_SECRET"
-  | "MUX_SIGNING_KEY_ID"
-  | "MUX_SIGNING_PRIVATE_KEY"
-  | "NEXTAUTH_URL"
-  | "NEXT_PUBLIC_APP_URL"
-  | "RESEND_API_KEY"
-  | "STRIPE_SECRET_KEY"
-  | "STRIPE_WEBHOOK_SECRET"
-  | "SUPABASE_SERVICE_ROLE_KEY"
-  | "SUPABASE_URL";
+import { resolveAppUrl } from "@/functions/environment/resolve-app-url";
+import type { ServerEnvName } from "@/types/environment";
 
 export function requireEnv(name: ServerEnvName): string {
   const value = process.env[name]?.trim();
@@ -28,8 +14,12 @@ export function requireEnv(name: ServerEnvName): string {
 }
 
 export function getAppUrl(): string {
-  const url = new URL(requireEnv("NEXT_PUBLIC_APP_URL"));
-  return url.toString().replace(/\/$/, "");
+  return resolveAppUrl({
+    configuredUrl: requireEnv("NEXT_PUBLIC_APP_URL"),
+    vercelEnvironment: getOptionalEnv("VERCEL_ENV"),
+    vercelProductionUrl: getOptionalEnv("VERCEL_PROJECT_PRODUCTION_URL"),
+    vercelUrl: getOptionalEnv("VERCEL_URL"),
+  });
 }
 
 export function getOptionalEnv(name: ServerEnvName): string | undefined {

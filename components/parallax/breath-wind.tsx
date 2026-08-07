@@ -1,13 +1,18 @@
 import { BREATH_WIND_VARIANTS } from "@/constants/breath-wind";
-import type { BreathWindProps } from "@/types/parallax";
+import type { BreathWindProps } from "@/types/breath-wind";
 
-export function BreathWind({ section }: BreathWindProps) {
-  const variant = BREATH_WIND_VARIANTS[section];
+export function BreathWind({ gust }: BreathWindProps) {
+  if (!gust) return null;
 
-  if (!variant) return null;
+  const variant = BREATH_WIND_VARIANTS[gust.variantIndex];
 
   return (
-    <div className="breath-wind" data-section={section} aria-hidden="true">
+    <div
+      key={gust.id}
+      className="breath-wind"
+      data-direction={gust.direction}
+      data-position={gust.position}
+      aria-hidden="true">
       <svg
         viewBox="0 0 1440 360"
         preserveAspectRatio="xMidYMid meet"

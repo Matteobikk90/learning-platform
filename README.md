@@ -48,7 +48,7 @@ The pages under `/[locale]/legal` are operational drafts and are excluded from s
 Before releasing a new version:
 
 1. Configure all variables from `.env.example` in the production environment.
-2. Set both application URLs to the production HTTPS origin.
+2. Set `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` to the exact production HTTPS origin; never use localhost in a deployed environment.
 3. Run `pnpm db:deploy` against the production database.
 4. Run `pnpm check`.
 5. Replace and approve all draft legal content, then bump its document version.

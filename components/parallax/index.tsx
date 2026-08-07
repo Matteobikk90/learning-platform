@@ -8,6 +8,7 @@ import { Hero } from "@/app/sections/hero";
 import { BreathWind } from "@/components/parallax/breath-wind";
 import { ParallaxNav } from "@/components/parallax/nav";
 import { SECTIONS } from "@/constants/parallax";
+import { useBreathWind } from "@/hooks/use-breath-wind";
 import { useParallaxScroll } from "@/hooks/use-parallax-scroll";
 import type { ParallaxProps } from "@/types/parallax";
 import { useEffect, useMemo, useRef } from "react";
@@ -15,6 +16,7 @@ import { useEffect, useMemo, useRef } from "react";
 export function Parallax({ courses, footer, purchasedIds }: ParallaxProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { active, visible, scrollTo } = useParallaxScroll(containerRef);
+  const gust = useBreathWind(containerRef);
   const isDark = SECTIONS.find((s) => s.id === active)?.dark ?? true;
   const purchasedSet = useMemo(() => new Set(purchasedIds), [purchasedIds]);
 
@@ -42,7 +44,7 @@ export function Parallax({ courses, footer, purchasedIds }: ParallaxProps) {
         <ChiSono visible={visible} />
         <Faq visible={visible} />
         {footer}
-        <BreathWind key={active} section={active} />
+        <BreathWind gust={gust} />
       </main>
     </>
   );

@@ -34,7 +34,7 @@ export default async function Home() {
   return (
     <Parallax
       courses={courses}
-      footer={<Footer />}
+      footer={<Footer className="parallax-footer" />}
       purchasedIds={purchases.map((purchase) => purchase.courseId)}
     />
   );

@@ -14,8 +14,8 @@ import { checkoutConsentSchema } from "@/features/courses/checkout-schema";
 import { getPublishedCourse } from "@/functions/courses/get-published-course";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { getCheckoutCustomerParams } from "@/functions/stripe/get-checkout-customer-params";
-import { getAppUrl } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
+import { getRequestAppUrl } from "@/lib/request-app-url";
 import { requireAuth } from "@/lib/session";
 import { getStripe } from "@/lib/stripe";
 import type { FormState } from "@/types/forms";
@@ -70,7 +70,7 @@ export async function createCheckoutSession(
     redirect(`${getLocalizedPath(locale, "/")}#corsi`);
   }
 
-  const appUrl = getAppUrl();
+  const appUrl = await getRequestAppUrl();
   const consentedAt = new Date();
   const legalMetadata = {
     [CHECKOUT_LEGAL_METADATA.version]: LEGAL_DOCUMENT_VERSION,

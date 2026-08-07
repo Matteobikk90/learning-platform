@@ -16,10 +16,6 @@ export type ParallaxProps = {
   purchasedIds: string[];
 };
 
-export type BreathWindProps = {
-  section: SectionId;
-};
-
 export type BaseSectionProps = {
   visible: Set<SectionId>;
 };
