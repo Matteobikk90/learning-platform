@@ -14,8 +14,8 @@ export function BreathWind({ gust }: BreathWindProps) {
       data-position={gust.position}
       aria-hidden="true">
       <svg
-        viewBox="0 0 1440 360"
-        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 1440 400"
+        preserveAspectRatio="none"
         focusable="false">
         {variant.paths.map((path, index) => (
           <path
