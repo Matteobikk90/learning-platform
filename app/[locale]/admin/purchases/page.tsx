@@ -1,6 +1,7 @@
 import { AdminPagination } from "@/components/admin/pagination";
 import { AdminPurchasesList } from "@/components/admin/purchases-list";
 import { ADMIN_PURCHASES_PAGE_SIZE } from "@/constants/admin";
+import { getAdminPagination } from "@/functions/admin/get-admin-pagination";
 import { normalizeAdminPage } from "@/functions/admin/normalize-admin-page";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
@@ -19,14 +20,14 @@ export default async function AdminPurchasesPage({
   ]);
   const requestedPage = normalizeAdminPage(rawPage);
   const purchaseCount = await prisma.purchase.count();
-  const totalPages = Math.max(
-    1,
-    Math.ceil(purchaseCount / ADMIN_PURCHASES_PAGE_SIZE)
-  );
-  const currentPage = Math.min(requestedPage, totalPages);
+  const { currentPage, skip, totalPages } = getAdminPagination({
+    itemCount: purchaseCount,
+    pageSize: ADMIN_PURCHASES_PAGE_SIZE,
+    requestedPage,
+  });
   const purchases = await prisma.purchase.findMany({
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-    skip: (currentPage - 1) * ADMIN_PURCHASES_PAGE_SIZE,
+    skip,
     take: ADMIN_PURCHASES_PAGE_SIZE,
     select: {
       id: true,
@@ -73,6 +74,7 @@ export default async function AdminPurchasesPage({
       </div>
 
       <AdminPagination
+        basePath="/admin/purchases"
         currentPage={currentPage}
         totalPages={totalPages}
         previousLabel={t("previousPage")}

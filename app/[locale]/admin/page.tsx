@@ -73,6 +73,18 @@ export default async function AdminPage() {
         </Link>
 
         <Link
+          href="/admin/users"
+          className="list-row no-underline transition-colors hover:bg-white/5">
+          <div>
+            <h2 className="list-row-title mb-0.5">{t("users")}</h2>
+            <p className="text-sm text-muted">{t("usersDescription")}</p>
+          </div>
+          <span className="btn-secondary pointer-events-none">
+            {t("view")}
+          </span>
+        </Link>
+
+        <Link
           href="/admin/purchases"
           className="list-row no-underline transition-colors hover:bg-white/5">
           <div>

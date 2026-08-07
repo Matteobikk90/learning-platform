@@ -34,6 +34,17 @@ export type AdminPurchasesRouteProps = {
   searchParams: Promise<{ page?: string | string[] }>;
 };
 
+export type AdminUsersRouteProps = {
+  searchParams: Promise<{
+    page?: string | string[];
+    q?: string | string[];
+  }>;
+};
+
+export type AdminUserRouteProps = {
+  params: Promise<LocalizedParams & { userId: string }>;
+};
+
 export type LoginRouteProps = {
   searchParams: Promise<{ callbackUrl?: string | string[] }>;
 };

@@ -1,9 +1,4 @@
-type CourseModuleWithProgress = {
-  id: string;
-  progress: {
-    completedAt: Date | null;
-  }[];
-};
+import type { CourseModuleWithProgress } from "@/types/progress";
 
 export function getCourseProgress(modules: CourseModuleWithProgress[]) {
   const totalModules = modules.length;

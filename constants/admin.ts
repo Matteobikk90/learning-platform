@@ -1,1 +1,3 @@
 export const ADMIN_PURCHASES_PAGE_SIZE = 20;
+export const ADMIN_USERS_PAGE_SIZE = 20;
+export const ADMIN_USER_SEARCH_MAX_LENGTH = 120;

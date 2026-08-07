@@ -1,11 +1,14 @@
+import { getAdminPageHref } from "@/functions/admin/get-admin-page-href";
 import { Link } from "@/i18n/navigation";
 import type { AdminPaginationProps } from "@/types/admin";
 
 export function AdminPagination({
+  basePath,
   currentPage,
   nextLabel,
   pageLabel,
   previousLabel,
+  query,
   totalPages,
 }: AdminPaginationProps) {
   if (totalPages <= 1) return null;
@@ -16,7 +19,11 @@ export function AdminPagination({
       className="mt-6 grid grid-cols-2 items-center gap-3 sm:grid-cols-[1fr_auto_1fr]">
       {currentPage > 1 ? (
         <Link
-          href={`/admin/purchases?page=${currentPage - 1}`}
+          href={getAdminPageHref({
+            basePath,
+            page: currentPage - 1,
+            query,
+          })}
           className="btn-secondary justify-self-start no-underline">
           ← {previousLabel}
         </Link>
@@ -30,7 +37,11 @@ export function AdminPagination({
 
       {currentPage < totalPages ? (
         <Link
-          href={`/admin/purchases?page=${currentPage + 1}`}
+          href={getAdminPageHref({
+            basePath,
+            page: currentPage + 1,
+            query,
+          })}
           className="justify-self-end btn-secondary no-underline sm:col-start-3">
           {nextLabel} →
         </Link>
