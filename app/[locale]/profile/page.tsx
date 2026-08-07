@@ -4,12 +4,12 @@ import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { Link } from "@/i18n/navigation";
 import { getCourseProgress } from "@/lib/course-progress";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/session";
+import { requireLearner } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
 export default async function ProfilePage() {
-  const session = await requireAuth();
+  const session = await requireLearner();
   const [locale, t] = await Promise.all([
     getLocale(),
     getTranslations("Profile"),

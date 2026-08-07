@@ -8,7 +8,7 @@ import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { routing } from "@/i18n/routing";
 import { isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/session";
+import { requireLearner } from "@/lib/session";
 
 const progressSchema = z.object({
   moduleId: z.string().min(1).max(128),
@@ -30,7 +30,7 @@ export async function saveModuleProgress(
     progressSeconds,
     watchedDeltaSeconds,
   });
-  const session = await requireAuth();
+  const session = await requireLearner();
   const userId = session.user.id;
 
   const courseModule = await prisma.module.findUnique({
@@ -48,45 +48,43 @@ export async function saveModuleProgress(
     throw new Error("Video non disponibile");
   }
 
-  if (session.user.role !== "ADMIN") {
-    const [purchase, previousModule] = await Promise.all([
-      prisma.purchase.findFirst({
+  const [purchase, previousModule] = await Promise.all([
+    prisma.purchase.findFirst({
+      where: {
+        ...ACTIVE_PURCHASE_FILTER,
+        userId,
+        courseId: courseModule.courseId,
+      },
+      select: { id: true },
+    }),
+    prisma.module.findFirst({
+      where: {
+        courseId: courseModule.courseId,
+        order: { lt: courseModule.order },
+      },
+      orderBy: { order: "desc" },
+      select: { id: true },
+    }),
+  ]);
+
+  if (!purchase) throw new Error("Corso non acquistato");
+
+  const previousProgress = previousModule
+    ? await prisma.moduleProgress.findUnique({
         where: {
-          ...ACTIVE_PURCHASE_FILTER,
-          userId,
-          courseId: courseModule.courseId,
+          userId_moduleId: { userId, moduleId: previousModule.id },
         },
-        select: { id: true },
-      }),
-      prisma.module.findFirst({
-        where: {
-          courseId: courseModule.courseId,
-          order: { lt: courseModule.order },
-        },
-        orderBy: { order: "desc" },
-        select: { id: true },
-      }),
-    ]);
-
-    if (!purchase) throw new Error("Corso non acquistato");
-
-    const previousProgress = previousModule
-      ? await prisma.moduleProgress.findUnique({
-          where: {
-            userId_moduleId: { userId, moduleId: previousModule.id },
-          },
-          select: { completedAt: true },
-        })
-      : null;
-
-    if (
-      !isModuleUnlocked({
-        isFirstModule: !previousModule,
-        previousCompletedAt: previousProgress?.completedAt,
+        select: { completedAt: true },
       })
-    ) {
-      throw new Error("Modulo non ancora disponibile");
-    }
+    : null;
+
+  if (
+    !isModuleUnlocked({
+      isFirstModule: !previousModule,
+      previousCompletedAt: previousProgress?.completedAt,
+    })
+  ) {
+    throw new Error("Modulo non ancora disponibile");
   }
 
   const safeProgressSeconds = Math.min(

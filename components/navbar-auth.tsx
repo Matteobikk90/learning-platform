@@ -23,7 +23,7 @@ export function NavbarAuth() {
             href="/admin"
             aria-label={t("admin")}
             title={t("admin")}
-            className="nav-link inline-flex min-h-9 items-center gap-2 text-muted no-underline">
+            className="nav-link nav-action">
             <NavigationIcon name="admin" />
             <span className="hidden sm:inline">{t("admin")}</span>
           </Link>
@@ -33,7 +33,7 @@ export function NavbarAuth() {
             href="/profile"
             aria-label={t("myCourses")}
             title={t("myCourses")}
-            className="nav-link inline-flex min-h-9 items-center gap-2 text-muted no-underline">
+            className="nav-link nav-action">
             <NavigationIcon name="courses" />
             <span className="hidden sm:inline">{t("myCourses")}</span>
           </Link>
@@ -43,7 +43,7 @@ export function NavbarAuth() {
           onClick={() => signOut({ callbackUrl: `/${locale}` })}
           aria-label={t("logout")}
           title={t("logout")}
-          className="nav-link inline-flex min-h-9 cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-subtle">
+          className="nav-link nav-action">
           <NavigationIcon name="logout" />
           <span className="hidden sm:inline">{t("logout")}</span>
         </button>
@@ -56,7 +56,7 @@ export function NavbarAuth() {
       href="/login"
       aria-label={t("login")}
       title={t("login")}
-      className="nav-link inline-flex min-h-9 items-center gap-2 text-white no-underline transition-opacity hover:opacity-70">
+      className="nav-link nav-action">
       <NavigationIcon name="login" />
       <span className="hidden sm:inline">{t("login")}</span>
     </Link>

@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { FlagIcon } from "@/components/icons/flag-icon";
 import { getLanguageSwitchHref } from "@/functions/i18n/get-language-switch-href";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { cn } from "@/lib/cn";
 import type { LanguageToggleProps, Locale } from "@/types/i18n";
 
 export function LanguageToggle({
@@ -37,8 +38,8 @@ export function LanguageToggle({
       disabled={pending}
       aria-label={t("switchLanguage")}
       title={t("switchLanguage")}
-      className={`nav-link inline-flex min-h-9 cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-inherit transition-opacity hover:opacity-70 disabled:cursor-wait disabled:opacity-50 ${className}`}>
-      <FlagIcon locale={nextLocale} />
+      className={cn("nav-link nav-action", className)}>
+      <FlagIcon locale={nextLocale} className="nav-action-flag h-3 w-[1.125rem]" />
       <span>{nextLocale.toUpperCase()}</span>
     </button>
   );

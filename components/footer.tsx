@@ -1,12 +1,18 @@
 import { LEGAL_PATHS } from "@/constants/legal";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/lib/cn";
+import type { FooterProps } from "@/types/footer";
 import { getTranslations } from "next-intl/server";
 
-export async function Footer() {
+export async function Footer({ className }: FooterProps = {}) {
   const t = await getTranslations("Footer");
 
   return (
-    <footer className="site-footer border-t border-stroke bg-surface px-6 py-7 sm:px-8">
+    <footer
+      className={cn(
+        "site-footer border-t border-stroke bg-surface px-6 py-7 sm:px-8",
+        className
+      )}>
       <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-subtle">
           {t("copyright", { year: new Date().getFullYear() })}

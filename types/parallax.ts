@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import type { ReactNode, RefObject } from "react";
 
 export type SectionId = "hero" | "benefici" | "corsi" | "chi-sono" | "faq";
 
@@ -12,7 +12,12 @@ export type Course = {
 
 export type ParallaxProps = {
   courses: Course[];
+  footer: ReactNode;
   purchasedIds: string[];
+};
+
+export type BreathWindProps = {
+  section: SectionId;
 };
 
 export type BaseSectionProps = {

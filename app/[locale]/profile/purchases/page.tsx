@@ -2,12 +2,12 @@ import { PurchaseHistory } from "@/components/profile/purchase-history";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/session";
+import { requireLearner } from "@/lib/session";
 import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 export default async function ProfilePurchasesPage() {
-  const session = await requireAuth();
+  const session = await requireLearner();
   const [locale, t, user] = await Promise.all([
     getLocale(),
     getTranslations("Profile"),

@@ -44,8 +44,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
                 href="/admin"
                 aria-label={t("admin")}
                 title={t("admin")}
-                className="nav-link inline-flex min-h-9 items-center gap-2 no-underline transition-opacity hover:opacity-70"
-                style={{ color: "inherit" }}>
+                className="nav-link nav-action">
                 <NavigationIcon name="admin" />
                 <span className="hidden sm:inline">{t("admin")}</span>
               </Link>
@@ -55,8 +54,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
                 href="/profile"
                 aria-label={t("myCourses")}
                 title={t("myCourses")}
-                className="nav-link inline-flex min-h-9 items-center gap-2 no-underline transition-opacity hover:opacity-70"
-                style={{ color: "inherit" }}>
+                className="nav-link nav-action">
                 <NavigationIcon name="courses" />
                 <span className="hidden sm:inline">{t("myCourses")}</span>
               </Link>
@@ -66,8 +64,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
               onClick={() => signOut({ callbackUrl: `/${locale}` })}
               aria-label={t("logout")}
               title={t("logout")}
-              className="nav-link inline-flex min-h-9 cursor-pointer items-center gap-2 no-underline transition-opacity hover:opacity-70"
-              style={{ color: "inherit", background: "none", border: 0 }}>
+              className="nav-link nav-action">
               <NavigationIcon name="logout" />
               <span className="hidden sm:inline">{t("logout")}</span>
             </button>
@@ -79,8 +76,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
               href="/login"
               aria-label={t("login")}
               title={t("login")}
-              className="nav-link inline-flex min-h-9 items-center gap-2 no-underline transition-opacity hover:opacity-70"
-              style={{ color: "inherit" }}>
+              className="nav-link nav-action">
               <NavigationIcon name="login" />
               <span className="hidden sm:inline">{t("login")}</span>
             </Link>

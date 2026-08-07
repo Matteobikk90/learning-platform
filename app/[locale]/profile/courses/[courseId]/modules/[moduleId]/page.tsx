@@ -6,7 +6,7 @@ import { formatDuration } from "@/lib/format-duration";
 import { isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
 import { createPlaybackTokens } from "@/lib/mux";
-import { requireAuth } from "@/lib/session";
+import { requireLearner } from "@/lib/session";
 import type { ProfileModuleRouteProps } from "@/types/routes";
 import { notFound, redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -14,7 +14,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 export default async function ProfileModulePage({
   params,
 }: ProfileModuleRouteProps) {
-  const session = await requireAuth();
+  const session = await requireLearner();
   const [locale, t] = await Promise.all([
     getLocale(),
     getTranslations("Profile"),
@@ -40,35 +40,31 @@ export default async function ProfileModulePage({
     notFound();
   }
 
-  const isAdmin = session.user.role === "ADMIN";
+  const prevModule = await prisma.module.findFirst({
+    where: { courseId, order: { lt: courseModule.order } },
+    orderBy: { order: "desc" },
+    select: { id: true },
+  });
 
-  if (!isAdmin) {
-    const prevModule = await prisma.module.findFirst({
-      where: { courseId, order: { lt: courseModule.order } },
-      orderBy: { order: "desc" },
-      select: { id: true },
-    });
-
-    const prevProgress = prevModule
-      ? await prisma.moduleProgress.findUnique({
-          where: {
-            userId_moduleId: {
-              userId: session.user.id,
-              moduleId: prevModule.id,
-            },
+  const prevProgress = prevModule
+    ? await prisma.moduleProgress.findUnique({
+        where: {
+          userId_moduleId: {
+            userId: session.user.id,
+            moduleId: prevModule.id,
           },
-          select: { completedAt: true },
-        })
-      : null;
-
-    if (
-      !isModuleUnlocked({
-        isFirstModule: !prevModule,
-        previousCompletedAt: prevProgress?.completedAt,
+        },
+        select: { completedAt: true },
       })
-    ) {
-      redirect(getLocalizedPath(locale, `/profile/courses/${courseId}`));
-    }
+    : null;
+
+  if (
+    !isModuleUnlocked({
+      isFirstModule: !prevModule,
+      previousCompletedAt: prevProgress?.completedAt,
+    })
+  ) {
+    redirect(getLocalizedPath(locale, `/profile/courses/${courseId}`));
   }
 
   const progress = await prisma.moduleProgress.findUnique({

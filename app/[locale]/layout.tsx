@@ -71,7 +71,7 @@ async function LocaleLayout({
           <AuthProvider>
             <Navbar />
             <div className="flex-1">{children}</div>
-            <Footer />
+            <Footer className="layout-footer" />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

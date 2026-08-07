@@ -62,11 +62,6 @@ export function Faq({ visible }: BaseSectionProps) {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-stroke text-center">
-          <p className="text-xs tracking-wider text-muted opacity-50">
-            © {new Date().getFullYear()} Umberto Iglina
-          </p>
-        </div>
       </div>
     </section>
   );

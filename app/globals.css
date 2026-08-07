@@ -44,7 +44,7 @@
     display: none;
   }
 
-  body.parallax-active .site-footer {
+  body.parallax-active .layout-footer {
     display: none;
   }
 }
@@ -70,6 +70,63 @@
   .parallax-content.visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .breath-wind {
+    position: fixed;
+    top: 17vh;
+    left: -14vw;
+    z-index: 5;
+    width: 128vw;
+    height: min(32vh, 23rem);
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: screen;
+    animation: breath-wind-reveal 7s ease-out both;
+  }
+
+  .breath-wind[data-section="corsi"] {
+    top: 8vh;
+  }
+
+  .breath-wind[data-section="faq"] {
+    top: auto;
+    bottom: 10vh;
+  }
+
+  .breath-wind[data-section="chi-sono"] {
+    top: 12vh;
+  }
+
+  .breath-wind svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    animation: breath-wind-drift 7s cubic-bezier(0.2, 0.6, 0.3, 1) both;
+  }
+
+  .breath-wind-path {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.32);
+    stroke-width: 1.05;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    vector-effect: non-scaling-stroke;
+    animation: breath-wind-draw 5.8s cubic-bezier(0.2, 0.65, 0.25, 1)
+      forwards;
+  }
+
+  .breath-wind-path-2 {
+    stroke: rgba(255, 255, 255, 0.2);
+    animation-delay: 0.18s;
+  }
+
+  .breath-wind-path-3 {
+    stroke: rgba(255, 255, 255, 0.12);
+    animation-delay: 0.38s;
   }
 
   /* Typography */
@@ -151,6 +208,37 @@
     @apply cursor-pointer font-mono text-[0.75rem] tracking-[0.15em] uppercase;
   }
 
+  .nav-action {
+    @apply inline-flex min-h-9 cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-muted no-underline;
+    transition: color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .nav-action:hover {
+    color: var(--color-ink);
+  }
+
+  .nav-action:focus-visible {
+    border-radius: 0.25rem;
+    outline: 1px solid currentColor;
+    outline-offset: 0.3rem;
+  }
+
+  .nav-action:disabled {
+    cursor: wait;
+    opacity: 0.5;
+  }
+
+  .nav-action-flag {
+    filter: grayscale(1);
+    opacity: 0.72;
+    transition: filter 0.2s ease, opacity 0.2s ease;
+  }
+
+  .nav-action:hover .nav-action-flag {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+
   .list-row-title {
     @apply font-display text-xl font-medium text-white;
   }
@@ -196,6 +284,83 @@
 
     100% {
       transform: translateY(100%);
+    }
+  }
+
+  @keyframes breath-wind-reveal {
+    0% {
+      opacity: 0;
+    }
+
+    14%,
+    72% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes breath-wind-drift {
+    from {
+      transform: translate3d(7vw, 0, 0) scale(1.01);
+    }
+
+    to {
+      transform: translate3d(-7vw, 0, 0) scale(1);
+    }
+  }
+
+  @keyframes breath-wind-draw {
+    0% {
+      stroke-dashoffset: 1;
+    }
+
+    68%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .breath-wind {
+      top: 18vh;
+      left: -62vw;
+      width: 220vw;
+      height: 25vh;
+    }
+
+    .breath-wind[data-section="corsi"] {
+      top: 9vh;
+    }
+
+    .breath-wind[data-section="faq"] {
+      bottom: 12vh;
+    }
+
+    .breath-wind-path {
+      stroke-width: 0.9;
+    }
+
+    .breath-wind-path-3 {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .breath-wind {
+      opacity: 0.55;
+      animation: none;
+    }
+
+    .breath-wind svg,
+    .breath-wind-path {
+      animation: none;
+    }
+
+    .breath-wind-path {
+      stroke-dashoffset: 0;
     }
   }
 

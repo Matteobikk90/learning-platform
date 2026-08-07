@@ -3,7 +3,7 @@ import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { formatDuration } from "@/lib/format-duration";
 import { getUnlockDate, isModuleUnlocked } from "@/lib/module-access";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/session";
+import { requireLearner } from "@/lib/session";
 import type { ProfileCourseRouteProps } from "@/types/routes";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -11,7 +11,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 export default async function ProfileCoursePage({
   params,
 }: ProfileCourseRouteProps) {
-  const session = await requireAuth();
+  const session = await requireLearner();
   const [locale, t] = await Promise.all([
     getLocale(),
     getTranslations("Profile"),
@@ -36,8 +36,6 @@ export default async function ProfileCoursePage({
   });
 
   if (!purchase) notFound();
-
-  const isAdmin = session.user.role === "ADMIN";
 
   const progresses = await prisma.moduleProgress.findMany({
     where: {
@@ -84,12 +82,10 @@ export default async function ProfileCoursePage({
                 ? progressMap.get(prevModule.id) ?? null
                 : null;
 
-              const unlocked =
-                isAdmin ||
-                isModuleUnlocked({
-                  isFirstModule: index === 0,
-                  previousCompletedAt: prevCompletedAt,
-                });
+              const unlocked = isModuleUnlocked({
+                isFirstModule: index === 0,
+                previousCompletedAt: prevCompletedAt,
+              });
 
               const unlockAt =
                 !unlocked && prevCompletedAt

@@ -29,6 +29,16 @@ export async function requireAdmin() {
   return session;
 }
 
+export async function requireLearner() {
+  const session = await requireAuth();
+
+  if (session.user.role === "ADMIN") {
+    redirect(getLocalizedPath(await getLocale(), "/admin"));
+  }
+
+  return session;
+}
+
 export async function getApiAdmin() {
   const session = await getAppSession();
   return session?.user?.role === "ADMIN" ? session.user : null;
