@@ -2,11 +2,13 @@
 
 import { SECTIONS } from "@/constants/parallax";
 import type { SectionId } from "@/types/parallax";
+import { useLocale } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useParallaxScroll(
   containerRef: React.RefObject<HTMLDivElement | null>
 ) {
+  const locale = useLocale();
   const [active, setActive] = useState<SectionId>("hero");
   const [visible, setVisible] = useState<Set<SectionId>>(new Set());
   const rafId = useRef<number | null>(null);
@@ -27,7 +29,7 @@ export function useParallaxScroll(
     });
 
     return () => window.cancelAnimationFrame(frameId);
-  }, [containerRef]);
+  }, [containerRef, locale]);
 
   // Track active section and sync URL hash only on section change
   useEffect(() => {

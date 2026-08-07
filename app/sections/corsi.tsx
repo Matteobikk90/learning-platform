@@ -2,15 +2,17 @@
 
 import { CourseCoverPlaceholder } from "@/components/course-cover-placeholder";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
+import { formatCoursePrice } from "@/functions/courses/format-course-price";
 import { cn } from "@/lib/cn";
 import { Link } from "@/i18n/navigation";
 import coursesDesktop from "@/public/images/home/courses-desktop.jpg";
 import coursesMobile from "@/public/images/home/courses-mobile.jpg";
 import type { CorsiSectionProps } from "@/types/parallax";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
+  const locale = useLocale();
   const t = useTranslations("Home.courses");
 
   return (
@@ -113,7 +115,7 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
 
                     <div className="course-banner-actions">
                       <span className="course-price-tag course-price-tag-invert">
-                        €{(course.price / 100).toFixed(0)}
+                        {formatCoursePrice(course.price, locale)}
                       </span>
 
                       {purchased ? (

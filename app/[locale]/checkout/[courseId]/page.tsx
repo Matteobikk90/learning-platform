@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { CheckoutConsentForm } from "@/components/checkout-consent-form";
 import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { createCheckoutSession } from "@/features/courses/checkout";
+import { formatCoursePrice } from "@/functions/courses/format-course-price";
 import { getPublishedCourse } from "@/functions/courses/get-published-course";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { Link } from "@/i18n/navigation";
@@ -70,7 +71,7 @@ export default async function CourseCheckoutPage({
             {t("total")}
           </span>
           <strong className="font-display text-2xl font-medium text-white">
-            €{(course.price / 100).toFixed(2)}
+            {formatCoursePrice(course.price, locale)}
           </strong>
         </div>
 
