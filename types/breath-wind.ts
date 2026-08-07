@@ -1,13 +1,15 @@
-export type BreathWindDirection = "from-left" | "from-right";
-
 export type BreathWindPosition = "high" | "middle" | "low";
 
+export type BreathWindPath = {
+  d: string;
+  length: number;
+};
+
 export type BreathWindVariant = {
-  paths: readonly string[];
+  paths: readonly BreathWindPath[];
 };
 
 export type BreathGust = {
-  direction: BreathWindDirection;
   id: number;
   position: BreathWindPosition;
   variantIndex: number;

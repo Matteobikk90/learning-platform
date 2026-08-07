@@ -85,9 +85,8 @@
     height: clamp(11rem, 25vw, 22rem);
     overflow: hidden;
     pointer-events: none;
-    opacity: 0;
+    opacity: 1;
     mix-blend-mode: screen;
-    animation: breath-wind-presence 4.6s ease-out both;
   }
 
   .breath-wind[data-position="high"] {
@@ -109,34 +108,34 @@
     overflow: visible;
   }
 
-  .breath-wind[data-direction="from-right"] svg {
-    transform: scaleX(-1);
-    transform-origin: center;
-  }
-
   .breath-wind-path {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.32);
-    stroke-width: 1.15;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
     vector-effect: non-scaling-stroke;
-    animation: breath-wind-draw 3.55s cubic-bezier(0.16, 0.68, 0.24, 1)
-      forwards;
   }
 
   .breath-wind-path-2 {
-    stroke: rgba(255, 255, 255, 0.2);
-    stroke-width: 0.9;
-    animation-delay: 0.14s;
+    opacity: 0.62;
   }
 
   .breath-wind-path-3 {
-    stroke: rgba(255, 255, 255, 0.12);
-    stroke-width: 0.75;
-    animation-delay: 0.28s;
+    opacity: 0.4;
+  }
+
+  .breath-wind-path-trail {
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 0.8;
+  }
+
+  .breath-wind-path-body {
+    stroke: rgba(255, 255, 255, 0.24);
+    stroke-width: 1.05;
+  }
+
+  .breath-wind-path-head {
+    stroke: rgba(255, 255, 255, 0.78);
+    stroke-width: 1.25;
   }
 
   /* Typography */
@@ -299,32 +298,6 @@
     }
   }
 
-  @keyframes breath-wind-presence {
-    0% {
-      opacity: 0;
-    }
-
-    12%,
-    80% {
-      opacity: 1;
-    }
-
-    100% {
-      opacity: 0;
-    }
-  }
-
-  @keyframes breath-wind-draw {
-    0% {
-      stroke-dashoffset: 1;
-    }
-
-    68%,
-    100% {
-      stroke-dashoffset: 0;
-    }
-  }
-
   @media (max-width: 767px) {
     .breath-wind {
       height: clamp(10rem, 44vw, 13rem);
@@ -343,18 +316,16 @@
       bottom: 7vh;
     }
 
-    .breath-wind-path {
+    .breath-wind-path-trail {
+      stroke-width: 0.7;
+    }
+
+    .breath-wind-path-body {
       stroke-width: 0.9;
     }
 
-    .breath-wind-path-3 {
-      display: none;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .breath-wind-path-3 {
-      display: none;
+    .breath-wind-path-head {
+      stroke-width: 1.1;
     }
   }
 
