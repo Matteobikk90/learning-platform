@@ -2,6 +2,10 @@
   "name": "learning-platform",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.22.0",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "tsx scripts/validate-production-environment.ts --vercel-production && prisma generate && next build && tsx scripts/deploy-production-migrations.ts",

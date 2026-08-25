@@ -29,6 +29,13 @@ Run the complete local verification with:
 pnpm check
 ```
 
+## Continuous integration
+
+GitHub Actions runs `pnpm check` for pull requests and for pushes to `dev` and
+`main`. The workflow installs the locked dependency graph and builds with
+non-sensitive placeholder values; it never receives production credentials or
+applies database migrations.
+
 Validate an environment containing the production values explicitly with:
 
 ```bash
