@@ -49,6 +49,10 @@ For Stripe, enable checkout completion events plus `charge.refunded`, `refund.cr
 
 `GET /api/health` returns `200` only when the application can reach its database. It returns `503` without infrastructure details when the database is unavailable. The response is never cached and can be used by an external uptime monitor.
 
+## Database migrations
+
+Vercel Production builds validate `DIRECT_URL`, generate Prisma Client, build Next.js, and then run `prisma migrate deploy` before the deployment can become active. A failed application build never touches the production database, while a failed migration prevents the new deployment from being published. Local and Preview builds never apply migrations automatically. Keep every production migration backward compatible with the currently deployed application because the previous deployment can remain active while the migration is running.
+
 ## Legal content
 
 The pages under `/[locale]/legal` are operational drafts and are excluded from search indexing. Before production, replace the placeholder seller, privacy, support, jurisdiction, and retention details with professionally reviewed copy. Bump `LEGAL_DOCUMENT_VERSION` whenever accepted legal wording changes so each purchase keeps the exact accepted version.
@@ -60,9 +64,10 @@ Before releasing a new version:
 1. Configure all variables from `.env.example` in the production environment.
 2. Set `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` to the exact production HTTPS origin; never use localhost in a deployed environment.
 3. Run `pnpm env:check` in an environment loaded with the production values; Vercel production builds also run this validation automatically.
-4. Run `pnpm db:deploy` against the production database.
+4. Review every committed migration for backward compatibility.
 5. Run `pnpm check`.
 6. Replace and approve all draft legal content, then bump its document version.
-7. Verify one magic-link login, one Mux upload through playback, one Stripe test purchase with confirmation email, and one eligible withdrawal/refund using production webhook URLs with test-mode credentials before enabling live payments.
+7. Deploy to Vercel Production and confirm that the build applied all pending migrations.
+8. Verify `/api/health`, one magic-link login, one Mux upload through playback, one Stripe test purchase with confirmation email, and one eligible withdrawal/refund using production webhook URLs with test-mode credentials before enabling live payments.
 
 Never commit `.env` files or service credentials.

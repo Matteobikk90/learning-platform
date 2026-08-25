@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "tsx scripts/validate-production-environment.ts --vercel-production && prisma generate && next build",
+    "build": "tsx scripts/validate-production-environment.ts --vercel-production && prisma generate && next build && tsx scripts/deploy-production-migrations.ts",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --incremental false",

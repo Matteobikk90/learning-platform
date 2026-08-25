@@ -1,10 +1,11 @@
 import "dotenv/config";
 
 import { getProductionEnvironmentIssues } from "@/functions/environment/get-production-environment-issues";
+import { isVercelProduction } from "@/functions/environment/is-vercel-production";
 
 const vercelProductionOnly = process.argv.includes("--vercel-production");
 
-if (vercelProductionOnly && process.env.VERCEL_ENV !== "production") {
+if (vercelProductionOnly && !isVercelProduction(process.env)) {
   console.log("Production environment validation skipped outside Vercel production.");
   process.exit(0);
 }

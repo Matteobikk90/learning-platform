@@ -16,6 +16,7 @@ const { privateKey: muxSigningPrivateKey } = generateKeyPairSync("rsa", {
 const validEnvironment = {
   AUTH_SECRET: "a-secure-auth-secret-with-more-than-32-characters",
   DATABASE_URL: "postgresql://user:password@db.example.com:6543/platform",
+  DIRECT_URL: "postgresql://user:password@db.example.com:5432/platform",
   EMAIL_FROM: "Platform <access@example.com>",
   MUX_SIGNING_KEY_ID: "mux-signing-key",
   MUX_SIGNING_PRIVATE_KEY: muxSigningPrivateKey.replaceAll("\n", "\\n"),
@@ -77,6 +78,7 @@ describe("getProductionEnvironmentIssues", () => {
     const environment = {
       ...validEnvironment,
       DATABASE_URL: "https://db.example.com",
+      DIRECT_URL: "https://db.example.com",
       EMAIL_FROM: "invalid-address",
       MUX_SIGNING_PRIVATE_KEY: "invalid-key",
       RESEND_API_KEY: "invalid",
@@ -86,6 +88,7 @@ describe("getProductionEnvironmentIssues", () => {
     expect(getProductionEnvironmentIssues(environment)).toEqual(
       expect.arrayContaining([
         { name: "DATABASE_URL", reason: "must use the postgres protocol" },
+        { name: "DIRECT_URL", reason: "must use the postgres protocol" },
         {
           name: "EMAIL_FROM",
           reason: "must contain a valid email address",
@@ -98,6 +101,28 @@ describe("getProductionEnvironmentIssues", () => {
         {
           name: "STRIPE_WEBHOOK_SECRET",
           reason: "must start with whsec_",
+        },
+      ])
+    );
+  });
+
+  it("rejects local or pooled migration database connections", () => {
+    const environment = {
+      ...validEnvironment,
+      DATABASE_URL: "postgresql://user:password@localhost:5432/platform",
+      DIRECT_URL:
+        "postgresql://user:password@db.example.com:6543/platform?pgbouncer=true",
+    };
+
+    expect(getProductionEnvironmentIssues(environment)).toEqual(
+      expect.arrayContaining([
+        {
+          name: "DATABASE_URL",
+          reason: "must use a remote database host",
+        },
+        {
+          name: "DIRECT_URL",
+          reason: "must not use a PgBouncer connection",
         },
       ])
     );
@@ -122,7 +147,7 @@ describe("getProductionEnvironmentIssues", () => {
     const documentedNames = [
       ...example.matchAll(/^([A-Z][A-Z0-9_]*)=/gm),
     ].map((match) => match[1]);
-    const expectedNames = [...REQUIRED_PRODUCTION_ENV_NAMES, "DIRECT_URL"];
+    const expectedNames = [...REQUIRED_PRODUCTION_ENV_NAMES];
 
     expect(documentedNames.sort()).toEqual(expectedNames.sort());
   });

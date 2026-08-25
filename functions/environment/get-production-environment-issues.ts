@@ -31,9 +31,15 @@ export function getProductionEnvironmentIssues(
   }
 
   const databaseUrl = parseUrl("DATABASE_URL", value("DATABASE_URL"), issues);
+  const directUrl = parseUrl("DIRECT_URL", value("DIRECT_URL"), issues);
 
-  if (databaseUrl && !POSTGRES_PROTOCOLS.has(databaseUrl.protocol)) {
-    addIssue("DATABASE_URL", "must use the postgres protocol");
+  validateDatabaseUrl("DATABASE_URL", databaseUrl, addIssue);
+  validateDatabaseUrl("DIRECT_URL", directUrl, addIssue);
+
+  if (
+    directUrl?.searchParams.get("pgbouncer")?.toLowerCase() === "true"
+  ) {
+    addIssue("DIRECT_URL", "must not use a PgBouncer connection");
   }
 
   const nextAuthUrl = parseProductionOrigin(
@@ -120,6 +126,20 @@ function validateEmailFrom(
   const address = value.match(/<([^<>]+)>$/)?.[1] ?? value;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
     addIssue("EMAIL_FROM", "must contain a valid email address");
+  }
+}
+
+function validateDatabaseUrl(
+  name: "DATABASE_URL" | "DIRECT_URL",
+  url: URL | null,
+  addIssue: (name: ServerEnvName, reason: string) => void
+) {
+  if (!url) return;
+
+  if (!POSTGRES_PROTOCOLS.has(url.protocol)) {
+    addIssue(name, "must use the postgres protocol");
+  } else if (LOCAL_APP_HOSTNAMES.has(url.hostname)) {
+    addIssue(name, "must use a remote database host");
   }
 }
 
