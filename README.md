@@ -29,6 +29,12 @@ Run the complete local verification with:
 pnpm check
 ```
 
+Validate an environment containing the production values explicitly with:
+
+```bash
+pnpm env:check
+```
+
 ## Webhooks
 
 Configure these public endpoints in the matching service environment:
@@ -49,9 +55,10 @@ Before releasing a new version:
 
 1. Configure all variables from `.env.example` in the production environment.
 2. Set `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` to the exact production HTTPS origin; never use localhost in a deployed environment.
-3. Run `pnpm db:deploy` against the production database.
-4. Run `pnpm check`.
-5. Replace and approve all draft legal content, then bump its document version.
-6. Verify one magic-link login, one Mux upload through playback, one Stripe test purchase with confirmation email, and one eligible withdrawal/refund using production webhook URLs with test-mode credentials before enabling live payments.
+3. Run `pnpm env:check` in an environment loaded with the production values; Vercel production builds also run this validation automatically.
+4. Run `pnpm db:deploy` against the production database.
+5. Run `pnpm check`.
+6. Replace and approve all draft legal content, then bump its document version.
+7. Verify one magic-link login, one Mux upload through playback, one Stripe test purchase with confirmation email, and one eligible withdrawal/refund using production webhook URLs with test-mode credentials before enabling live payments.
 
 Never commit `.env` files or service credentials.

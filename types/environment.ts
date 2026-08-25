@@ -1,6 +1,7 @@
 export type ServerEnvName =
   | "AUTH_SECRET"
   | "DATABASE_URL"
+  | "DIRECT_URL"
   | "EMAIL_FROM"
   | "MUX_SIGNING_KEY_ID"
   | "MUX_SIGNING_PRIVATE_KEY"
@@ -27,4 +28,13 @@ export type AppUrlEnvironment = {
 
 export type HeaderReader = {
   get(name: string): string | null;
+};
+
+export type EnvironmentValues = Readonly<
+  Record<string, string | undefined>
+>;
+
+export type EnvironmentValidationIssue = {
+  name: ServerEnvName;
+  reason: string;
 };
