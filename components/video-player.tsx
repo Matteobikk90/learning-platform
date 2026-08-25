@@ -19,6 +19,7 @@ export function VideoPlayer({
       <MuxPlayer
         playbackId={playbackId}
         tokens={playbackTokens}
+        disableTracking
         startTime={initialTime}
         metadata={{
           video_title: title,

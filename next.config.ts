@@ -20,11 +20,11 @@ const contentSecurityPolicy = [
   "form-action 'self' https://*.mux.com https://storage.googleapis.com",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: blob: https://image.mux.com https://*.litix.io${
+  `img-src 'self' data: blob: https://image.mux.com${
     supabaseUrl ? ` ${supabaseUrl.origin}` : ""
   }`,
   "font-src 'self' data:",
-  "connect-src 'self' https://*.mux.com https://*.litix.io https://storage.googleapis.com",
+  "connect-src 'self' https://*.mux.com https://storage.googleapis.com",
   "media-src 'self' blob: https://*.mux.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
