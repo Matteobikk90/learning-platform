@@ -21,7 +21,7 @@ Production-oriented course platform built with Next.js 16, Prisma 7, Supabase Po
 1. Copy `.env.example` to `.env` and configure each service.
 2. Install dependencies with `pnpm install`.
 3. Apply migrations with `pnpm db:deploy`.
-4. Start the app with `pnpm dev -- --port 3001`.
+4. Start the app with `pnpm dev --port 3001`.
 
 Run the complete local verification with:
 
@@ -44,6 +44,10 @@ Configure these public endpoints in the matching service environment:
 
 Set `MUX_WEBHOOK_SECRET` and `STRIPE_WEBHOOK_SECRET` to the signing secrets for those exact endpoints. For Mux, enable direct-upload and asset lifecycle events, including ready, errored, and cancelled events.
 For Stripe, enable checkout completion events plus `charge.refunded`, `refund.created`, and `refund.updated` so full refunds revoke course access and partial refunds remain visible without revoking it.
+
+## Health check
+
+`GET /api/health` returns `200` only when the application can reach its database. It returns `503` without infrastructure details when the database is unavailable. The response is never cached and can be used by an external uptime monitor.
 
 ## Legal content
 
