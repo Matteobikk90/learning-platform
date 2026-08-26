@@ -1,6 +1,6 @@
 "use client";
 
-import { CourseCoverPlaceholder } from "@/components/course-cover-placeholder";
+import { CourseCoverMedia } from "@/components/course-cover-media";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { formatCoursePrice } from "@/functions/courses/format-course-price";
 import { cn } from "@/lib/cn";
@@ -8,7 +8,6 @@ import { Link } from "@/i18n/navigation";
 import coursesDesktop from "@/public/images/home/courses-desktop.jpg";
 import coursesMobile from "@/public/images/home/courses-mobile.jpg";
 import type { CorsiSectionProps } from "@/types/parallax";
-import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 
 export function Corsi({
@@ -62,63 +61,40 @@ export function Corsi({
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-            {courses.map((course, index) => {
+            {courses.map((course) => {
               const purchased = purchasedSet.has(course.id);
               const titleId = `course-${course.id}-title`;
               return (
                 <article
                   key={course.id}
                   aria-labelledby={titleId}
-                  className={cn(
-                    "course-banner",
-                    course.coverImageUrl
-                      ? undefined
-                      : "course-banner-placeholder"
-                  )}>
-                  {course.coverImageUrl ? (
-                    <Image
-                      src={course.coverImageUrl}
-                      alt=""
-                      fill
-                      sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1152px) calc(50vw - 2.5rem), 560px"
-                      className="object-cover course-banner-img"
-                    />
-                  ) : (
-                    <CourseCoverPlaceholder />
-                  )}
-                  <div className="course-banner-overlay" aria-hidden="true" />
+                  className="course-card group">
+                  <CourseCoverMedia
+                    coverImageUrl={course.coverImageUrl}
+                    sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1152px) calc(50vw - 2.5rem), 560px"
+                    className="w-full rounded-b-none! border-0 border-b border-white/10"
+                  />
 
-                  <div className="course-banner-corner" aria-hidden="true">
-                    <span className="size-1.5 rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.75)]" />
-                    {t("digitalAccess")}
-                  </div>
+                  <div className="course-card-body">
+                    <div className="course-card-copy">
+                      {purchased && (
+                        <span className="mb-2 inline-flex rounded-full bg-white px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] text-black">
+                          {t("purchased")}
+                        </span>
+                      )}
 
-                  <div className="course-banner-content">
-                    <div className="course-banner-kicker">
-                      <span className="text-white">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="h-px w-7 bg-white/30" aria-hidden="true" />
-                      {t("guidedPath")}
+                      <h3 id={titleId} className="course-card-title">
+                        {course.title}
+                      </h3>
+
+                      {course.description && (
+                        <p className="course-card-description">
+                          {course.description}
+                        </p>
+                      )}
                     </div>
 
-                    {purchased && (
-                      <span className="mb-2 self-start rounded-full bg-white px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] text-black">
-                        {t("purchased")}
-                      </span>
-                    )}
-
-                    <h3 id={titleId} className="course-banner-title">
-                      {course.title}
-                    </h3>
-
-                    {course.description && (
-                      <p className="course-banner-description">
-                        {course.description}
-                      </p>
-                    )}
-
-                    <div className="course-banner-actions">
+                    <div className="course-card-actions">
                       <span className="course-price-tag course-price-tag-invert">
                         {formatCoursePrice(course.price, locale)}
                       </span>

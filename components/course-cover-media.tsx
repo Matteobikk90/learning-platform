@@ -27,10 +27,6 @@ export function CourseCoverMedia({
         <CourseCoverPlaceholder />
       )}
       <div
-        className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-white/[0.03]"
-        aria-hidden="true"
-      />
-      <div
         className="absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/8"
         aria-hidden="true"
       />
