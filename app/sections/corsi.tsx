@@ -61,7 +61,7 @@ export function Corsi({
             {t("empty")}
           </div>
         ) : (
-          <div className="flex flex-col gap-8">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
             {courses.map((course, index) => {
               const purchased = purchasedSet.has(course.id);
               const titleId = `course-${course.id}-title`;
@@ -80,7 +80,7 @@ export function Corsi({
                       src={course.coverImageUrl}
                       alt=""
                       fill
-                      sizes="(max-width: 1152px) 100vw, 1152px"
+                      sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1152px) calc(50vw - 2.5rem), 560px"
                       className="object-cover course-banner-img"
                     />
                   ) : (
@@ -103,7 +103,7 @@ export function Corsi({
                     </div>
 
                     {purchased && (
-                      <span className="mb-5 self-start rounded-full bg-white px-2.5 py-1 font-mono text-[0.625rem] font-bold uppercase tracking-[0.18em] text-black">
+                      <span className="mb-2 self-start rounded-full bg-white px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] text-black">
                         {t("purchased")}
                       </span>
                     )}

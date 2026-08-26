@@ -2,11 +2,12 @@
 
 import { useCallback, useRef } from "react";
 
-import {
-  MAX_WATCHED_DELTA_SECONDS,
-  PROGRESS_SAVE_THRESHOLDS,
-} from "@/constants/progress";
+import { PROGRESS_SAVE_THRESHOLDS } from "@/constants/progress";
 import { saveModuleProgress } from "@/features/modules/progress-actions";
+import {
+  getObservedWatchedDelta,
+  getWatchedDeltaToSave,
+} from "@/functions/progress/get-watched-playback-delta";
 import type { UseModuleProgressOptions } from "@/types/video";
 
 export function useModuleProgress({
@@ -21,10 +22,10 @@ export function useModuleProgress({
   const saveQueue = useRef(Promise.resolve());
 
   const enqueueSave = useCallback(
-    (currentTime: number, force = false) => {
-      const watchedDelta = Math.min(
-        MAX_WATCHED_DELTA_SECONDS,
-        Math.floor(pendingWatchedSeconds.current)
+    (currentTime: number, force = false, roundWatchedUp = false) => {
+      const watchedDelta = getWatchedDeltaToSave(
+        pendingWatchedSeconds.current,
+        roundWatchedUp
       );
       const moved = Math.abs(currentTime - lastSavedTime.current);
 
@@ -38,7 +39,10 @@ export function useModuleProgress({
 
       if (watchedDelta === 0 && moved === 0) return;
 
-      pendingWatchedSeconds.current -= watchedDelta;
+      pendingWatchedSeconds.current = Math.max(
+        0,
+        pendingWatchedSeconds.current - watchedDelta
+      );
       lastSavedTime.current = currentTime;
       saveQueue.current = saveQueue.current
         .catch(() => undefined)
@@ -53,15 +57,12 @@ export function useModuleProgress({
 
   const onTimeUpdate = useCallback(
     (currentTime: number) => {
-      const elapsed = currentTime - lastObservedTime.current;
+      const watchedDelta = getObservedWatchedDelta(
+        lastObservedTime.current,
+        currentTime
+      );
       lastObservedTime.current = currentTime;
-
-      if (
-        elapsed > 0 &&
-        elapsed <= PROGRESS_SAVE_THRESHOLDS.maxObservedGapSeconds
-      ) {
-        pendingWatchedSeconds.current += elapsed;
-      }
+      pendingWatchedSeconds.current += watchedDelta;
 
       enqueueSave(currentTime);
     },
@@ -82,7 +83,14 @@ export function useModuleProgress({
   );
 
   const onEnded = useCallback(
-    (duration: number) => enqueueSave(duration, true),
+    (duration: number) => {
+      pendingWatchedSeconds.current += getObservedWatchedDelta(
+        lastObservedTime.current,
+        duration
+      );
+      lastObservedTime.current = duration;
+      enqueueSave(duration, true, true);
+    },
     [enqueueSave]
   );
 

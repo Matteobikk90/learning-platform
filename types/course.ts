@@ -20,6 +20,12 @@ export type CourseImageUploadProps = {
   defaultUrl?: string | null;
 };
 
+export type CourseCoverMediaProps = {
+  className?: string;
+  coverImageUrl: string | null;
+  sizes: string;
+};
+
 export type CoursePublicationModule = {
   videoPlaybackId: string | null;
   videoPlaybackPolicy: AppMuxPlaybackPolicy;

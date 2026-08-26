@@ -26,19 +26,19 @@ export function VideoPlayer({
         }}
         onTimeUpdate={(event) => {
           const player = event.currentTarget as HTMLVideoElement;
-          onTimeUpdate?.(Math.floor(player.currentTime));
+          onTimeUpdate?.(player.currentTime);
         }}
         onEnded={(event) => {
           const player = event.currentTarget as HTMLVideoElement;
-          onEnded?.(Math.floor(player.duration));
+          onEnded?.(player.duration);
         }}
         onSeeked={(event) => {
           const player = event.currentTarget as HTMLVideoElement;
-          onSeeked?.(Math.floor(player.currentTime));
+          onSeeked?.(player.currentTime);
         }}
         onPause={(event) => {
           const player = event.currentTarget as HTMLVideoElement;
-          onPause?.(Math.floor(player.currentTime));
+          onPause?.(player.currentTime);
         }}
         className="aspect-video w-full"
         accentColor="#ffffff"

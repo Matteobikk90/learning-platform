@@ -40,12 +40,12 @@ export default async function ModulesPage({ params }: CourseRouteProps) {
         ← {t("courses")}
       </Link>
 
-      <div className="mb-10 flex flex-col items-stretch justify-between gap-6 sm:flex-row sm:items-end">
+      <div className="mb-10 flex flex-col items-stretch justify-between gap-6 sm:flex-row sm:items-start">
         <div>
           <span className="label-upper">{t("modules")}</span>
           <h1 className="page-title">{course.title}</h1>
         </div>
-        <div className="flex flex-wrap items-end justify-between gap-3 sm:justify-end">
+        <div className="flex flex-wrap items-start justify-between gap-3 sm:justify-end">
           <CoursePublicationControl
             courseId={course.id}
             isPublished={course.isPublished}

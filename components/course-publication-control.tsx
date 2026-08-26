@@ -69,7 +69,8 @@ export function CoursePublicationControl({
       )}
       {state.success && (
         <p
-          className="max-w-56 text-right text-xs text-petrol"
+          className="sr-only"
+          role="status"
           aria-live="polite">
           {state.success}
         </p>
