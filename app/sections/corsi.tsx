@@ -11,7 +11,12 @@ import type { CorsiSectionProps } from "@/types/parallax";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 
-export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
+export function Corsi({
+  visible,
+  courses,
+  isAdmin,
+  purchasedSet,
+}: CorsiSectionProps) {
   const locale = useLocale();
   const t = useTranslations("Home.courses");
 
@@ -118,7 +123,13 @@ export function Corsi({ visible, courses, purchasedSet }: CorsiSectionProps) {
                         {formatCoursePrice(course.price, locale)}
                       </span>
 
-                      {purchased ? (
+                      {isAdmin ? (
+                        <Link
+                          href={`/admin/courses/${course.id}/modules`}
+                          className="btn-primary">
+                          {t("manageCourse")}
+                        </Link>
+                      ) : purchased ? (
                         <Link
                           href={`/profile/courses/${course.id}`}
                           className="btn-primary">

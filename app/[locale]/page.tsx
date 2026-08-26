@@ -20,8 +20,9 @@ export default async function Home() {
       },
     }),
   ]);
+  const isAdmin = session?.user.role === "ADMIN";
 
-  const purchases = session?.user.id
+  const purchases = session?.user.id && !isAdmin
     ? await prisma.purchase.findMany({
         where: {
           ...ACTIVE_PURCHASE_FILTER,
@@ -36,6 +37,7 @@ export default async function Home() {
     <Parallax
       courses={courses}
       footer={<Footer className="parallax-footer" />}
+      isAdmin={isAdmin}
       purchasedIds={purchases.map((purchase) => purchase.courseId)}
     />
   );

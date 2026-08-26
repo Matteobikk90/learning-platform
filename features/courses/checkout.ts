@@ -17,7 +17,7 @@ import { getPublishedCourse } from "@/functions/courses/get-published-course";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
 import { prisma } from "@/lib/prisma";
 import { getRequestAppUrl } from "@/lib/request-app-url";
-import { requireAuth } from "@/lib/session";
+import { requireLearner } from "@/lib/session";
 import type { CheckoutAttemptClaim } from "@/types/checkout";
 import type { FormState } from "@/types/forms";
 
@@ -29,7 +29,7 @@ export async function createCheckoutSession(
   const safeCourseId = z.string().min(1).max(128).parse(courseId);
   const [locale, session, t] = await Promise.all([
     getLocale(),
-    requireAuth(),
+    requireLearner(),
     getTranslations("Checkout"),
   ]);
   const userId = session.user.id;

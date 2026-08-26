@@ -28,6 +28,10 @@ export default async function CourseCheckoutPage({
     redirect(`${loginUrl}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
+  if (session.user.role === "ADMIN") {
+    redirect(getLocalizedPath(locale, "/admin/courses"));
+  }
+
   const [course, existingPurchase] = await Promise.all([
     getPublishedCourse(courseId),
     prisma.purchase.findFirst({

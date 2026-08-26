@@ -13,7 +13,12 @@ import { useParallaxScroll } from "@/hooks/use-parallax-scroll";
 import type { ParallaxProps } from "@/types/parallax";
 import { useEffect, useMemo, useRef } from "react";
 
-export function Parallax({ courses, footer, purchasedIds }: ParallaxProps) {
+export function Parallax({
+  courses,
+  footer,
+  isAdmin,
+  purchasedIds,
+}: ParallaxProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { active, visible, scrollTo } = useParallaxScroll(containerRef);
   const gust = useBreathWind(containerRef);
@@ -39,6 +44,7 @@ export function Parallax({ courses, footer, purchasedIds }: ParallaxProps) {
         <Corsi
           visible={visible}
           courses={courses}
+          isAdmin={isAdmin}
           purchasedSet={purchasedSet}
         />
         <ChiSono visible={visible} />

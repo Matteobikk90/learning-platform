@@ -13,6 +13,7 @@ export type Course = {
 export type ParallaxProps = {
   courses: Course[];
   footer: ReactNode;
+  isAdmin: boolean;
   purchasedIds: string[];
 };
 
@@ -26,6 +27,7 @@ export type HeroSectionProps = BaseSectionProps & {
 
 export type CorsiSectionProps = BaseSectionProps & {
   courses: Course[];
+  isAdmin: boolean;
   purchasedSet: Set<string>;
 };
 
