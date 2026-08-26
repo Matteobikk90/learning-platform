@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "tsx scripts/validate-production-environment.ts --vercel-production && prisma generate && next build && tsx scripts/deploy-production-migrations.ts",
+    "build": "tsx scripts/validate-production-environment.ts --vercel-production && prisma generate && next build --webpack && tsx scripts/deploy-production-migrations.ts",
     "start": "next start",
     "lint": "eslint",
     "typegen": "prisma generate && next typegen",
