@@ -29,6 +29,22 @@ Run the complete local verification with:
 pnpm check
 ```
 
+## Administrators
+
+An administrator must first complete one magic-link login so the verified user exists. The command uses the `DATABASE_URL` loaded in the current environment, so verify that it targets the intended database. Preview the promotion without changing data:
+
+```bash
+pnpm admin:promote --email=admin@example.com
+```
+
+Then apply it explicitly:
+
+```bash
+pnpm admin:promote:apply --email=admin@example.com
+```
+
+Repeat the two commands for every administrator. Existing administrators are never replaced or demoted, and running the command again for the same address is safe.
+
 ## Continuous integration
 
 GitHub Actions runs `pnpm check` for pull requests and for pushes to `dev` and

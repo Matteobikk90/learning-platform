@@ -1,4 +1,11 @@
-import type { UserRole } from "@prisma/client";
+import type { PrismaClient, UserRole } from "@prisma/client";
+
+export type AdminPromotionClient = Pick<PrismaClient, "user">;
+
+export type AdminPromotionResult =
+  | "alreadyAdmin"
+  | "promoted"
+  | "wouldPromote";
 
 export type AdminPurchaseListItem = {
   amountRefunded: number;

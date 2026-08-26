@@ -1,8 +1,6 @@
 import Mux from "@mux/mux-node";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
-import { Pool } from "pg";
 
+import { createDatabaseScriptClient } from "@/functions/scripts/create-database-script-client";
 import { requireScriptEnv } from "@/functions/scripts/require-script-env";
 import type { ScriptClientsOptions } from "@/types/scripts";
 
@@ -14,15 +12,10 @@ export function createScriptClients({
     requireScriptEnv("MUX_SIGNING_PRIVATE_KEY");
   }
 
-  const mux = new Mux({
-    tokenId: requireScriptEnv("MUX_TOKEN_ID"),
-    tokenSecret: requireScriptEnv("MUX_TOKEN_SECRET"),
-  });
-  const pool = new Pool({
-    connectionString: requireScriptEnv("DATABASE_URL"),
-    max: 2,
-  });
-  const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
+  const tokenId = requireScriptEnv("MUX_TOKEN_ID");
+  const tokenSecret = requireScriptEnv("MUX_TOKEN_SECRET");
+  const mux = new Mux({ tokenId, tokenSecret });
+  const { pool, prisma } = createDatabaseScriptClient();
 
   return { mux, pool, prisma };
 }

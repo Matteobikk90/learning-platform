@@ -15,6 +15,8 @@
     "typecheck": "pnpm typegen && tsc --noEmit --incremental false",
     "db:deploy": "prisma migrate deploy",
     "env:check": "tsx scripts/validate-production-environment.ts",
+    "admin:promote": "tsx scripts/promote-admin.ts",
+    "admin:promote:apply": "tsx scripts/promote-admin.ts --apply",
     "test": "vitest run",
     "videos:sign": "tsx scripts/migrate-videos-to-signed.ts",
     "videos:sign:apply": "tsx scripts/migrate-videos-to-signed.ts --apply",
