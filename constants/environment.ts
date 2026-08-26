@@ -23,6 +23,8 @@ export const NON_PRODUCTION_EMAIL_DOMAIN_SUFFIXES = [
   ".test",
 ];
 
+export const RESEND_SANDBOX_EMAIL_ADDRESS = "onboarding@resend.dev";
+
 export const REQUIRED_PRODUCTION_ENV_NAMES = [
   "AUTH_SECRET",
   "DATABASE_URL",

@@ -5,6 +5,7 @@ import {
   NON_PRODUCTION_EMAIL_DOMAIN_SUFFIXES,
   NON_PRODUCTION_EMAIL_DOMAINS,
   REQUIRED_PRODUCTION_ENV_NAMES,
+  RESEND_SANDBOX_EMAIL_ADDRESS,
 } from "@/constants/environment";
 import type {
   EnvironmentValidationIssue,
@@ -60,7 +61,11 @@ export function getProductionEnvironmentIssues(
   }
 
   parseProductionOrigin("SUPABASE_URL", value("SUPABASE_URL"), issues);
-  validateEmailFrom(value("EMAIL_FROM"), addIssue);
+  validateEmailFrom(
+    value("EMAIL_FROM"),
+    value("ALLOW_RESEND_SANDBOX_EMAILS") === "true",
+    addIssue
+  );
   validatePrefix("RESEND_API_KEY", value("RESEND_API_KEY"), "re_", addIssue);
   validatePrefix(
     "STRIPE_SECRET_KEY",
@@ -121,6 +126,7 @@ function parseProductionOrigin(
 
 function validateEmailFrom(
   value: string | undefined,
+  allowResendSandboxEmails: boolean,
   addIssue: (name: ServerEnvName, reason: string) => void
 ) {
   if (!value) return;
@@ -132,6 +138,9 @@ function validateEmailFrom(
   }
 
   const domain = address.slice(address.lastIndexOf("@") + 1).toLowerCase();
+  const isAllowedResendSandboxSender =
+    allowResendSandboxEmails &&
+    address.toLowerCase() === RESEND_SANDBOX_EMAIL_ADDRESS;
   const isNonProductionDomain = [...NON_PRODUCTION_EMAIL_DOMAINS].some(
     (blockedDomain) =>
       domain === blockedDomain || domain.endsWith(`.${blockedDomain}`)
@@ -140,7 +149,7 @@ function validateEmailFrom(
       domain.endsWith(suffix)
     );
 
-  if (isNonProductionDomain) {
+  if (isNonProductionDomain && !isAllowedResendSandboxSender) {
     addIssue("EMAIL_FROM", "must not use a sandbox or placeholder domain");
   }
 }

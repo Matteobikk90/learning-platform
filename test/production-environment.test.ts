@@ -63,6 +63,46 @@ describe("getProductionEnvironmentIssues", () => {
     });
   });
 
+  it("allows the Resend owner-only sandbox with an explicit opt-in", () => {
+    const environment = {
+      ...validEnvironment,
+      ALLOW_RESEND_SANDBOX_EMAILS: "true",
+      EMAIL_FROM: "Umberto Iglina <onboarding@resend.dev>",
+    };
+
+    expect(getProductionEnvironmentIssues(environment)).toEqual([]);
+  });
+
+  it.each([
+    "Platform <access@mail.resend.dev>",
+    "Platform <access@example.com>",
+    "Platform <access@project.test>",
+  ])("keeps the placeholder sender %s blocked after opt-in", (emailFrom) => {
+    const environment = {
+      ...validEnvironment,
+      ALLOW_RESEND_SANDBOX_EMAILS: "true",
+      EMAIL_FROM: emailFrom,
+    };
+
+    expect(getProductionEnvironmentIssues(environment)).toContainEqual({
+      name: "EMAIL_FROM",
+      reason: "must not use a sandbox or placeholder domain",
+    });
+  });
+
+  it("requires the sandbox opt-in value to be exactly true", () => {
+    const environment = {
+      ...validEnvironment,
+      ALLOW_RESEND_SANDBOX_EMAILS: "TRUE",
+      EMAIL_FROM: "Umberto Iglina <onboarding@resend.dev>",
+    };
+
+    expect(getProductionEnvironmentIssues(environment)).toContainEqual({
+      name: "EMAIL_FROM",
+      reason: "must not use a sandbox or placeholder domain",
+    });
+  });
+
   it("reports all missing variables", () => {
     const issues = getProductionEnvironmentIssues({});
 

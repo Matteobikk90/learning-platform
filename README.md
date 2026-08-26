@@ -97,4 +97,6 @@ Before releasing a new version:
 9. Deploy to Vercel Production and confirm that the build applied all pending migrations.
 10. Verify `/api/health`, one magic-link login to an external inbox, one Mux upload through playback, one Stripe test purchase with confirmation email, and one eligible withdrawal/refund using production webhook URLs with test-mode credentials before enabling live payments.
 
+For a temporary pre-launch deployment without a verified domain, set `EMAIL_FROM` to `Umberto Iglina <onboarding@resend.dev>` and `ALLOW_RESEND_SANDBOX_EMAILS` to `true`. Resend will deliver only to the account owner's email. Remove the opt-in before launch and configure a verified sending domain.
+
 Never commit `.env` files or service credentials.
