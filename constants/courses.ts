@@ -1,3 +1,5 @@
+import type { Prisma } from "@prisma/client";
+
 export const COURSE_FORM_VALUE_FIELDS = [
   "title",
   "description",
@@ -14,6 +16,17 @@ export const COURSE_PUBLICATION_ACTIONS = {
   publish: "publish",
   unpublish: "unpublish",
 } as const;
+
+export const PUBLIC_CATALOG_COURSE_FILTER = {
+  isPublished: true,
+  modules: {
+    some: {},
+    every: {
+      videoPlaybackId: { not: null },
+      videoPlaybackPolicy: "SIGNED",
+    },
+  },
+} satisfies Prisma.CourseWhereInput;
 
 export const COURSE_IMAGE_ERRORS = {
   invalidResponse: "invalidImageResponse",

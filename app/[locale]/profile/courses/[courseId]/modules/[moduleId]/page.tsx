@@ -77,9 +77,13 @@ export default async function ProfileModulePage({
     },
   });
 
-  const playbackTokens = courseModule.videoPlaybackId
+  const playbackId =
+    courseModule.videoPlaybackPolicy === "SIGNED"
+      ? courseModule.videoPlaybackId
+      : null;
+  const playbackTokens = playbackId
     ? await createPlaybackTokens(
-        courseModule.videoPlaybackId,
+        playbackId,
         courseModule.videoPlaybackPolicy,
         courseModule.durationSeconds
       )
@@ -106,10 +110,10 @@ export default async function ProfileModulePage({
       </div>
 
       <section>
-        {courseModule.videoPlaybackId ? (
+        {playbackId ? (
           <div className="card">
             <ModuleProgressPlayer
-              playbackId={courseModule.videoPlaybackId}
+              playbackId={playbackId}
               playbackTokens={playbackTokens}
               title={courseModule.title}
               moduleId={courseModule.id}

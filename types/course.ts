@@ -1,4 +1,5 @@
 import type { FormAction } from "@/types/forms";
+import type { AppMuxPlaybackPolicy } from "@/types/mux";
 
 export type CourseFormDefaults = {
   id: string;
@@ -21,6 +22,7 @@ export type CourseImageUploadProps = {
 
 export type CoursePublicationModule = {
   videoPlaybackId: string | null;
+  videoPlaybackPolicy: AppMuxPlaybackPolicy;
 };
 
 export type CoursePublicationControlProps = {

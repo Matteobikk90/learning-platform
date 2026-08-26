@@ -12,17 +12,25 @@ describe("canPublishCourse", () => {
   it("requires every module to have a ready playback ID", () => {
     expect(
       canPublishCourse([
-        { videoPlaybackId: "playback_1" },
-        { videoPlaybackId: null },
+        { videoPlaybackId: "playback_1", videoPlaybackPolicy: "SIGNED" },
+        { videoPlaybackId: null, videoPlaybackPolicy: "SIGNED" },
       ])
     ).toBe(false);
   });
 
-  it("accepts a course when every module is ready", () => {
+  it("rejects ready modules with public playback", () => {
     expect(
       canPublishCourse([
-        { videoPlaybackId: "playback_1" },
-        { videoPlaybackId: "playback_2" },
+        { videoPlaybackId: "playback_1", videoPlaybackPolicy: "PUBLIC" },
+      ])
+    ).toBe(false);
+  });
+
+  it("accepts a course when every module is ready and signed", () => {
+    expect(
+      canPublishCourse([
+        { videoPlaybackId: "playback_1", videoPlaybackPolicy: "SIGNED" },
+        { videoPlaybackId: "playback_2", videoPlaybackPolicy: "SIGNED" },
       ])
     ).toBe(true);
   });

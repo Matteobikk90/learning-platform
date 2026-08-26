@@ -81,6 +81,9 @@ export default async function ProfileCoursePage({
               const prevCompletedAt = prevModule
                 ? progressMap.get(prevModule.id) ?? null
                 : null;
+              const hasProtectedVideo =
+                Boolean(module.videoPlaybackId) &&
+                module.videoPlaybackPolicy === "SIGNED";
 
               const unlocked = isModuleUnlocked({
                 isFirstModule: index === 0,
@@ -106,7 +109,7 @@ export default async function ProfileCoursePage({
                     </div>
                     <p className="text-[0.8125rem] text-subtle">
                       {formatDuration(module.durationSeconds)}
-                      {!module.videoPlaybackId && (
+                      {!hasProtectedVideo && (
                         <span className="ml-2">
                           · {t("videoUnavailable")}
                         </span>
@@ -124,7 +127,7 @@ export default async function ProfileCoursePage({
                     </p>
                   </div>
 
-                  {unlocked && module.videoPlaybackId ? (
+                  {unlocked && hasProtectedVideo ? (
                     <Link
                       href={`/profile/courses/${purchase.course.id}/modules/${module.id}`}
                       className="btn-primary">

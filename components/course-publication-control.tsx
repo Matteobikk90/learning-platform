@@ -53,9 +53,13 @@ export function CoursePublicationControl({
         </form>
       </div>
 
-      {!isPublished && !canPublish && !state.error && (
+      {!canPublish && !state.error && (
         <p className="max-w-56 text-right text-xs leading-relaxed text-subtle">
-          {t("publishRequirements")}
+          {t(
+            isPublished
+              ? "publishedCourseUnavailable"
+              : "publishRequirements"
+          )}
         </p>
       )}
       {state.error && (

@@ -34,7 +34,9 @@ export async function updateCoursePublication(
     select: {
       id: true,
       publishedAt: true,
-      modules: { select: { videoPlaybackId: true } },
+      modules: {
+        select: { videoPlaybackId: true, videoPlaybackPolicy: true },
+      },
     },
   });
 

@@ -5,6 +5,10 @@ export function canPublishCourse(
 ): boolean {
   return (
     modules.length > 0 &&
-    modules.every((courseModule) => Boolean(courseModule.videoPlaybackId))
+    modules.every(
+      (courseModule) =>
+        Boolean(courseModule.videoPlaybackId) &&
+        courseModule.videoPlaybackPolicy === "SIGNED"
+    )
   );
 }

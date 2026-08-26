@@ -21,7 +21,9 @@ export default async function AdminCoursesPage() {
       isPublished: true,
       publishedAt: true,
       _count: { select: { purchases: true } },
-      modules: { select: { videoPlaybackId: true } },
+      modules: {
+        select: { videoPlaybackId: true, videoPlaybackPolicy: true },
+      },
     },
   });
 
