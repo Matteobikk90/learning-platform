@@ -2,6 +2,8 @@ import { createPrivateKey } from "node:crypto";
 
 import {
   LOCAL_APP_HOSTNAMES,
+  NON_PRODUCTION_EMAIL_DOMAIN_SUFFIXES,
+  NON_PRODUCTION_EMAIL_DOMAINS,
   REQUIRED_PRODUCTION_ENV_NAMES,
 } from "@/constants/environment";
 import type {
@@ -126,6 +128,20 @@ function validateEmailFrom(
   const address = value.match(/<([^<>]+)>$/)?.[1] ?? value;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
     addIssue("EMAIL_FROM", "must contain a valid email address");
+    return;
+  }
+
+  const domain = address.slice(address.lastIndexOf("@") + 1).toLowerCase();
+  const isNonProductionDomain = [...NON_PRODUCTION_EMAIL_DOMAINS].some(
+    (blockedDomain) =>
+      domain === blockedDomain || domain.endsWith(`.${blockedDomain}`)
+  ) ||
+    NON_PRODUCTION_EMAIL_DOMAIN_SUFFIXES.some((suffix) =>
+      domain.endsWith(suffix)
+    );
+
+  if (isNonProductionDomain) {
+    addIssue("EMAIL_FROM", "must not use a sandbox or placeholder domain");
   }
 }
 

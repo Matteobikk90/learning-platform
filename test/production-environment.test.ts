@@ -17,7 +17,7 @@ const validEnvironment = {
   AUTH_SECRET: "a-secure-auth-secret-with-more-than-32-characters",
   DATABASE_URL: "postgresql://user:password@db.example.com:6543/platform",
   DIRECT_URL: "postgresql://user:password@db.example.com:5432/platform",
-  EMAIL_FROM: "Platform <access@example.com>",
+  EMAIL_FROM: "Umberto Iglina <access@mail.umbertoiglina.it>",
   MUX_SIGNING_KEY_ID: "mux-signing-key",
   MUX_SIGNING_PRIVATE_KEY: muxSigningPrivateKey.replaceAll("\n", "\\n"),
   MUX_TOKEN_ID: "mux-token-id",
@@ -35,6 +35,21 @@ const validEnvironment = {
 describe("getProductionEnvironmentIssues", () => {
   it("accepts a complete production environment", () => {
     expect(getProductionEnvironmentIssues(validEnvironment)).toEqual([]);
+  });
+
+  it.each([
+    "Platform <onboarding@resend.dev>",
+    "Platform <ACCESS@MAIL.RESEND.DEV>",
+    "Platform <access@example.com>",
+    "Platform <access@mail.example.org>",
+    "Platform <access@project.test>",
+  ])("rejects the non-production sender %s", (emailFrom) => {
+    const environment = { ...validEnvironment, EMAIL_FROM: emailFrom };
+
+    expect(getProductionEnvironmentIssues(environment)).toContainEqual({
+      name: "EMAIL_FROM",
+      reason: "must not use a sandbox or placeholder domain",
+    });
   });
 
   it("reports all missing variables", () => {
@@ -104,6 +119,20 @@ describe("getProductionEnvironmentIssues", () => {
         },
       ])
     );
+  });
+
+  it("reports only the syntax issue for a malformed sender", () => {
+    const issues = getProductionEnvironmentIssues({
+      ...validEnvironment,
+      EMAIL_FROM: "invalid-address",
+    }).filter(({ name }) => name === "EMAIL_FROM");
+
+    expect(issues).toEqual([
+      {
+        name: "EMAIL_FROM",
+        reason: "must contain a valid email address",
+      },
+    ]);
   });
 
   it("rejects local or pooled migration database connections", () => {

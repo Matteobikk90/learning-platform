@@ -9,6 +9,20 @@ export const LOCAL_APP_HOSTNAMES = new Set([
   "localhost",
 ]);
 
+export const NON_PRODUCTION_EMAIL_DOMAINS = new Set([
+  "example.com",
+  "example.net",
+  "example.org",
+  "resend.dev",
+]);
+
+export const NON_PRODUCTION_EMAIL_DOMAIN_SUFFIXES = [
+  ".example",
+  ".invalid",
+  ".localhost",
+  ".test",
+];
+
 export const REQUIRED_PRODUCTION_ENV_NAMES = [
   "AUTH_SECRET",
   "DATABASE_URL",

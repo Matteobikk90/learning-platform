@@ -69,13 +69,14 @@ The pages under `/[locale]/legal` are operational drafts and are excluded from s
 Before releasing a new version:
 
 1. Configure all variables from `.env.example` in the production environment.
-2. Set `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` to the exact production HTTPS origin; never use localhost in a deployed environment.
-3. Run `pnpm env:check` in an environment loaded with the production values; Vercel production builds also run this validation automatically.
-4. Run `pnpm videos:sign` against production. If the dry run finds public playback IDs, review them, run `pnpm videos:sign:apply`, and repeat the dry run until none remain.
-5. Review every committed migration for backward compatibility.
-6. Run `pnpm check`.
-7. Replace and approve all draft legal content, then bump its document version.
-8. Deploy to Vercel Production and confirm that the build applied all pending migrations.
-9. Verify `/api/health`, one magic-link login, one Mux upload through playback, one Stripe test purchase with confirmation email, and one eligible withdrawal/refund using production webhook URLs with test-mode credentials before enabling live payments.
+2. Verify a sending domain in Resend and set `EMAIL_FROM` to an address on that domain; `resend.dev` is only for tests to the account owner.
+3. Set `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` to the exact production HTTPS origin; never use localhost in a deployed environment.
+4. Run `pnpm env:check` in an environment loaded with the production values; Vercel production builds also run this validation automatically.
+5. Run `pnpm videos:sign` against production. If the dry run finds public playback IDs, review them, run `pnpm videos:sign:apply`, and repeat the dry run until none remain.
+6. Review every committed migration for backward compatibility.
+7. Run `pnpm check`.
+8. Replace and approve all draft legal content, then bump its document version.
+9. Deploy to Vercel Production and confirm that the build applied all pending migrations.
+10. Verify `/api/health`, one magic-link login to an external inbox, one Mux upload through playback, one Stripe test purchase with confirmation email, and one eligible withdrawal/refund using production webhook URLs with test-mode credentials before enabling live payments.
 
 Never commit `.env` files or service credentials.
