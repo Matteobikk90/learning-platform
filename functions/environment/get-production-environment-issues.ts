@@ -176,10 +176,19 @@ function validateMuxSigningKey(
 ) {
   if (!value) return;
 
-  try {
-    const key = createPrivateKey(value.replaceAll("\\n", "\n"));
-    if (key.asymmetricKeyType !== "rsa") throw new Error();
-  } catch {
+  const candidates = [
+    value.replaceAll("\\n", "\n"),
+    Buffer.from(value, "base64").toString("utf8"),
+  ];
+  const hasValidRsaKey = candidates.some((candidate) => {
+    try {
+      return createPrivateKey(candidate).asymmetricKeyType === "rsa";
+    } catch {
+      return false;
+    }
+  });
+
+  if (!hasValidRsaKey) {
     addIssue("MUX_SIGNING_PRIVATE_KEY", "must be a valid RSA private key");
   }
 }

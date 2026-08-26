@@ -37,6 +37,17 @@ describe("getProductionEnvironmentIssues", () => {
     expect(getProductionEnvironmentIssues(validEnvironment)).toEqual([]);
   });
 
+  it("accepts the Base64-encoded PEM returned by Mux", () => {
+    const environment = {
+      ...validEnvironment,
+      MUX_SIGNING_PRIVATE_KEY: Buffer.from(muxSigningPrivateKey).toString(
+        "base64"
+      ),
+    };
+
+    expect(getProductionEnvironmentIssues(environment)).toEqual([]);
+  });
+
   it.each([
     "Platform <onboarding@resend.dev>",
     "Platform <ACCESS@MAIL.RESEND.DEV>",
