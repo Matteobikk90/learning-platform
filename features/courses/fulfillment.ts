@@ -2,6 +2,10 @@ import "server-only";
 
 import type Stripe from "stripe";
 
+import {
+  CHECKOUT_ATTEMPT_METADATA_KEY,
+  FULFILLABLE_CHECKOUT_ATTEMPT_STATUSES,
+} from "@/constants/checkout";
 import { getCheckoutConsent } from "@/functions/checkout/get-checkout-consent";
 import { getStripeCustomerId } from "@/functions/stripe/get-stripe-customer-id";
 import { getStripePaymentIntentId } from "@/functions/stripe/get-stripe-payment-intent-id";
@@ -19,6 +23,8 @@ export async function fulfillCheckoutSession(
 
   const userId = session.metadata?.userId;
   const courseId = session.metadata?.courseId;
+  const checkoutAttemptId =
+    session.metadata?.[CHECKOUT_ATTEMPT_METADATA_KEY] ?? null;
   const stripeCustomerId = getStripeCustomerId(session.customer);
   const stripePaymentIntentId = getStripePaymentIntentId(
     session.payment_intent
@@ -51,7 +57,7 @@ export async function fulfillCheckoutSession(
   }
 
   const purchase = await prisma.$transaction(async (transaction) => {
-    const [user, course] = await Promise.all([
+    const [user, course, checkoutAttempt] = await Promise.all([
       transaction.user.findUnique({
         where: { id: userId },
         select: { id: true, stripeCustomerId: true },
@@ -60,6 +66,23 @@ export async function fulfillCheckoutSession(
         where: { id: courseId },
         select: { id: true },
       }),
+      checkoutAttemptId
+        ? transaction.checkoutAttempt.findUnique({
+            where: { id: checkoutAttemptId },
+            select: {
+              amountTotal: true,
+              checkoutLocale: true,
+              consentedAt: true,
+              courseId: true,
+              currency: true,
+              legalTermsVersion: true,
+              status: true,
+              stripeCustomerId: true,
+              stripeCheckoutSessionId: true,
+              userId: true,
+            },
+          })
+        : null,
     ]);
 
     if (!user || !course) {
@@ -67,6 +90,33 @@ export async function fulfillCheckoutSession(
     }
 
     if (
+      checkoutAttemptId &&
+      (!checkoutAttempt ||
+        !checkoutConsent ||
+        checkoutAttempt.userId !== userId ||
+        checkoutAttempt.courseId !== courseId ||
+        checkoutAttempt.amountTotal !== session.amount_total ||
+        checkoutAttempt.currency !== session.currency ||
+        checkoutAttempt.checkoutLocale !== checkoutConsent.checkoutLocale ||
+        checkoutAttempt.legalTermsVersion !==
+          checkoutConsent.legalTermsVersion ||
+        checkoutAttempt.consentedAt.getTime() !==
+          checkoutConsent.consentedAt.getTime() ||
+        (checkoutAttempt.stripeCustomerId !== null &&
+          checkoutAttempt.stripeCustomerId !== stripeCustomerId) ||
+        (checkoutAttempt.stripeCheckoutSessionId !== null &&
+          checkoutAttempt.stripeCheckoutSessionId !== session.id) ||
+        !FULFILLABLE_CHECKOUT_ATTEMPT_STATUSES.has(checkoutAttempt.status) ||
+        !Number.isSafeInteger(session.expires_at) ||
+        session.expires_at <= 0)
+    ) {
+      throw new Error(
+        `Checkout session ${session.id} has an invalid checkout attempt`
+      );
+    }
+
+    if (
+      !checkoutAttemptId &&
       stripeCustomerId &&
       user.stripeCustomerId &&
       user.stripeCustomerId !== stripeCustomerId
@@ -104,7 +154,7 @@ export async function fulfillCheckoutSession(
         }
       : {};
 
-    return transaction.purchase.upsert({
+    const purchase = await transaction.purchase.upsert({
       where: { stripeCheckoutSessionId: session.id },
       update: {
         stripePaymentIntentId,
@@ -124,6 +174,33 @@ export async function fulfillCheckoutSession(
       },
       select: { id: true, refundedAt: true },
     });
+
+    if (checkoutAttemptId) {
+      const completedAttempt = await transaction.checkoutAttempt.updateMany({
+        where: {
+          id: checkoutAttemptId,
+          OR: [
+            { stripeCheckoutSessionId: null },
+            { stripeCheckoutSessionId: session.id },
+          ],
+        },
+        data: {
+          activeKey: null,
+          status: "COMPLETED",
+          stripeCheckoutSessionId: session.id,
+          stripeCheckoutUrl: null,
+          stripeExpiresAt: new Date(session.expires_at * 1000),
+        },
+      });
+
+      if (completedAttempt.count !== 1) {
+        throw new Error(
+          `Checkout session ${session.id} could not complete its attempt`
+        );
+      }
+    }
+
+    return purchase;
   });
 
   return {

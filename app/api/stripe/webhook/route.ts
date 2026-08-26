@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 
+import {
+  closeCheckoutAttempt,
+  markCheckoutAttemptProcessing,
+} from "@/features/courses/checkout-attempt-events";
 import { fulfillCheckoutSession } from "@/features/courses/fulfillment";
 import {
   syncRefund,
@@ -19,6 +23,14 @@ const FULFILLMENT_EVENTS = new Set<Stripe.Event.Type>([
 const REFUND_EVENTS = new Set<Stripe.Event.Type>([
   "refund.created",
   "refund.updated",
+]);
+
+const CLOSED_CHECKOUT_ATTEMPT_EVENTS = new Map<
+  Stripe.Event.Type,
+  "EXPIRED" | "FAILED"
+>([
+  ["checkout.session.expired", "EXPIRED"],
+  ["checkout.session.async_payment_failed", "FAILED"],
 ]);
 
 export async function POST(request: Request) {
@@ -43,13 +55,19 @@ export async function POST(request: Request) {
 
   if (FULFILLMENT_EVENTS.has(event.type)) {
     try {
+      const checkoutSession = event.data.object as Stripe.Checkout.Session;
       const fulfillment = await fulfillCheckoutSession(
-        event.data.object as Stripe.Checkout.Session,
+        checkoutSession,
         new Date(event.created * 1000)
       );
 
       if (fulfillment?.isActive) {
         await sendPurchaseConfirmation(fulfillment.purchaseId);
+      } else if (
+        event.type === "checkout.session.completed" &&
+        checkoutSession.payment_status !== "paid"
+      ) {
+        await markCheckoutAttemptProcessing(checkoutSession);
       }
     } catch (error) {
       console.error("[stripe] Checkout fulfillment failed", {
@@ -57,6 +75,25 @@ export async function POST(request: Request) {
         error,
       });
       return NextResponse.json({ error: "Fulfillment failed" }, { status: 500 });
+    }
+  }
+
+  const closedAttemptStatus = CLOSED_CHECKOUT_ATTEMPT_EVENTS.get(event.type);
+  if (closedAttemptStatus) {
+    try {
+      await closeCheckoutAttempt(
+        event.data.object as Stripe.Checkout.Session,
+        closedAttemptStatus
+      );
+    } catch (error) {
+      console.error("[stripe] Checkout attempt transition failed", {
+        eventId: event.id,
+        error,
+      });
+      return NextResponse.json(
+        { error: "Checkout transition failed" },
+        { status: 500 }
+      );
     }
   }
 

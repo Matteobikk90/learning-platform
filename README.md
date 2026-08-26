@@ -50,7 +50,9 @@ Configure these public endpoints in the matching service environment:
 - Stripe: `/api/stripe/webhook`
 
 Set `MUX_WEBHOOK_SECRET` and `STRIPE_WEBHOOK_SECRET` to the signing secrets for those exact endpoints. For Mux, enable direct-upload and asset lifecycle events, including ready, errored, and cancelled events.
-For Stripe, enable checkout completion events plus `charge.refunded`, `refund.created`, and `refund.updated` so full refunds revoke course access and partial refunds remain visible without revoking it.
+For Stripe, enable `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, and `checkout.session.expired`, plus `charge.refunded`, `refund.created`, and `refund.updated`. Checkout lifecycle events keep each purchase attempt idempotent, while full refunds revoke course access and partial refunds remain visible without revoking it.
+
+Deploy the checkout-attempt migration before enabling Stripe live mode. When upgrading an installation that already accepts live payments, first let every Checkout Session created by the previous version complete or expire and confirm that no legacy session remains open before enabling the new checkout flow.
 
 ## Health check
 

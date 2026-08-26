@@ -18,6 +18,7 @@ model User {
   sessions         Session[]
   purchases        Purchase[]
   progress         ModuleProgress[]
+  checkoutAttempts CheckoutAttempt[]
   role             UserRole         @default(USER)
 }
 
@@ -32,6 +33,7 @@ model Course {
   createdAt     DateTime   @default(now())
   modules       Module[]
   purchases     Purchase[]
+  checkoutAttempts CheckoutAttempt[]
 }
 
 model Module {
@@ -78,6 +80,35 @@ model Purchase {
 
   @@index([userId, courseId, refundedAt])
   @@index([withdrawalRequestedAt, refundedAt])
+}
+
+model CheckoutAttempt {
+  id                      String                @id @default(cuid())
+  activeKey               String?               @unique
+  status                  CheckoutAttemptStatus @default(CREATING)
+  userId                  String
+  user                    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId                String
+  course                  Course                @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  amountTotal             Int
+  currency                String
+  checkoutLocale          String
+  legalTermsVersion       String
+  consentedAt             DateTime
+  courseTitle             String
+  courseDescription       String?
+  successUrl              String
+  cancelUrl               String
+  customerEmail           String
+  stripeCustomerId        String?
+  stripeCheckoutSessionId String?               @unique
+  stripeCheckoutUrl       String?
+  stripeExpiresAt         DateTime?
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+
+  @@index([userId, courseId, createdAt])
+  @@index([status, stripeExpiresAt])
 }
 
 model ModuleProgress {
@@ -144,4 +175,14 @@ enum UserRole {
 enum MuxPlaybackPolicy {
   PUBLIC
   SIGNED
+}
+
+enum CheckoutAttemptStatus {
+  CREATING
+  OPEN
+  PROCESSING
+  COMPLETED
+  EXPIRED
+  FAILED
+  CANCELLED
 }

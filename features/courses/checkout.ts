@@ -6,18 +6,19 @@ import { z } from "zod";
 
 import {
   CHECKOUT_CONSENT_FIELDS,
-  CHECKOUT_LEGAL_METADATA,
   LEGAL_DOCUMENT_VERSION,
 } from "@/constants/legal";
+import { CHECKOUT_SESSION_ID_PLACEHOLDER } from "@/constants/checkout";
 import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { checkoutConsentSchema } from "@/features/courses/checkout-schema";
+import { openCheckoutAttempt } from "@/features/courses/open-checkout-attempt";
+import { claimCheckoutAttempt } from "@/functions/checkout/claim-checkout-attempt";
 import { getPublishedCourse } from "@/functions/courses/get-published-course";
 import { getLocalizedPath } from "@/functions/i18n/get-localized-path";
-import { getCheckoutCustomerParams } from "@/functions/stripe/get-checkout-customer-params";
 import { prisma } from "@/lib/prisma";
 import { getRequestAppUrl } from "@/lib/request-app-url";
 import { requireAuth } from "@/lib/session";
-import { getStripe } from "@/lib/stripe";
+import type { CheckoutAttemptClaim } from "@/types/checkout";
 import type { FormState } from "@/types/forms";
 
 export async function createCheckoutSession(
@@ -72,55 +73,25 @@ export async function createCheckoutSession(
 
   const appUrl = await getRequestAppUrl();
   const consentedAt = new Date();
-  const legalMetadata = {
-    [CHECKOUT_LEGAL_METADATA.version]: LEGAL_DOCUMENT_VERSION,
-    [CHECKOUT_LEGAL_METADATA.locale]: locale,
-    [CHECKOUT_LEGAL_METADATA.consentedAt]: consentedAt.toISOString(),
-    [CHECKOUT_LEGAL_METADATA.terms]: "true",
-    [CHECKOUT_LEGAL_METADATA.immediateAccess]: "true",
-    [CHECKOUT_LEGAL_METADATA.withdrawalWaiver]: "true",
-  };
-  const checkoutMetadata = {
-    userId,
-    courseId: course.id,
-    amountTotal: String(course.price),
-    ...legalMetadata,
-  };
-  let checkoutSession;
+  let claim: CheckoutAttemptClaim;
 
   try {
-    checkoutSession = await getStripe().checkout.sessions.create(
-      {
-        mode: "payment",
-        locale,
-        client_reference_id: userId,
-        ...getCheckoutCustomerParams(user),
-        line_items: [
-          {
-            price_data: {
-              currency: "eur",
-              product_data: {
-                name: course.title,
-                description: course.description?.slice(0, 500) || undefined,
-              },
-              unit_amount: course.price,
-            },
-            quantity: 1,
-          },
-        ],
-        success_url: `${appUrl}/${locale}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${appUrl}/${locale}/checkout/cancel`,
-        metadata: checkoutMetadata,
-        payment_intent_data: {
-          metadata: checkoutMetadata,
-        },
-      },
-      {
-        idempotencyKey: `checkout:${userId}:${course.id}:${consentedAt.getTime()}`,
-      }
-    );
+    claim = await claimCheckoutAttempt({
+      amountTotal: course.price,
+      cancelUrl: `${appUrl}/${locale}/checkout/cancel`,
+      checkoutLocale: locale,
+      consentedAt,
+      courseDescription: course.description,
+      courseId: course.id,
+      courseTitle: course.title,
+      customerEmail: user.email,
+      legalTermsVersion: LEGAL_DOCUMENT_VERSION,
+      stripeCustomerId: user.stripeCustomerId,
+      successUrl: `${appUrl}/${locale}/checkout/success?session_id=${CHECKOUT_SESSION_ID_PLACEHOLDER}`,
+      userId,
+    });
   } catch (error) {
-    console.error("[stripe] Checkout session creation failed", {
+    console.error("[checkout] Checkout attempt creation failed", {
       userId,
       courseId: course.id,
       error,
@@ -128,9 +99,23 @@ export async function createCheckoutSession(
     return { error: t("checkoutUnavailable") };
   }
 
-  if (!checkoutSession.url) {
+  if (claim.kind === "owned") {
+    redirect(getLocalizedPath(locale, `/profile/courses/${safeCourseId}`));
+  }
+
+  let checkoutUrl: string;
+
+  try {
+    checkoutUrl = await openCheckoutAttempt(claim.attempt);
+  } catch (error) {
+    console.error("[stripe] Checkout session creation failed", {
+      userId,
+      courseId: course.id,
+      attemptId: claim.attempt.id,
+      error,
+    });
     return { error: t("checkoutUnavailable") };
   }
 
-  redirect(checkoutSession.url);
+  redirect(checkoutUrl);
 }

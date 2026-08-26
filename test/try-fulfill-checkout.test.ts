@@ -4,8 +4,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { tryFulfillCheckoutSession } from "@/features/courses/try-fulfill-checkout";
 
 const fulfillCheckoutSession = vi.hoisted(() => vi.fn());
+const markCheckoutAttemptProcessing = vi.hoisted(() => vi.fn());
 const sendPurchaseConfirmation = vi.hoisted(() => vi.fn());
 
+vi.mock("@/features/courses/checkout-attempt-events", () => ({
+  markCheckoutAttemptProcessing,
+}));
 vi.mock("@/features/courses/fulfillment", () => ({
   fulfillCheckoutSession,
 }));
@@ -19,6 +23,7 @@ function makeSession() {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  markCheckoutAttemptProcessing.mockResolvedValue(true);
   sendPurchaseConfirmation.mockResolvedValue(true);
 });
 
@@ -88,5 +93,18 @@ describe("tryFulfillCheckoutSession", () => {
       fulfillment
     );
     expect(sendPurchaseConfirmation).not.toHaveBeenCalled();
+  });
+
+  it("keeps an asynchronous payment in the same checkout cycle", async () => {
+    const session = {
+      id: "cs_test_123",
+      mode: "payment",
+      payment_status: "unpaid",
+      status: "complete",
+    } as Stripe.Checkout.Session;
+    fulfillCheckoutSession.mockResolvedValue(null);
+
+    await expect(tryFulfillCheckoutSession(session)).resolves.toBeNull();
+    expect(markCheckoutAttemptProcessing).toHaveBeenCalledWith(session);
   });
 });

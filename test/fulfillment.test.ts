@@ -7,6 +7,7 @@ const tx = vi.hoisted(() => ({
   user: { findUnique: vi.fn(), update: vi.fn() },
   course: { findUnique: vi.fn() },
   purchase: { findUnique: vi.fn(), upsert: vi.fn() },
+  checkoutAttempt: { findUnique: vi.fn(), updateMany: vi.fn() },
 }));
 
 vi.mock("@/lib/prisma", () => ({
@@ -47,6 +48,8 @@ beforeEach(() => {
     id: "purchase_1",
     refundedAt: null,
   });
+  tx.checkoutAttempt.findUnique.mockResolvedValue(null);
+  tx.checkoutAttempt.updateMany.mockResolvedValue({ count: 1 });
 });
 
 describe("fulfillCheckoutSession", () => {
@@ -157,6 +160,86 @@ describe("fulfillCheckoutSession", () => {
     expect(tx.purchase.upsert).not.toHaveBeenCalled();
   });
 
+  it("accepts a second concurrent first purchase with its generated customer", async () => {
+    const consentedAt = "2026-08-07T10:15:30.000Z";
+    tx.user.findUnique.mockResolvedValue({
+      id: "user_1",
+      stripeCustomerId: "cus_from_other_course",
+    });
+    tx.checkoutAttempt.findUnique.mockResolvedValue({
+      amountTotal: 4999,
+      checkoutLocale: "it",
+      consentedAt: new Date(consentedAt),
+      courseId: "course_1",
+      currency: "eur",
+      legalTermsVersion: "2026-08-07-draft.1",
+      status: "OPEN",
+      stripeCustomerId: null,
+      stripeCheckoutSessionId: null,
+      userId: "user_1",
+    });
+
+    await expect(
+      fulfillCheckoutSession(
+        makeSession({
+          expires_at: 1_800_003_600,
+          metadata: {
+            amountTotal: "4999",
+            checkoutAttemptId: "attempt_1",
+            checkoutLocale: "it",
+            courseId: "course_1",
+            immediateAccessConsent: "true",
+            legalConsentAt: consentedAt,
+            legalTermsVersion: "2026-08-07-draft.1",
+            termsAccepted: "true",
+            userId: "user_1",
+            withdrawalWaiverAcknowledged: "true",
+          },
+        })
+      )
+    ).resolves.toEqual(
+      expect.objectContaining({ purchaseId: "purchase_1", isActive: true })
+    );
+    expect(tx.user.update).not.toHaveBeenCalled();
+  });
+
+  it("rejects a generated session that changed its persisted customer", async () => {
+    const consentedAt = "2026-08-07T10:15:30.000Z";
+    tx.checkoutAttempt.findUnique.mockResolvedValue({
+      amountTotal: 4999,
+      checkoutLocale: "it",
+      consentedAt: new Date(consentedAt),
+      courseId: "course_1",
+      currency: "eur",
+      legalTermsVersion: "2026-08-07-draft.1",
+      status: "OPEN",
+      stripeCustomerId: "cus_expected",
+      stripeCheckoutSessionId: null,
+      userId: "user_1",
+    });
+
+    await expect(
+      fulfillCheckoutSession(
+        makeSession({
+          expires_at: 1_800_003_600,
+          metadata: {
+            amountTotal: "4999",
+            checkoutAttemptId: "attempt_1",
+            checkoutLocale: "it",
+            courseId: "course_1",
+            immediateAccessConsent: "true",
+            legalConsentAt: consentedAt,
+            legalTermsVersion: "2026-08-07-draft.1",
+            termsAccepted: "true",
+            userId: "user_1",
+            withdrawalWaiverAcknowledged: "true",
+          },
+        })
+      )
+    ).rejects.toThrow(/invalid checkout attempt/);
+    expect(tx.purchase.upsert).not.toHaveBeenCalled();
+  });
+
   it("rejects a checkout session already assigned to another purchase", async () => {
     tx.purchase.findUnique.mockResolvedValue({
       userId: "user_other",
@@ -221,6 +304,131 @@ describe("fulfillCheckoutSession", () => {
         create: expect.objectContaining(legalData),
       })
     );
+  });
+
+  it("completes the matching persisted checkout attempt", async () => {
+    const consentedAt = "2026-08-07T10:15:30.000Z";
+    tx.checkoutAttempt.findUnique.mockResolvedValue({
+      amountTotal: 4999,
+      checkoutLocale: "it",
+      consentedAt: new Date(consentedAt),
+      courseId: "course_1",
+      currency: "eur",
+      legalTermsVersion: "2026-08-07-draft.1",
+      status: "OPEN",
+      stripeCustomerId: null,
+      stripeCheckoutSessionId: null,
+      userId: "user_1",
+    });
+
+    await fulfillCheckoutSession(
+      makeSession({
+        expires_at: 1_800_003_600,
+        metadata: {
+          amountTotal: "4999",
+          checkoutAttemptId: "attempt_1",
+          checkoutLocale: "it",
+          courseId: "course_1",
+          immediateAccessConsent: "true",
+          legalConsentAt: consentedAt,
+          legalTermsVersion: "2026-08-07-draft.1",
+          termsAccepted: "true",
+          userId: "user_1",
+          withdrawalWaiverAcknowledged: "true",
+        },
+      })
+    );
+
+    expect(tx.checkoutAttempt.updateMany).toHaveBeenCalledWith({
+      where: {
+        id: "attempt_1",
+        OR: [
+          { stripeCheckoutSessionId: null },
+          { stripeCheckoutSessionId: "cs_test_123" },
+        ],
+      },
+      data: {
+        activeKey: null,
+        status: "COMPLETED",
+        stripeCheckoutSessionId: "cs_test_123",
+        stripeCheckoutUrl: null,
+        stripeExpiresAt: new Date(1_800_003_600 * 1000),
+      },
+    });
+  });
+
+  it("recovers access when a matching paid session arrives after closure", async () => {
+    const consentedAt = "2026-08-07T10:15:30.000Z";
+    tx.checkoutAttempt.findUnique.mockResolvedValue({
+      amountTotal: 4999,
+      checkoutLocale: "it",
+      consentedAt: new Date(consentedAt),
+      courseId: "course_1",
+      currency: "eur",
+      legalTermsVersion: "2026-08-07-draft.1",
+      status: "FAILED",
+      stripeCustomerId: null,
+      stripeCheckoutSessionId: "cs_test_123",
+      userId: "user_1",
+    });
+
+    await expect(
+      fulfillCheckoutSession(
+        makeSession({
+          expires_at: 1_800_003_600,
+          metadata: {
+            amountTotal: "4999",
+            checkoutAttemptId: "attempt_1",
+            checkoutLocale: "it",
+            courseId: "course_1",
+            immediateAccessConsent: "true",
+            legalConsentAt: consentedAt,
+            legalTermsVersion: "2026-08-07-draft.1",
+            termsAccepted: "true",
+            userId: "user_1",
+            withdrawalWaiverAcknowledged: "true",
+          },
+        })
+      )
+    ).resolves.toEqual(
+      expect.objectContaining({ purchaseId: "purchase_1", isActive: true })
+    );
+  });
+
+  it("rejects a checkout attempt belonging to another cycle", async () => {
+    tx.checkoutAttempt.findUnique.mockResolvedValue({
+      amountTotal: 4999,
+      checkoutLocale: "it",
+      consentedAt: new Date("2026-08-07T10:15:30.000Z"),
+      courseId: "course_other",
+      currency: "eur",
+      legalTermsVersion: "2026-08-07-draft.1",
+      status: "OPEN",
+      stripeCustomerId: null,
+      stripeCheckoutSessionId: null,
+      userId: "user_1",
+    });
+
+    await expect(
+      fulfillCheckoutSession(
+        makeSession({
+          expires_at: 1_800_003_600,
+          metadata: {
+            amountTotal: "4999",
+            checkoutAttemptId: "attempt_1",
+            checkoutLocale: "it",
+            courseId: "course_1",
+            immediateAccessConsent: "true",
+            legalConsentAt: "2026-08-07T10:15:30.000Z",
+            legalTermsVersion: "2026-08-07-draft.1",
+            termsAccepted: "true",
+            userId: "user_1",
+            withdrawalWaiverAcknowledged: "true",
+          },
+        })
+      )
+    ).rejects.toThrow(/invalid checkout attempt/);
+    expect(tx.purchase.upsert).not.toHaveBeenCalled();
   });
 
   it("never resets refund state when Stripe replays checkout completion", async () => {
