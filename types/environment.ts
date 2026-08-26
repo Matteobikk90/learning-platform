@@ -1,5 +1,4 @@
 export type ServerEnvName =
-  | "ALLOW_RESEND_SANDBOX_EMAILS"
   | "AUTH_SECRET"
   | "DATABASE_URL"
   | "DIRECT_URL"
