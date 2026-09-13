@@ -78,6 +78,10 @@ Deploy the checkout-attempt migration before enabling Stripe live mode. When upg
 
 Vercel Production builds validate `DIRECT_URL`, generate Prisma Client, build Next.js, and then run `prisma migrate deploy` before the deployment can become active. A failed application build never touches the production database, while a failed migration prevents the new deployment from being published. Local and Preview builds never apply migrations automatically. Keep every production migration backward compatible with the currently deployed application because the previous deployment can remain active while the migration is running.
 
+## Search indexing
+
+`/robots.txt` and `/sitemap.xml` are generated at build time from the application URL. The sitemap lists the localized home pages with `hreflang` alternates, while `robots.txt` blocks the API, admin, profile, checkout, and login areas. Legal pages stay reachable but carry a `noindex` directive until their copy is final.
+
 ## Legal content
 
 The pages under `/[locale]/legal` are operational drafts and are excluded from search indexing. Before production, replace the placeholder seller, privacy, support, jurisdiction, and retention details with professionally reviewed copy. Bump `LEGAL_DOCUMENT_VERSION` whenever accepted legal wording changes so each purchase keeps the exact accepted version.

@@ -1,8 +1,10 @@
 import { AuthProvider } from "@/components/auth-provider";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
+import { OPEN_GRAPH_LOCALES, SITE_NAME } from "@/constants/seo";
 import { isSupportedLocale } from "@/functions/i18n/is-supported-locale";
 import { routing } from "@/i18n/routing";
+import { getAppUrl } from "@/lib/env";
 import type { LocalizedLayoutProps } from "@/types/routes";
 import type { Metadata } from "next";
 import { Inter, Space_Mono } from "next/font/google";
@@ -37,13 +39,25 @@ export async function generateMetadata({
   if (!isSupportedLocale(locale)) notFound();
 
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const description = t("description");
 
   return {
+    metadataBase: new URL(getAppUrl()),
     title: {
-      default: "Umberto Iglina",
-      template: "%s | Umberto Iglina",
+      default: SITE_NAME,
+      template: `%s | ${SITE_NAME}`,
     },
-    description: t("description"),
+    description,
+    openGraph: {
+      type: "website",
+      siteName: SITE_NAME,
+      title: SITE_NAME,
+      description,
+      locale: OPEN_GRAPH_LOCALES[locale],
+      alternateLocale: routing.locales
+        .filter((alternate) => alternate !== locale)
+        .map((alternate) => OPEN_GRAPH_LOCALES[alternate]),
+    },
   };
 }
 
