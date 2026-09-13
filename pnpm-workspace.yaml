@@ -1,5 +1,15 @@
 autoInstallPeers: false
 
 ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - '@prisma/engines'
+  - '@swc/core'
+  - prisma
   - sharp
   - unrs-resolver
+
+onlyBuiltDependencies:
+  - esbuild@0.28.1
+
+overrides:
+  sharp: ^0.35.4
