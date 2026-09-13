@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import type { ErrorPageProps } from "@/types/errors";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
@@ -11,6 +12,7 @@ export default function ErrorPage({
   const t = useTranslations("Errors");
 
   useEffect(() => {
+    Sentry.captureException(error);
     console.error("[app] Rendering failed", error);
   }, [error]);
 

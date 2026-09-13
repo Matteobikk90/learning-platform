@@ -70,6 +70,10 @@ For Stripe, enable `checkout.session.completed`, `checkout.session.async_payment
 
 Deploy the checkout-attempt migration before enabling Stripe live mode. When upgrading an installation that already accepts live payments, first let every Checkout Session created by the previous version complete or expire and confirm that no legacy session remains open before enabling the new checkout flow.
 
+## Error monitoring
+
+Sentry is optional and stays inert until a DSN is configured. Set `SENTRY_DSN` (server) and `NEXT_PUBLIC_SENTRY_DSN` (browser) to enable error reporting; both usually hold the same value. Browser events travel through the same-origin `/monitoring` route, so the Content Security Policy does not change. Add `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN` to the build environment to upload source maps; without them the build simply skips the upload. Personal data is not attached to events, but list Sentry as a processor in the privacy policy once it is enabled.
+
 ## Health check
 
 `GET /api/health` returns `200` only when the application can reach its database. It returns `503` without infrastructure details when the database is unavailable. The response is never cached and can be used by an external uptime monitor.

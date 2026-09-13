@@ -43,3 +43,13 @@ export const REQUIRED_PRODUCTION_ENV_NAMES = [
   "SUPABASE_SERVICE_ROLE_KEY",
   "SUPABASE_URL",
 ] as const satisfies readonly ServerEnvName[];
+
+// Documented in .env.example but never required: the app stays fully
+// functional without them.
+export const OPTIONAL_ENV_NAMES = [
+  "NEXT_PUBLIC_SENTRY_DSN",
+  "SENTRY_AUTH_TOKEN",
+  "SENTRY_DSN",
+  "SENTRY_ORG",
+  "SENTRY_PROJECT",
+] as const satisfies readonly ServerEnvName[];

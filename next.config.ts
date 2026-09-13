@@ -1,5 +1,8 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+
+import { SENTRY_TUNNEL_ROUTE } from "./constants/sentry";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -80,4 +83,16 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+export default withSentryConfig(withNextIntl(nextConfig), {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  // Source maps are uploaded only when the build has a Sentry token.
+  sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+  silent: !process.env.CI,
+  telemetry: false,
+  widenClientFileUpload: true,
+  tunnelRoute: SENTRY_TUNNEL_ROUTE,
+  disableLogger: true,
+  automaticVercelMonitors: false,
+});

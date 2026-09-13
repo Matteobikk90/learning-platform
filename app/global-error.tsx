@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { GLOBAL_ERROR_MESSAGES } from "@/constants/i18n";
 import { useCurrentLocale } from "@/hooks/use-current-locale";
 import type { ErrorPageProps } from "@/types/errors";
@@ -13,6 +14,7 @@ export default function GlobalError({
   const messages = GLOBAL_ERROR_MESSAGES[locale];
 
   useEffect(() => {
+    Sentry.captureException(error);
     console.error("[app] Root rendering failed", error);
   }, [error]);
 

@@ -3,7 +3,10 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { REQUIRED_PRODUCTION_ENV_NAMES } from "@/constants/environment";
+import {
+  OPTIONAL_ENV_NAMES,
+  REQUIRED_PRODUCTION_ENV_NAMES,
+} from "@/constants/environment";
 import { getProductionEnvironmentIssues } from "@/functions/environment/get-production-environment-issues";
 import type { EnvironmentValues } from "@/types/environment";
 
@@ -190,12 +193,15 @@ describe("getProductionEnvironmentIssues", () => {
     expect(serializedIssues).not.toContain(secretValue);
   });
 
-  it("keeps .env.example aligned with runtime and migration variables", () => {
+  it("keeps .env.example aligned with runtime, migration and optional variables", () => {
     const example = readFileSync(resolve(process.cwd(), ".env.example"), "utf8");
     const documentedNames = [
       ...example.matchAll(/^([A-Z][A-Z0-9_]*)=/gm),
     ].map((match) => match[1]);
-    const expectedNames = [...REQUIRED_PRODUCTION_ENV_NAMES];
+    const expectedNames = [
+      ...REQUIRED_PRODUCTION_ENV_NAMES,
+      ...OPTIONAL_ENV_NAMES,
+    ];
 
     expect(documentedNames.sort()).toEqual(expectedNames.sort());
   });

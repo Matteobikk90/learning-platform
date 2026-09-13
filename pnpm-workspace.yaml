@@ -3,6 +3,7 @@ autoInstallPeers: false
 ignoredBuiltDependencies:
   - '@parcel/watcher'
   - '@prisma/engines'
+  - '@sentry/cli'
   - '@swc/core'
   - prisma
   - sharp
