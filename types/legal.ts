@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export type LegalSection = {
   title: string;
   paragraphs: string[];
@@ -12,4 +14,3 @@ export type LegalPageProps = {
   sections: LegalSection[];
   action?: ReactNode;
 };
-import type { ReactNode } from "react";

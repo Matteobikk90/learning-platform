@@ -16,6 +16,8 @@ const pool =
   new Pool({
     connectionString: requireEnv("DATABASE_URL"),
     max: process.env.NODE_ENV === "production" ? 10 : 5,
+    // Fail fast instead of holding a request until the platform timeout.
+    connectionTimeoutMillis: 10_000,
   });
 
 const adapter = new PrismaPg(pool);
