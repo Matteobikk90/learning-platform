@@ -4,67 +4,45 @@ import benefitsDesktop from "@/public/images/home/benefits-desktop.jpg";
 import benefitsMobile from "@/public/images/home/benefits-mobile.jpg";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { useHorizontalProgress } from "@/hooks/use-horizontal-progress";
-import { cn } from "@/lib/cn";
-import type { BenefitContent, BeneficiSectionProps } from "@/types/parallax";
+import type { BenefitContent } from "@/types/home";
 import { useTranslations } from "next-intl";
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 
-export function Benefici({
-  visible,
-  scrollContainerRef,
-}: BeneficiSectionProps) {
+export function Benefici() {
   const sectionRef = useRef<HTMLElement>(null);
   const t = useTranslations("Home.benefits");
   const benefits = t.raw("items") as BenefitContent[];
-  const progress = useHorizontalProgress(sectionRef, scrollContainerRef);
+  const progress = useHorizontalProgress(sectionRef);
   const totalSlides = benefits.length;
-
-  const translateX = progress * (totalSlides - 1) * 100;
-  const sceneTransform = `translate3d(-${translateX}vw, 0, 0)`;
 
   return (
     <section
       ref={sectionRef}
       id="benefici"
-      className="parallax-section relative bg-navy"
+      className="benefits-section bg-navy"
       style={{
-        height: `${totalSlides * 100}dvh`,
-      }}>
-      <div className="sticky top-0 h-dvh overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-          <div
-            className="benefits-panorama relative h-full will-change-transform"
-            style={{
-              transform: `translateX(-${progress * 100}%) translateX(${progress * 100}vw)`,
-            }}>
-            <ResponsiveBackgroundImage
-              desktopSrc={benefitsDesktop}
-              mobileSrc={benefitsMobile}
-              sizes="(min-width: 768px) 300vh, 150vh"
-              className="absolute inset-0 size-full object-cover object-center"
-            />
-          </div>
+        "--benefit-count": totalSlides,
+        "--benefit-progress": progress,
+      } as CSSProperties}>
+      <div className="benefits-viewport">
+        <div className="benefits-panorama" aria-hidden="true">
+          <ResponsiveBackgroundImage
+            desktopSrc={benefitsDesktop}
+            mobileSrc={benefitsMobile}
+            sizes="(min-width: 768px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) 300vh, 100vw"
+            className="block size-full object-cover object-center"
+          />
         </div>
 
-        <div
-          className="relative z-10 flex h-full will-change-transform"
-          style={{
-            width: `${totalSlides * 100}vw`,
-            transform: sceneTransform,
-            transition: "transform 0.05s linear",
-          }}>
+        <div className="benefits-track">
           {benefits.map(({ title, body }, index) => {
             const num = String(index + 1).padStart(2, "0");
 
             return (
               <article
                 key={num}
-                className="flex h-dvh w-screen shrink-0 flex-col items-center justify-center px-6 py-24 text-left">
-                <div
-                  className={cn(
-                    "parallax-content w-full max-w-3xl",
-                    visible.has("benefici") && "visible"
-                  )}>
+                className="home-section">
+                <div className="mx-auto w-full max-w-3xl">
                   <div className="mb-8 flex items-baseline gap-3">
                     <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white">
                       {num}
@@ -74,27 +52,13 @@ export function Benefici({
                     </span>
                   </div>
                   <h2 className="section-title mb-8">{title}</h2>
-                  <div className="border-t border-white/25 pt-8">
-                    <p className="label-upper w-full whitespace-pre-line leading-6 text-white">
-                      {body}
-                    </p>
-                  </div>
+                  <p className="border-t border-white/25 pt-8 font-mono text-xs leading-6 tracking-widest whitespace-pre-line text-white uppercase">
+                    {body}
+                  </p>
                 </div>
               </article>
             );
           })}
-        </div>
-
-        <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 text-white">
-          <div className="h-px w-16 overflow-hidden bg-white/20">
-            <div
-              className="parallax-scroll-progress h-full bg-white"
-              style={{ width: `${progress * 100}%` }}
-            />
-          </div>
-          <span className="font-mono text-[0.625rem] tracking-[0.25em] uppercase">
-            {t("scroll")}
-          </span>
         </div>
       </div>
     </section>

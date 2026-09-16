@@ -1,29 +1,30 @@
 "use client";
 
 import { useEffect, useState, type RefObject } from "react";
+import { BENEFITS_SCROLL_QUERY } from "@/constants/home";
 
 export function useHorizontalProgress(
-  sectionRef: RefObject<HTMLElement | null>,
-  containerRef: RefObject<HTMLDivElement | null>
+  sectionRef: RefObject<HTMLElement | null>
 ): number {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
+    const media = window.matchMedia(BENEFITS_SCROLL_QUERY);
     let rafId: number | null = null;
 
     const update = () => {
+      if (!media.matches) {
+        setProgress(0);
+        return;
+      }
+
       const section = sectionRef.current;
       if (!section) return;
 
       const sectionRect = section.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      const sectionTop = sectionRect.top - containerRect.top;
+      const sectionTop = sectionRect.top;
       const sectionHeight = section.offsetHeight;
-      const viewportHeight = container.clientHeight;
+      const viewportHeight = window.innerHeight;
       const scrollableDistance = sectionHeight - viewportHeight;
 
       if (scrollableDistance <= 0) {
@@ -37,7 +38,7 @@ export function useHorizontalProgress(
     };
 
     const onScroll = () => {
-      if (rafId !== null) return;
+      if (!media.matches || rafId !== null) return;
 
       rafId = window.requestAnimationFrame(() => {
         update();
@@ -47,18 +48,20 @@ export function useHorizontalProgress(
 
     update();
 
-    container.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", update);
+    media.addEventListener("change", update);
 
     return () => {
-      container.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", update);
+      media.removeEventListener("change", update);
 
       if (rafId !== null) {
         window.cancelAnimationFrame(rafId);
       }
     };
-  }, [sectionRef, containerRef]);
+  }, [sectionRef]);
 
   return progress;
 }

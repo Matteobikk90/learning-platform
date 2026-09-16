@@ -1,32 +1,26 @@
 import { LEGAL_PATHS } from "@/constants/legal";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/cn";
-import type { FooterProps } from "@/types/footer";
 import { getTranslations } from "next-intl/server";
 
-export async function Footer({ className }: FooterProps = {}) {
+export async function Footer() {
   const t = await getTranslations("Footer");
 
   return (
-    <footer
-      className={cn(
-        "site-footer border-t border-stroke bg-surface px-6 py-7 sm:px-8",
-        className
-      )}>
-      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-subtle">
+    <footer className="site-footer border-t border-stroke bg-surface px-6 py-5 sm:px-8">
+      <div className="mx-auto flex min-h-9 max-w-7xl flex-col justify-between gap-4 md:flex-row md:items-center">
+        <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-white">
           {t("copyright", { year: new Date().getFullYear() })}
         </p>
         <nav
           aria-label={t("legalNavigation")}
-          className="flex flex-wrap gap-x-5 gap-y-3 text-xs text-muted">
-          <Link href={LEGAL_PATHS.terms} className="hover:text-white">
+          className="flex flex-wrap gap-x-5 gap-y-3 text-xs text-white">
+          <Link href={LEGAL_PATHS.terms} className="underline-offset-4 hover:underline">
             {t("terms")}
           </Link>
-          <Link href={LEGAL_PATHS.privacy} className="hover:text-white">
+          <Link href={LEGAL_PATHS.privacy} className="underline-offset-4 hover:underline">
             {t("privacy")}
           </Link>
-          <Link href={LEGAL_PATHS.withdrawal} className="hover:text-white">
+          <Link href={LEGAL_PATHS.withdrawal} className="underline-offset-4 hover:underline">
             {t("withdrawal")}
           </Link>
         </nav>

@@ -4,19 +4,11 @@
   },
   "Navigation": {
     "mainLabel": "Main navigation",
-    "sectionsLabel": "Page sections",
     "admin": "Admin",
     "myCourses": "My courses",
     "logout": "Log out",
     "login": "Log in",
-    "switchLanguage": "Passa all’italiano",
-    "sectionHome": "Home",
-    "sectionBenefits": "Benefits",
-    "sectionAbout": "About me",
-    "sectionCourses": "Courses",
-    "sectionTestimonials": "Testimonials",
-    "sectionFaq": "FAQ",
-    "goToSection": "Go to the {section} section"
+    "switchLanguage": "Passa all’italiano"
   },
   "Home": {
     "hero": {
@@ -31,7 +23,6 @@
       "scroll": "Scroll"
     },
     "benefits": {
-      "scroll": "Scroll",
       "items": [
         {
           "title": "Clinical Evidence",

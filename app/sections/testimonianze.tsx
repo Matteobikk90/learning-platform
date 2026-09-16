@@ -1,28 +1,22 @@
 import { useTranslations } from "next-intl";
 
 import { TESTIMONIAL_REELS } from "@/constants/testimonials";
-import { cn } from "@/lib/cn";
-import type { BaseSectionProps } from "@/types/parallax";
 
-export function Testimonianze({ visible }: BaseSectionProps) {
+export function Testimonianze() {
   const t = useTranslations("Home.testimonials");
 
   return (
     <section
       id="testimonianze"
       aria-labelledby="testimonials-title"
-      className="parallax-section min-h-dvh bg-canvas px-6 py-28">
-      <div
-        className={cn(
-          "parallax-content mx-auto max-w-4xl",
-          visible.has("testimonianze") && "visible"
-        )}>
-        <h2 id="testimonials-title" className="section-title mb-12">
+      className="home-section bg-canvas">
+      <div className="mx-auto max-w-6xl">
+        <h2 id="testimonials-title" className="section-title mb-10 sm:mb-14">
           {t("title")}
         </h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
+        <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {TESTIMONIAL_REELS.map((reel, index) => (
-            <div
+            <li
               key={reel.id}
               className="aspect-[9/16] overflow-hidden rounded-2xl border border-white/20 bg-surface">
               {reel.videoSrc ? (
@@ -43,9 +37,9 @@ export function Testimonianze({ visible }: BaseSectionProps) {
                   <p className="text-sm">{t("comingSoon")}</p>
                 </div>
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

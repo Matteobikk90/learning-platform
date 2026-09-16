@@ -23,6 +23,10 @@
 }
 
 @layer base {
+  html {
+    scroll-padding-top: 5rem;
+  }
+
   body {
     @apply bg-canvas text-ink antialiased;
     font-size: 0.9375rem;
@@ -35,76 +39,78 @@
     font-family: var(--font-display);
     letter-spacing: -0.015em;
   }
-
-  body.parallax-active {
-    overflow: hidden;
-  }
-
-  body.parallax-active .site-header {
-    display: none;
-  }
-
-  body.parallax-active .layout-footer {
-    display: none;
-  }
 }
 
 @layer components {
-  /* Layout */
-  .parallax-section {
-    scroll-snap-align: start;
-  }
-
-  .parallax-scroll {
+  .marketing-page {
     --color-muted: #ffffff;
     --color-subtle: #ffffff;
     --color-petrol: #ffffff;
-    scroll-snap-type: y proximity;
-    scroll-behavior: smooth;
-    overscroll-behavior: contain;
   }
 
-  .parallax-footer {
-    scroll-snap-align: end;
-    scroll-snap-stop: always;
+  .home-section {
+    padding-block: clamp(5rem, 9vw, 8rem);
+    padding-inline: clamp(1.5rem, 4vw, 2rem);
   }
 
-  .parallax-content {
-    opacity: 0;
-    transform: translateY(1.5rem);
-    transition: opacity 0.75s ease, transform 0.75s ease;
-  }
-
-  .parallax-content.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .benefits-viewport {
+    position: relative;
+    overflow: hidden;
   }
 
   .benefits-panorama {
-    width: max(100vw, 150dvh);
+    aspect-ratio: 3 / 2;
   }
 
   @media (min-width: 768px) {
     .benefits-panorama {
-      width: max(100vw, 300dvh);
+      aspect-ratio: 3 / 1;
     }
   }
 
-  :is(.parallax-scroll, .marketing-page) .btn-primary {
+  @media (min-width: 768px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
+    .benefits-section {
+      height: calc(var(--benefit-count) * 100dvh);
+    }
+
+    .benefits-viewport {
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+    }
+
+    .benefits-panorama {
+      position: absolute;
+      width: max(100vw, 300dvh);
+      height: 100%;
+      transform: translateX(calc(var(--benefit-progress) * -100%)) translateX(calc(var(--benefit-progress) * 100vw));
+      will-change: transform;
+    }
+
+    .benefits-track {
+      position: relative;
+      display: flex;
+      width: calc(var(--benefit-count) * 100vw);
+      transform: translateX(calc(var(--benefit-progress) * (var(--benefit-count) - 1) * -100vw));
+      will-change: transform;
+    }
+
+    .benefits-track > article {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      width: 100vw;
+      height: 100dvh;
+      padding-block: 6rem;
+    }
+  }
+
+  .marketing-page .btn-primary {
     @apply border border-white/60 bg-black text-white;
   }
 
-  :is(.parallax-scroll, .marketing-page) .btn-primary:hover {
+  .marketing-page .btn-primary:hover {
     @apply border-white bg-surface;
-  }
-
-  body.parallax-active .nav-action {
-    color: #ffffff;
-  }
-
-  body.parallax-active .nav-action:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.35em;
   }
 
   /* Typography */
@@ -130,7 +136,7 @@
   }
 
   .hero-heading {
-    font-size: clamp(2.25rem, 6.5vw, min(5.25rem, 10dvh));
+    font-size: clamp(2.25rem, 6vw, 5.25rem);
   }
 
   .label-upper,
@@ -183,7 +189,7 @@
   }
 
   .nav-brand {
-    @apply font-display text-2xl font-semibold tracking-[0.04em];
+    @apply font-display text-lg font-semibold tracking-[0.04em] sm:text-2xl;
   }
 
   .nav-link {
@@ -192,7 +198,7 @@
 
   .nav-action {
     @apply inline-flex min-h-9 cursor-pointer items-center gap-2 border-0 bg-transparent p-0 no-underline;
-    color: rgba(255, 255, 255, 0.78);
+    color: #ffffff;
     transition: color 0.2s ease, opacity 0.2s ease, text-shadow 0.2s ease;
   }
 
@@ -252,61 +258,13 @@
     @apply inline-flex items-center gap-1.5 text-xs font-medium tracking-widest uppercase text-muted no-underline mb-10;
   }
 
-  /* Scroll indicators */
-  .parallax-scroll-line {
-    animation: scroll-line-move 1.8s ease-in-out infinite;
-  }
-
-  @keyframes scroll-line-move {
-    0% {
-      transform: translateY(-100%);
-    }
-
-    50% {
-      transform: translateY(0%);
-    }
-
-    100% {
-      transform: translateY(100%);
-    }
-  }
-
-  /* Horizontal progress bar (Benefici sticky section) */
-  .parallax-scroll-progress {
-    transition: width 0.1s linear;
-  }
-
   /* Course cards */
   .course-card {
-    @apply relative flex min-w-0 flex-col overflow-hidden bg-surface;
-    border: 1px solid rgba(255, 255, 255, 0.13);
-    border-radius: 1.125rem;
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
-    transition: border-color 0.35s ease, box-shadow 0.35s ease,
-      transform 0.35s ease;
-  }
-
-  .course-card::after {
-    position: absolute;
-    inset: 1px;
-    z-index: 20;
-    border: 1px solid rgba(255, 255, 255, 0.035);
-    border-radius: calc(1.125rem - 2px);
-    content: "";
-    pointer-events: none;
-  }
-
-  @media (hover: hover) {
-    .course-card:hover {
-      border-color: rgba(255, 255, 255, 0.26);
-      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.32);
-      transform: translateY(-4px);
-    }
+    @apply flex min-w-0 flex-col overflow-hidden rounded-2xl border border-white/20 bg-surface;
   }
 
   .course-card-body {
-    @apply flex flex-1 flex-col border-t border-white/10 p-4 sm:p-5;
-    background: linear-gradient(180deg, #141414 0%, #0d0d0d 100%);
+    @apply flex flex-1 flex-col p-6 sm:p-7;
   }
 
   .course-card-copy {
@@ -318,51 +276,11 @@
   }
 
   .course-card-description {
-    @apply mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted;
+    @apply mt-3 line-clamp-3 text-sm leading-relaxed text-white sm:text-base;
   }
 
   .course-card-actions {
-    @apply mt-auto flex flex-wrap items-center gap-2.5 pt-5;
-  }
-
-  @media (min-width: 1280px) {
-    .course-card-body {
-      @apply flex-row items-end justify-between gap-5;
-    }
-
-    .course-card-actions {
-      @apply mt-0 shrink-0 justify-end pt-0;
-    }
-  }
-
-  .course-card-actions .btn-primary {
-    padding: 0.55rem 1rem;
-    font-size: 0.675rem;
-  }
-
-  .course-card-actions .course-price-tag {
-    padding-block: 0.45rem;
-    padding-left: 0.875rem;
-    padding-right: 1.25rem;
-    font-size: 0.7rem;
-  }
-
-  @media (max-width: 420px) {
-    .course-card-body {
-      padding: 0.875rem;
-    }
-
-    .course-card-actions .btn-primary {
-      padding-inline: 0.75rem;
-      font-size: 0.625rem;
-      letter-spacing: 0.08em;
-    }
-
-    .course-card-actions .course-price-tag {
-      padding-left: 0.75rem;
-      padding-right: 1.1rem;
-      font-size: 0.65rem;
-    }
+    @apply mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/15 pt-6;
   }
 
   .course-placeholder-orbit,

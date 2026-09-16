@@ -1,18 +1,14 @@
-"use client";
-
 import { CourseCoverMedia } from "@/components/course-cover-media";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
 import { YogaBanner } from "@/components/yoga-banner";
 import { formatCoursePrice } from "@/functions/courses/format-course-price";
-import { cn } from "@/lib/cn";
 import { Link } from "@/i18n/navigation";
 import coursesDesktop from "@/public/images/home/courses-desktop.jpg";
 import coursesMobile from "@/public/images/home/courses-mobile.jpg";
-import type { CorsiSectionProps } from "@/types/parallax";
+import type { CorsiSectionProps } from "@/types/home";
 import { useLocale, useTranslations } from "next-intl";
 
 export function Corsi({
-  visible,
   courses,
   isAdmin,
   purchasedSet,
@@ -23,33 +19,30 @@ export function Corsi({
   return (
     <section
       id="corsi"
-      className="parallax-section relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-canvas px-6 py-28">
+      aria-labelledby="courses-title"
+      className="home-section relative overflow-hidden bg-canvas">
       <ResponsiveBackgroundImage
         desktopSrc={coursesDesktop}
         mobileSrc={coursesMobile}
         className="absolute inset-0 size-full object-cover object-center"
       />
-      <div
-        className={cn(
-          "parallax-content relative z-10 w-full max-w-6xl",
-          visible.has("corsi") && "visible"
-        )}>
-        <div className="mb-12 md:mb-16">
+      <div className="relative z-10 mx-auto max-w-6xl">
+        <header className="mb-10 sm:mb-14">
           <p className="mb-5 flex items-center gap-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.24em] text-white">
             <span className="h-px w-8 bg-white/45" aria-hidden="true" />
             {t("eyebrow")}
           </p>
-          <h2 className="section-title">
+          <h2 id="courses-title" className="section-title">
             {t("title")}
             <br />
             <em>{t("titleEmphasis")}</em>
           </h2>
-        </div>
+        </header>
 
         <YogaBanner />
 
         {courses.length > 0 && (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+          <div className="mt-8 grid gap-6 sm:mt-10 sm:grid-cols-2 lg:gap-8">
             {courses.map((course) => {
               const purchased = purchasedSet.has(course.id);
               const titleId = `course-${course.id}-title`;
@@ -60,7 +53,7 @@ export function Corsi({
                   className="course-card group">
                   <CourseCoverMedia
                     coverImageUrl={course.coverImageUrl}
-                    sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1152px) calc(50vw - 2.5rem), 560px"
+                    sizes="(max-width: 639px) calc(100vw - 3rem), (max-width: 1216px) calc(50vw - 3rem), 560px"
                     className="w-full rounded-b-none! border-0 border-b border-white/10"
                   />
 
@@ -84,7 +77,7 @@ export function Corsi({
                     </div>
 
                     <div className="course-card-actions">
-                      <span className="course-price-tag">
+                      <span className="whitespace-nowrap font-mono text-base font-bold text-white">
                         {formatCoursePrice(course.price, locale)}
                       </span>
 

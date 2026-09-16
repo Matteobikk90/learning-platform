@@ -1,21 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { SECTIONS } from "@/constants/parallax";
 import { TESTIMONIAL_REELS } from "@/constants/testimonials";
 import en from "@/messages/en.json";
 import itMessages from "@/messages/it.json";
 
 describe("home content", () => {
-  it("places testimonials fourth and the introduction fifth", () => {
-    expect(SECTIONS.map(({ id }) => id)).toEqual([
-      "hero", "benefici", "corsi", "testimonianze", "chi-sono", "faq",
-    ]);
-    for (const { labelKey } of SECTIONS) {
-      expect(itMessages.Navigation[labelKey]).toBeTruthy();
-      expect(en.Navigation[labelKey]).toBeTruthy();
-    }
-  });
-
   it("preserves the requested Italian copy and editorial line breaks", () => {
     const [clinical, performance, wellbeing] = itMessages.Home.benefits.items;
 

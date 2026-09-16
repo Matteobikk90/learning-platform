@@ -29,18 +29,16 @@ export default async function YogaSuMisura({ params }: LocaleRouteProps) {
   const t = await getTranslations({ locale, namespace: "Yoga" });
 
   return (
-    <main className="marketing-page mx-auto max-w-6xl px-6 py-12 text-white sm:py-20">
+    <main className="marketing-page mx-auto max-w-6xl px-6 py-12 text-white sm:px-8 sm:py-20">
       <Link href="/#corsi" className="back-link text-white">
         ← {t("back")}
       </Link>
-      <div className="grid items-start gap-12 md:grid-cols-[1fr_0.8fr] md:gap-20">
-        <div className="md:pt-12">
+      <div className="grid items-start gap-10 sm:gap-14 md:grid-cols-2 lg:gap-20">
+        <header className="md:pt-10">
           <h1 className="hero-title mb-6">{t("title")}</h1>
           <p className="text-xl leading-relaxed sm:text-2xl">{t("subtitle")}</p>
-          <div className="mt-10 border-t border-white/20 pt-8">
-            <p className="text-base leading-relaxed">{t("body")}</p>
-          </div>
-        </div>
+          <p className="mt-10 border-t border-white/20 pt-8 text-base leading-relaxed">{t("body")}</p>
+        </header>
         <video
           controls
           playsInline
@@ -48,7 +46,7 @@ export default async function YogaSuMisura({ params }: LocaleRouteProps) {
           src="/videos/yoga-su-misura.mp4"
           poster="/images/home/yoga-su-misura-poster.jpg"
           aria-label={t("videoLabel")}
-          className="mx-auto aspect-[9/16] w-full max-w-sm rounded-2xl border border-white/20 bg-surface object-contain">
+          className="mx-auto aspect-[9/16] w-full max-w-md rounded-2xl border border-white/20 bg-surface object-contain">
           <a href="/videos/yoga-su-misura.mp4">{t("openVideo")}</a>
         </video>
       </div>

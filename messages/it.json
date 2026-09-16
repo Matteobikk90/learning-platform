@@ -4,19 +4,11 @@
   },
   "Navigation": {
     "mainLabel": "Navigazione principale",
-    "sectionsLabel": "Sezioni della pagina",
     "admin": "Admin",
     "myCourses": "I miei corsi",
     "logout": "Esci",
     "login": "Accedi",
-    "switchLanguage": "Passa all’inglese",
-    "sectionHome": "Home",
-    "sectionBenefits": "Benefici",
-    "sectionAbout": "Mi presento",
-    "sectionCourses": "Corsi",
-    "sectionTestimonials": "Testimonianze",
-    "sectionFaq": "FAQ",
-    "goToSection": "Vai alla sezione {section}"
+    "switchLanguage": "Passa all’inglese"
   },
   "Home": {
     "hero": {
@@ -31,7 +23,6 @@
       "scroll": "Scorri"
     },
     "benefits": {
-      "scroll": "Scorri",
       "items": [
         {
           "title": "Evidenza clinica",

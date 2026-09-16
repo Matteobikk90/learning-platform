@@ -1,5 +1,9 @@
-import { Parallax } from "@/components/parallax";
-import { Footer } from "@/components/footer";
+import { Benefici } from "@/app/sections/benefici";
+import { ChiSono } from "@/app/sections/chi-sono";
+import { Corsi } from "@/app/sections/corsi";
+import { Faq } from "@/app/sections/faq";
+import { Hero } from "@/app/sections/hero";
+import { Testimonianze } from "@/app/sections/testimonianze";
 import { PUBLIC_CATALOG_COURSE_FILTER } from "@/constants/courses";
 import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { isSupportedLocale } from "@/functions/i18n/is-supported-locale";
@@ -50,11 +54,17 @@ export default async function Home() {
     : [];
 
   return (
-    <Parallax
-      courses={courses}
-      footer={<Footer className="parallax-footer" />}
-      isAdmin={isAdmin}
-      purchasedIds={purchases.map((purchase) => purchase.courseId)}
-    />
+    <main className="marketing-page">
+      <Hero />
+      <Benefici />
+      <Corsi
+        courses={courses}
+        isAdmin={isAdmin}
+        purchasedSet={new Set(purchases.map((purchase) => purchase.courseId))}
+      />
+      <Testimonianze />
+      <ChiSono />
+      <Faq />
+    </main>
   );
 }
