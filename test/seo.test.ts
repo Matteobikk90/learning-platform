@@ -1,6 +1,7 @@
 import { getDisallowedPaths } from "@/functions/seo/get-disallowed-paths";
 import {
   getHomeAlternates,
+  getPageAlternates,
   getLocalizedAlternates,
 } from "@/functions/seo/get-localized-alternates";
 import { getPublicSitemap } from "@/functions/seo/get-public-sitemap";
@@ -56,18 +57,38 @@ describe("getHomeAlternates", () => {
 });
 
 describe("getPublicSitemap", () => {
-  it("lists one absolute home URL per locale with hreflang alternates", () => {
+  it("lists the home and yoga page in each locale with matching hreflang alternates", () => {
     const sitemap = getPublicSitemap("https://yoga.example.com", locales);
 
     expect(sitemap.map((entry) => entry.url)).toEqual([
       "https://yoga.example.com/it",
       "https://yoga.example.com/en",
+      "https://yoga.example.com/it/yoga-su-misura",
+      "https://yoga.example.com/en/yoga-su-misura",
     ]);
     expect(sitemap[0]?.alternates).toEqual({
       languages: {
         it: "https://yoga.example.com/it",
         en: "https://yoga.example.com/en",
         "x-default": "https://yoga.example.com",
+      },
+    });
+    expect(sitemap[2]?.alternates?.languages).toEqual({
+      it: "https://yoga.example.com/it/yoga-su-misura",
+      en: "https://yoga.example.com/en/yoga-su-misura",
+      "x-default": "https://yoga.example.com/yoga-su-misura",
+    });
+  });
+});
+
+describe("getPageAlternates", () => {
+  it("keeps the page path when switching language", () => {
+    expect(getPageAlternates("en", locales, "/yoga-su-misura")).toEqual({
+      canonical: "/en/yoga-su-misura",
+      languages: {
+        it: "/it/yoga-su-misura",
+        en: "/en/yoga-su-misura",
+        "x-default": "/yoga-su-misura",
       },
     });
   });

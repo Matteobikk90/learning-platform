@@ -14,6 +14,7 @@
     "sectionBenefits": "Benefits",
     "sectionAbout": "About me",
     "sectionCourses": "Courses",
+    "sectionTestimonials": "Testimonials",
     "sectionFaq": "FAQ",
     "goToSection": "Go to the {section} section"
   },
@@ -34,15 +35,15 @@
       "items": [
         {
           "title": "Clinical Evidence",
-          "body": "Every module draws on twenty years of therapeutic experience and biomechanical study of human movement. A rigorous, non-commercial approach in which every technique is explained through clinical reasoning."
+          "body": "Every program draws on twenty years of therapeutic experience and biomechanical study\nof human movement. A rigorous, non-commercial approach in which every technique is explained through clinical reasoning."
         },
         {
-          "title": "Performance & Quality of Life",
-          "body": "Advanced protocols designed to neuromodulate your body. Improve athletic performance by discovering new aspects of your physical system, learn to calm your mind in everyday life and under greater stress, and give yourself an authentic self-care experience."
+          "title": "Sports Performance & Quality of Life",
+          "body": "Advanced protocols designed to neuromodulate your body. Improve athletic performance by discovering new aspects of your physical system, learn to calm your mind in everyday life, under greater stress, and give yourself an authentic self-care experience."
         },
         {
           "title": "Put Yourself Back at the Center",
-          "body": "Combining the ancient science of breath from Traditional Yoga with osteopathic precision has a direct impact on posture, cardiovascular efficiency, systemic longevity and psychophysical wellbeing. Are you ready to develop your full potential?"
+          "body": "Combining the ancient science of breath from Traditional Yoga\nwith osteopathic precision has a direct impact on posture, cardiovascular efficiency, systemic longevity and psychophysical wellbeing.\nAre you ready to develop your full potential?"
         }
       ]
     },
@@ -50,10 +51,11 @@
       "eyebrow": "About me",
       "name": "Umberto Iglina",
       "paragraph1": "As an osteopath and human movement specialist, I have always looked for tools that could help my patients live better.",
-      "paragraph2": "I have had the privilege of studying Yoga in its most authentic form, and I have been studying the science of breath for more than 20 years. By bringing ancient traditions together with a modern clinical approach, I discovered how we can create meaningful change in our lives. Welcome."
+      "paragraph2": "I have had the privilege of learning Yoga in its most authentic form, and I have been studying the science of breath for more than 20 years. By bringing ancient tradition together with a modern clinical approach, I discovered how we can create meaningful change in our lives.",
+      "welcome": "Welcome."
     },
     "courses": {
-      "eyebrow": "Online programs",
+      "eyebrow": "Programs",
       "title": "Start your transformation:",
       "titleEmphasis": "choose your path",
       "empty": "No courses are currently available.",
@@ -65,13 +67,15 @@
       "openingCheckout": "Opening checkout…",
       "buyCourse": "Buy the course"
     },
+    "testimonials": {
+      "title": "Testimonials",
+      "videoLabel": "Student testimonial video {number}",
+      "comingSoon": "Video coming soon"
+    },
     "faq": {
       "eyebrow": "Frequently asked questions",
       "title": "Do you have",
       "titleEmphasis": "questions?",
-      "testimonialsEyebrow": "Experiences",
-      "testimonialsTitle": "What students",
-      "testimonialsEmphasis": "are saying",
       "items": [
         {
           "question": "What is the method, and how does it combine science with Eastern disciplines?",
@@ -101,22 +105,18 @@
           "question": "I am a high-level athlete. How can the method improve my performance?",
           "answer": "The method works on three pillars: biomechanical and postural efficiency, regulation of the Autonomic Nervous System through rapid sympathetic/parasympathetic switching, and CO₂ tolerance to delay fatigue and maintain focus under maximal effort."
         }
-      ],
-      "testimonials": [
-        {
-          "name": "Sara M.",
-          "text": "I started with no experience at all, and after three months I can hold positions I never thought possible."
-        },
-        {
-          "name": "Luca P.",
-          "text": "The video quality and course progression are excellent. I feel guided at every step."
-        },
-        {
-          "name": "Giulia R.",
-          "text": "Umberto explains everything with a clarity and passion that energize you. Highly recommended!"
-        }
       ]
     }
+  },
+  "Yoga": {
+    "title": "Tailored Yoga",
+    "subtitle": "Your personalized practice",
+    "body": "TBD",
+    "discover": "Discover more",
+    "discoverLabel": "Discover more about Tailored Yoga",
+    "back": "Programs",
+    "videoLabel": "Introduction to Tailored Yoga",
+    "openVideo": "Open the video"
   },
   "Auth": {
     "loginEyebrow": "Access",

@@ -7,7 +7,7 @@ import { useHorizontalProgress } from "@/hooks/use-horizontal-progress";
 import { cn } from "@/lib/cn";
 import type { BenefitContent, BeneficiSectionProps } from "@/types/parallax";
 import { useTranslations } from "next-intl";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 
 export function Benefici({
   visible,
@@ -19,10 +19,7 @@ export function Benefici({
   const progress = useHorizontalProgress(sectionRef, scrollContainerRef);
   const totalSlides = benefits.length;
 
-  const translateX = useMemo(
-    () => progress * (totalSlides - 1) * 100,
-    [progress, totalSlides]
-  );
+  const translateX = progress * (totalSlides - 1) * 100;
   const sceneTransform = `translate3d(-${translateX}vw, 0, 0)`;
 
   return (
@@ -36,27 +33,17 @@ export function Benefici({
       <div className="sticky top-0 h-dvh overflow-hidden">
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
           <div
-            className="relative h-full will-change-transform"
+            className="benefits-panorama relative h-full will-change-transform"
             style={{
-              width: `${totalSlides * 100}vw`,
-              transform: sceneTransform,
-              transition: "transform 0.05s linear",
+              transform: `translateX(-${progress * 100}%) translateX(${progress * 100}vw)`,
             }}>
             <ResponsiveBackgroundImage
               desktopSrc={benefitsDesktop}
               mobileSrc={benefitsMobile}
-              sizes={`${totalSlides * 100}vw`}
+              sizes="(min-width: 768px) 300vh, 150vh"
               className="absolute inset-0 size-full object-cover object-center"
             />
           </div>
-          <div className="absolute inset-0 bg-black/30" />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.18) 45%, rgba(0,0,0,0.68) 100%)",
-            }}
-          />
         </div>
 
         <div
@@ -70,35 +57,35 @@ export function Benefici({
             const num = String(index + 1).padStart(2, "0");
 
             return (
-            <article
-              key={num}
-              className="flex h-dvh w-screen shrink-0 flex-col items-center justify-center px-6 py-24 text-center">
-              <div
-                className={cn(
-                  "parallax-content w-full max-w-3xl drop-shadow-[0_2px_16px_rgba(0,0,0,0.65)]",
-                  visible.has("benefici") && "visible"
-                )}>
-                <div className="mb-12 flex items-baseline justify-center gap-3">
-                  <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white">
-                    {num}
-                  </span>
-                  <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-white/45">
-                    / {String(totalSlides).padStart(2, "0")}
-                  </span>
+              <article
+                key={num}
+                className="flex h-dvh w-screen shrink-0 flex-col items-center justify-center px-6 py-24 text-left">
+                <div
+                  className={cn(
+                    "parallax-content w-full max-w-3xl",
+                    visible.has("benefici") && "visible"
+                  )}>
+                  <div className="mb-8 flex items-baseline gap-3">
+                    <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.2em] text-white">
+                      {num}
+                    </span>
+                    <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-white">
+                      / {String(totalSlides).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <h2 className="section-title mb-8">{title}</h2>
+                  <div className="border-t border-white/25 pt-8">
+                    <p className="label-upper w-full whitespace-pre-line leading-6 text-white">
+                      {body}
+                    </p>
+                  </div>
                 </div>
-                <h2 className="section-title mb-8">{title}</h2>
-                <div className="border-t border-white/25 pt-8">
-                  <p className="label-upper w-full text-white/70 leading-6">
-                    {body}
-                  </p>
-                </div>
-              </div>
-            </article>
+              </article>
             );
           })}
         </div>
 
-        <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 text-white/55">
+        <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 text-white">
           <div className="h-px w-16 overflow-hidden bg-white/20">
             <div
               className="parallax-scroll-progress h-full bg-white"

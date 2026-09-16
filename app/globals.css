@@ -56,6 +56,9 @@
   }
 
   .parallax-scroll {
+    --color-muted: #ffffff;
+    --color-subtle: #ffffff;
+    --color-petrol: #ffffff;
     scroll-snap-type: y proximity;
     scroll-behavior: smooth;
     overscroll-behavior: contain;
@@ -77,65 +80,31 @@
     transform: translateY(0);
   }
 
-  .breath-wind {
-    position: fixed;
-    left: 0;
-    z-index: 15;
-    width: 100vw;
-    height: clamp(11rem, 25vw, 22rem);
-    overflow: hidden;
-    pointer-events: none;
-    opacity: 1;
-    mix-blend-mode: screen;
+  .benefits-panorama {
+    width: max(100vw, 150dvh);
   }
 
-  .breath-wind[data-position="high"] {
-    top: 14vh;
+  @media (min-width: 768px) {
+    .benefits-panorama {
+      width: max(100vw, 300dvh);
+    }
   }
 
-  .breath-wind[data-position="middle"] {
-    top: 38vh;
+  :is(.parallax-scroll, .marketing-page) .btn-primary {
+    @apply border border-white/60 bg-black text-white;
   }
 
-  .breath-wind[data-position="low"] {
-    top: auto;
-    bottom: 4vh;
+  :is(.parallax-scroll, .marketing-page) .btn-primary:hover {
+    @apply border-white bg-surface;
   }
 
-  .breath-wind svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
+  body.parallax-active .nav-action {
+    color: #ffffff;
   }
 
-  .breath-wind-path {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    vector-effect: non-scaling-stroke;
-  }
-
-  .breath-wind-path-2 {
-    opacity: 0.62;
-  }
-
-  .breath-wind-path-3 {
-    opacity: 0.4;
-  }
-
-  .breath-wind-path-trail {
-    stroke: rgba(255, 255, 255, 0.08);
-    stroke-width: 0.8;
-  }
-
-  .breath-wind-path-body {
-    stroke: rgba(255, 255, 255, 0.24);
-    stroke-width: 1.05;
-  }
-
-  .breath-wind-path-head {
-    stroke: rgba(255, 255, 255, 0.78);
-    stroke-width: 1.25;
+  body.parallax-active .nav-action:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
   }
 
   /* Typography */
@@ -158,6 +127,10 @@
   .hero-title {
     @apply text-white tracking-tight;
     font-size: clamp(2.75rem, 6.5vw, 5.25rem);
+  }
+
+  .hero-heading {
+    font-size: clamp(2.25rem, 6.5vw, min(5.25rem, 10dvh));
   }
 
   .label-upper,
@@ -295,37 +268,6 @@
 
     100% {
       transform: translateY(100%);
-    }
-  }
-
-  @media (max-width: 767px) {
-    .breath-wind {
-      height: clamp(10rem, 44vw, 13rem);
-    }
-
-    .breath-wind[data-position="high"] {
-      top: 12vh;
-    }
-
-    .breath-wind[data-position="middle"] {
-      top: 37vh;
-    }
-
-    .breath-wind[data-position="low"] {
-      top: auto;
-      bottom: 7vh;
-    }
-
-    .breath-wind-path-trail {
-      stroke-width: 0.7;
-    }
-
-    .breath-wind-path-body {
-      stroke-width: 0.9;
-    }
-
-    .breath-wind-path-head {
-      stroke-width: 1.1;
     }
   }
 

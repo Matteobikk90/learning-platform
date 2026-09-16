@@ -18,3 +18,13 @@ export function getHomeAlternates(locale: Locale, locales: readonly Locale[]) {
     languages: getLocalizedAlternates(locales),
   };
 }
+
+export function getPageAlternates(locale: Locale, locales: readonly Locale[], path: string) {
+  return {
+    canonical: `/${locale}${path}`,
+    languages: {
+      ...Object.fromEntries(locales.map((language) => [language, `/${language}${path}`])),
+      "x-default": path,
+    },
+  };
+}

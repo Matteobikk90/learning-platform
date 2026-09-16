@@ -2,6 +2,7 @@
 
 import { CourseCoverMedia } from "@/components/course-cover-media";
 import { ResponsiveBackgroundImage } from "@/components/responsive-background-image";
+import { YogaBanner } from "@/components/yoga-banner";
 import { formatCoursePrice } from "@/functions/courses/format-course-price";
 import { cn } from "@/lib/cn";
 import { Link } from "@/i18n/navigation";
@@ -28,23 +29,13 @@ export function Corsi({
         mobileSrc={coursesMobile}
         className="absolute inset-0 size-full object-cover object-center"
       />
-      <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.32) 58%, rgba(0,0,0,0.76) 100%)",
-        }}
-        aria-hidden="true"
-      />
-
       <div
         className={cn(
           "parallax-content relative z-10 w-full max-w-6xl",
           visible.has("corsi") && "visible"
         )}>
         <div className="mb-12 md:mb-16">
-          <p className="mb-5 flex items-center gap-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.24em] text-white/60">
+          <p className="mb-5 flex items-center gap-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.24em] text-white">
             <span className="h-px w-8 bg-white/45" aria-hidden="true" />
             {t("eyebrow")}
           </p>
@@ -55,11 +46,9 @@ export function Corsi({
           </h2>
         </div>
 
-        {courses.length === 0 ? (
-          <div className="card px-8 py-16 text-center text-muted">
-            {t("empty")}
-          </div>
-        ) : (
+        <YogaBanner />
+
+        {courses.length > 0 && (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
             {courses.map((course) => {
               const purchased = purchasedSet.has(course.id);
@@ -78,7 +67,7 @@ export function Corsi({
                   <div className="course-card-body">
                     <div className="course-card-copy">
                       {purchased && (
-                        <span className="mb-2 inline-flex rounded-full bg-white px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] text-black">
+                        <span className="mb-2 inline-flex rounded-full border border-white/30 px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] text-white">
                           {t("purchased")}
                         </span>
                       )}
@@ -88,14 +77,14 @@ export function Corsi({
                       </h3>
 
                       {course.description && (
-                        <p className="course-card-description">
+                        <p className="course-card-description text-white">
                           {course.description}
                         </p>
                       )}
                     </div>
 
                     <div className="course-card-actions">
-                      <span className="course-price-tag course-price-tag-invert">
+                      <span className="course-price-tag">
                         {formatCoursePrice(course.price, locale)}
                       </span>
 

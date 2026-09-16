@@ -16,13 +16,13 @@ export function FaqItem({
     <div className="border-t border-stroke">
       <button
         type="button"
-        className="w-full flex items-center justify-between py-4 text-left gap-4"
+        className="w-full flex cursor-pointer items-center justify-between py-4 text-left gap-4"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-controls={contentId}>
         <span className="text-sm font-medium text-white">{question}</span>
         <span
-          className={`text-petrol shrink-0 text-lg leading-none transition-transform duration-200 ${
+          className={`text-white shrink-0 text-lg leading-none transition-transform duration-200 ${
             open ? "rotate-45" : ""
           }`}
           aria-hidden="true">
@@ -31,7 +31,7 @@ export function FaqItem({
       </button>
 
       {open && (
-        <p id={contentId} className="text-sm text-muted leading-[1.9] pb-4">
+        <p id={contentId} className="text-sm text-white leading-[1.9] pb-4">
           {answer}
         </p>
       )}

@@ -14,6 +14,7 @@
     "sectionBenefits": "Benefici",
     "sectionAbout": "Mi presento",
     "sectionCourses": "Corsi",
+    "sectionTestimonials": "Testimonianze",
     "sectionFaq": "FAQ",
     "goToSection": "Vai alla sezione {section}"
   },
@@ -33,27 +34,28 @@
       "scroll": "Scorri",
       "items": [
         {
-          "title": "Evidenza Clinica",
-          "body": "Ogni modulo si fonda su vent'anni di esperienza terapeutica e studio biomeccanico del movimento umano. Un approccio rigoroso e privo di derive commerciali, dove ogni tecnica è spiegata con logica clinica."
+          "title": "Evidenza clinica",
+          "body": "Ogni percorso si fonda su vent'anni di esperienza terapeutica e studio biomeccanico\ndel movimento umano. Un approccio rigoroso e privo di derive commerciali, dove ogni tecnica è spiegata con logica clinica."
         },
         {
-          "title": "Performance & Qualità della vita",
-          "body": "Protocolli avanzati per neuromodulare il tuo organismo. Incrementa le prestazioni sportive scoprendo nuovi aspetti del tuo sistema corpo, scopri come calmare la mente nel quotidiano e nelle situazioni di maggiore stress e regalati un'esperienza di autentica autocura."
+          "title": "Performance nello sport & Qualità della vita",
+          "body": "Protocolli avanzati per neuromodulare il tuo organismo. Incrementa le prestazioni sportive scoprendo nuovi aspetti del tuo sistema corpo, impara come calmare la mente nel quotidiano, nelle situazioni di maggiore stress e regalati un'esperienza di autentica autocura."
         },
         {
           "title": "Rimettiti al centro",
-          "body": "L'unione tra l'antica scienza del respiro estratta dalle pratiche di Yoga Tradizionale e la precisione osteopatica genera un impatto diretto su postura, efficienza cardiovascolare, longevità sistemica e benessere psicofisico. Sei pronto a sviluppare il tuo pieno potenziale?"
+          "body": "L'unione tra l'antica scienza del respiro estratta dalle pratiche di Yoga Tradizionale\ne la precisione osteopatica genera un impatto diretto su postura, efficienza cardiovascolare, longevità sistemica e benessere psicofisico.\nSei pronto a sviluppare il tuo pieno potenziale?"
         }
       ]
     },
     "about": {
       "eyebrow": "Mi presento",
       "name": "Umberto Iglina",
-      "paragraph1": "Come osteopata e specialista nel movimento umano ho sempre cercato strumenti che permettessero ai miei pazienti di vivere al meglio.",
-      "paragraph2": "Ho avuto il privilegio di studiare lo Yoga nella sua forma più autentica e da oltre 20 anni studio la scienza del respiro. Nell'unione di tradizioni millenarie e approccio clinico moderno ho scoperto come trasformare concretamente la propria vita. Benvenuto."
+      "paragraph1": "Come osteopata e specialista del movimento umano ho sempre cercato strumenti che permettessero ai miei pazienti di vivere al meglio.",
+      "paragraph2": "Ho avuto il privilegio di imparare lo Yoga nella sua forma più autentica e da oltre 20 anni studio la scienza del respiro. Unendo tradizione millenaria e approccio clinico moderno ho scoperto come trasformare concretamente la propria vita.",
+      "welcome": "Benvenuto."
     },
     "courses": {
-      "eyebrow": "Percorsi online",
+      "eyebrow": "Percorsi",
       "title": "Inizia ora la trasformazione:",
       "titleEmphasis": "scegli il tuo percorso",
       "empty": "Nessun corso disponibile al momento.",
@@ -65,13 +67,15 @@
       "openingCheckout": "Apertura checkout…",
       "buyCourse": "Acquista il corso"
     },
+    "testimonials": {
+      "title": "Testimonianze",
+      "videoLabel": "Video testimonianza {number}",
+      "comingSoon": "Video in arrivo"
+    },
     "faq": {
       "eyebrow": "Domande frequenti",
       "title": "Hai delle",
       "titleEmphasis": "domande?",
-      "testimonialsEyebrow": "Esperienze",
-      "testimonialsTitle": "Cosa dicono",
-      "testimonialsEmphasis": "gli studenti",
       "items": [
         {
           "question": "In cosa consiste il metodo e come unisce scienza e discipline orientali?",
@@ -101,22 +105,18 @@
           "question": "Sono un atleta di alto livello: come può migliorare le mie prestazioni?",
           "answer": "Il metodo agisce su tre pilastri: efficienza biomeccanica e posturale, gestione del Sistema Nervoso Autonomo (switch rapido sympathetic/parasympathetic) e tolleranza alla CO₂ per ritardare la fatica e mantenere il focus sotto sforzo massimale."
         }
-      ],
-      "testimonials": [
-        {
-          "name": "Sara M.",
-          "text": "Ho iniziato senza alcuna esperienza e dopo tre mesi riesco a fare posizioni che non avrei mai immaginato."
-        },
-        {
-          "name": "Luca P.",
-          "text": "La qualità dei video e la progressione dei corsi è eccellente. Mi sento guidato ad ogni passo."
-        },
-        {
-          "name": "Giulia R.",
-          "text": "Umberto spiega con una chiarezza e una passione che ti trasmette energia. Consigliatissimo!"
-        }
       ]
     }
+  },
+  "Yoga": {
+    "title": "Yoga su misura",
+    "subtitle": "La tua pratica personalizzata",
+    "body": "TBD",
+    "discover": "Scopri di più",
+    "discoverLabel": "Scopri di più su Yoga su misura",
+    "back": "Percorsi",
+    "videoLabel": "Presentazione di Yoga su misura",
+    "openVideo": "Apri il video"
   },
   "Auth": {
     "loginEyebrow": "Accesso",

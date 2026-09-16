@@ -5,10 +5,9 @@ import { ChiSono } from "@/app/sections/chi-sono";
 import { Corsi } from "@/app/sections/corsi";
 import { Faq } from "@/app/sections/faq";
 import { Hero } from "@/app/sections/hero";
-import { BreathWind } from "@/components/parallax/breath-wind";
+import { Testimonianze } from "@/app/sections/testimonianze";
 import { ParallaxNav } from "@/components/parallax/nav";
 import { SECTIONS } from "@/constants/parallax";
-import { useBreathWind } from "@/hooks/use-breath-wind";
 import { useParallaxScroll } from "@/hooks/use-parallax-scroll";
 import type { ParallaxProps } from "@/types/parallax";
 import { useEffect, useMemo, useRef } from "react";
@@ -21,7 +20,6 @@ export function Parallax({
 }: ParallaxProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { active, visible, scrollTo } = useParallaxScroll(containerRef);
-  const gust = useBreathWind(containerRef);
   const isDark = SECTIONS.find((s) => s.id === active)?.dark ?? true;
   const purchasedSet = useMemo(() => new Set(purchasedIds), [purchasedIds]);
 
@@ -47,10 +45,10 @@ export function Parallax({
           isAdmin={isAdmin}
           purchasedSet={purchasedSet}
         />
+        <Testimonianze visible={visible} />
         <ChiSono visible={visible} />
         <Faq visible={visible} />
         {footer}
-        <BreathWind gust={gust} />
       </main>
     </>
   );

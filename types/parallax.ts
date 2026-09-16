@@ -1,6 +1,12 @@
 import type { ReactNode, RefObject } from "react";
 
-export type SectionId = "hero" | "benefici" | "corsi" | "chi-sono" | "faq";
+export type SectionId =
+  | "hero"
+  | "benefici"
+  | "corsi"
+  | "testimonianze"
+  | "chi-sono"
+  | "faq";
 
 export type Course = {
   id: string;
@@ -43,11 +49,6 @@ export type BenefitContent = {
 export type FaqContent = {
   question: string;
   answer: string;
-};
-
-export type TestimonialContent = {
-  name: string;
-  text: string;
 };
 
 export type ParallaxNavProps = {

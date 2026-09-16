@@ -14,7 +14,7 @@ export function ParallaxNav({ active, isDark, scrollTo }: ParallaxNavProps) {
   const t = useTranslations("Navigation");
   const isAdmin = session?.user.role === "ADMIN";
 
-  const textColor = isDark ? "rgba(255,255,255,0.9)" : "var(--color-navy)";
+  const textColor = isDark ? "#ffffff" : "var(--color-navy)";
   const dotActive = isDark ? "#ffffff" : "var(--color-navy)";
   const dotInactive = isDark
     ? "rgba(255,255,255,0.28)"

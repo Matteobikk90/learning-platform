@@ -17,35 +17,26 @@ export function ChiSono({ visible }: BaseSectionProps) {
         mobileSrc={aboutMobile}
         className="absolute inset-0 size-full object-cover object-center"
       />
-      <div className="absolute inset-0 bg-black/35" aria-hidden="true" />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.62) 50%, rgba(0,0,0,0.12) 100%)",
-        }}
-        aria-hidden="true"
-      />
-
       <div
         className={cn(
           "parallax-content relative z-10 w-full max-w-6xl",
           visible.has("chi-sono") && "visible"
         )}>
         <div className="max-w-3xl">
-          <span className="label-upper mb-8 text-white/60">
+          <span className="label-upper mb-8 text-white">
             {t("eyebrow")}
           </span>
           <h2 className="section-title mb-10 text-white">
             <em>{t("name")}</em>
           </h2>
           <div className="border-t border-white/20 pt-8">
-            <p className="label-upper w-full text-white/65 leading-6">
+            <p className="label-upper w-full leading-6 text-white">
               {t("paragraph1")}
             </p>
-            <p className="label-upper mt-6 w-full text-white/65 leading-6">
+            <p className="label-upper mt-6 w-full leading-6 text-white">
               {t("paragraph2")}
             </p>
+            <p className="label-upper mt-6 leading-6 text-white">{t("welcome")}</p>
           </div>
         </div>
       </div>
