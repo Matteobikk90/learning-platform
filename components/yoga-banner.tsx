@@ -8,7 +8,7 @@ export function YogaBanner() {
   const t = useTranslations("Yoga");
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/20 bg-surface">
+    <article data-reveal className="overflow-hidden rounded-2xl border border-white/20 bg-surface">
       <Image
         src={yogaBanner}
         alt={t("title")}

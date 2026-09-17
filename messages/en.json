@@ -23,6 +23,9 @@
       "scroll": "Scroll"
     },
     "benefits": {
+      "label": "The benefits of the method",
+      "previous": "Previous benefit",
+      "next": "Next benefit",
       "items": [
         {
           "title": "Clinical Evidence",

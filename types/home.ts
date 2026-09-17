@@ -1,3 +1,9 @@
+import type { ReactNode } from "react";
+
+export type HomeSectionsProps = {
+  children: ReactNode;
+};
+
 export type Course = {
   id: string;
   title: string;

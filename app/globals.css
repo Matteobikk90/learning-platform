@@ -43,65 +43,103 @@
 
 @layer components {
   .marketing-page {
+    --home-section-height: calc(100svh - 5rem);
     --color-muted: #ffffff;
     --color-subtle: #ffffff;
     --color-petrol: #ffffff;
   }
 
   .home-section {
+    display: grid;
+    align-content: center;
+    min-height: var(--home-section-height);
     padding-block: clamp(5rem, 9vw, 8rem);
     padding-inline: clamp(1.5rem, 4vw, 2rem);
   }
 
+  .benefits-section {
+    --benefit-progress: 0;
+    --benefit-panel-height: var(--home-section-height);
+    --benefit-sticky-top: 5rem;
+    --benefit-viewport-width: 100vw;
+  }
+
   .benefits-viewport {
     position: relative;
+    min-height: var(--home-section-height);
     overflow: hidden;
   }
 
   .benefits-panorama {
-    aspect-ratio: 3 / 2;
+    position: absolute;
+    width: max(100%, calc(var(--benefit-panel-height) * 1.5));
+    height: 100%;
+    transform: translateX(calc(var(--benefit-progress) * -100%)) translateX(calc(var(--benefit-progress) * var(--benefit-viewport-width)));
+  }
+
+  .benefits-track {
+    position: relative;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #fff #000;
+  }
+
+  .benefits-track:focus-visible {
+    outline: 1px solid white;
+    outline-offset: -4px;
+  }
+
+  .benefits-panel {
+    display: flex;
+    flex: 0 0 100%;
+    align-items: center;
+    min-width: 0;
+    min-height: var(--home-section-height);
+    padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 4vw, 2rem);
+    scroll-snap-align: start;
+  }
+
+  .benefits-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .benefits-section[data-scroll-driven="true"] {
+    height: calc(var(--benefit-count) * var(--benefit-panel-height));
+  }
+
+  .benefits-section[data-scroll-driven="true"] .benefits-viewport {
+    position: sticky;
+    top: var(--benefit-sticky-top);
+  }
+
+  .benefits-section[data-scroll-driven="true"] .benefits-track {
+    overflow: hidden;
+    scroll-snap-type: none;
+  }
+
+  .benefits-section[data-scroll-driven="true"] .benefits-panel {
+    transform: translateX(calc(var(--benefit-progress) * (var(--benefit-count) - 1) * -100%));
+    will-change: transform;
+  }
+
+  .benefits-section[data-scroll-driven="true"] .benefits-panorama {
+    will-change: transform;
+  }
+
+  .benefits-section[data-scroll-driven="true"] .benefits-controls {
+    display: none;
   }
 
   @media (min-width: 768px) {
     .benefits-panorama {
-      aspect-ratio: 3 / 1;
-    }
-  }
-
-  @media (min-width: 768px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
-    .benefits-section {
-      height: calc(var(--benefit-count) * 100dvh);
-    }
-
-    .benefits-viewport {
-      position: sticky;
-      top: 0;
-      height: 100dvh;
-    }
-
-    .benefits-panorama {
-      position: absolute;
-      width: max(100vw, 300dvh);
-      height: 100%;
-      transform: translateX(calc(var(--benefit-progress) * -100%)) translateX(calc(var(--benefit-progress) * 100vw));
-      will-change: transform;
-    }
-
-    .benefits-track {
-      position: relative;
-      display: flex;
-      width: calc(var(--benefit-count) * 100vw);
-      transform: translateX(calc(var(--benefit-progress) * (var(--benefit-count) - 1) * -100vw));
-      will-change: transform;
-    }
-
-    .benefits-track > article {
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      width: 100vw;
-      height: 100dvh;
-      padding-block: 6rem;
+      width: max(100%, calc(var(--benefit-panel-height) * 3));
     }
   }
 

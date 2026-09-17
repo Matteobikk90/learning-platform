@@ -16,7 +16,7 @@ export function ChiSono() {
         mobileSrc={aboutMobile}
         className="absolute inset-0 size-full object-cover object-center"
       />
-      <div className="relative z-10 mx-auto max-w-6xl">
+      <div data-reveal className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="max-w-3xl">
           <span className="label-upper mb-5 text-white">
             {t("eyebrow")}

@@ -4,6 +4,7 @@ import { Corsi } from "@/app/sections/corsi";
 import { Faq } from "@/app/sections/faq";
 import { Hero } from "@/app/sections/hero";
 import { Testimonianze } from "@/app/sections/testimonianze";
+import { HomeSections } from "@/components/home-sections";
 import { PUBLIC_CATALOG_COURSE_FILTER } from "@/constants/courses";
 import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { isSupportedLocale } from "@/functions/i18n/is-supported-locale";
@@ -54,7 +55,7 @@ export default async function Home() {
     : [];
 
   return (
-    <main className="marketing-page">
+    <HomeSections>
       <Hero />
       <Benefici />
       <Corsi
@@ -65,6 +66,6 @@ export default async function Home() {
       <Testimonianze />
       <ChiSono />
       <Faq />
-    </main>
+    </HomeSections>
   );
 }

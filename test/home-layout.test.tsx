@@ -11,6 +11,7 @@ import { Faq } from "@/app/sections/faq";
 import { Hero } from "@/app/sections/hero";
 import { Testimonianze } from "@/app/sections/testimonianze";
 import { FaqItem } from "@/components/faq-item";
+import { HomeSections } from "@/components/home-sections";
 import messages from "@/messages/it.json";
 
 vi.mock("@/lib/session", () => ({
@@ -36,10 +37,32 @@ describe("home layout", () => {
   it("renders the six sections in a single main without duplicating navigation or footer", async () => {
     const page = await Home();
 
-    expect(page.type).toBe("main");
+    expect(page.type).toBe(HomeSections);
     expect(Children.toArray(page.props.children).filter(isValidElement).map((child) => child.type)).toEqual([
       Hero, Benefici, Corsi, Testimonianze, ChiSono, Faq,
     ]);
+  });
+
+  it("keeps a semantic main and visible content before animations load", () => {
+    const html = renderToStaticMarkup(<HomeSections><section data-reveal>Contenuto</section></HomeSections>);
+
+    expect(html).toContain('<main class="marketing-page">');
+    expect(html).toContain("Contenuto");
+    expect(html).not.toContain("opacity");
+    expect(html).not.toContain("hidden");
+  });
+
+  it("provides horizontal navigation for short screens and reduced motion", () => {
+    const html = renderToStaticMarkup(
+      <NextIntlClientProvider locale="it" messages={messages} timeZone="Europe/Rome">
+        <Benefici />
+      </NextIntlClientProvider>
+    );
+
+    expect(html.match(/class="benefits-panel"/g)).toHaveLength(3);
+    expect(html).toContain('aria-label="Beneficio precedente"');
+    expect(html).toContain('aria-label="Beneficio successivo"');
+    expect(html).toContain('aria-controls="benefits-track"');
   });
 
   it("places the hero CTA after the introduction and uses native section links", () => {

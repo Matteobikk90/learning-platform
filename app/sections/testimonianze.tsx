@@ -10,14 +10,15 @@ export function Testimonianze() {
       id="testimonianze"
       aria-labelledby="testimonials-title"
       className="home-section bg-canvas">
-      <div className="mx-auto max-w-6xl">
-        <h2 id="testimonials-title" className="section-title mb-10 sm:mb-14">
+      <div className="mx-auto w-full max-w-6xl">
+        <h2 data-reveal id="testimonials-title" className="section-title mb-10 sm:mb-14">
           {t("title")}
         </h2>
         <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {TESTIMONIAL_REELS.map((reel, index) => (
             <li
               key={reel.id}
+              data-reveal
               className="aspect-[9/16] overflow-hidden rounded-2xl border border-white/20 bg-surface">
               {reel.videoSrc ? (
                 <video

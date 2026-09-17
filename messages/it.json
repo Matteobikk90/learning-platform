@@ -23,6 +23,9 @@
       "scroll": "Scorri"
     },
     "benefits": {
+      "label": "I benefici del metodo",
+      "previous": "Beneficio precedente",
+      "next": "Beneficio successivo",
       "items": [
         {
           "title": "Evidenza clinica",

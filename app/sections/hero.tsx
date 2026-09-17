@@ -10,14 +10,14 @@ export function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-title"
-      className="relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden bg-navy px-6 pt-14 pb-28 sm:px-8 sm:pt-20 sm:pb-32">
+      className="home-section relative flex items-center overflow-hidden bg-navy px-6 pt-14 pb-28 sm:px-8 sm:pt-20 sm:pb-32">
       <ResponsiveBackgroundImage
         desktopSrc={heroDesktop}
         mobileSrc={heroMobile}
         priority
         className="absolute inset-0 size-full object-cover object-center"
       />
-      <div className="relative z-10 mx-auto w-full max-w-6xl text-left">
+      <div data-reveal className="relative z-10 mx-auto w-full max-w-6xl text-left">
         <span className="label-upper mb-6">{t("eyebrow")}</span>
         <h1 id="hero-title" className="hero-title hero-heading mb-8">
           {t("titleLine1")}

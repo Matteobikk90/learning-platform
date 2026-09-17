@@ -26,8 +26,8 @@ export function Corsi({
         mobileSrc={coursesMobile}
         className="absolute inset-0 size-full object-cover object-center"
       />
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <header className="mb-10 sm:mb-14">
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
+        <header data-reveal className="mb-10 sm:mb-14">
           <p className="mb-5 flex items-center gap-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.24em] text-white">
             <span className="h-px w-8 bg-white/45" aria-hidden="true" />
             {t("eyebrow")}
@@ -49,6 +49,7 @@ export function Corsi({
               return (
                 <article
                   key={course.id}
+                  data-reveal
                   aria-labelledby={titleId}
                   className="course-card group">
                   <CourseCoverMedia
