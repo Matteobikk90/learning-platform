@@ -29,7 +29,6 @@ export function useBenefitsScroll() {
     const measure = () => {
       stickyTop = header?.getBoundingClientRect().height ?? 0;
       section.style.setProperty("--benefit-sticky-top", `${stickyTop}px`);
-      section.style.setProperty("--benefit-viewport-width", `${viewport.clientWidth}px`);
       update();
     };
 

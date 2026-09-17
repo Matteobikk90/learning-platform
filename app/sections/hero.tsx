@@ -14,6 +14,7 @@ export function Hero() {
       <ResponsiveBackgroundImage
         desktopSrc={heroDesktop}
         mobileSrc={heroMobile}
+        sizes="(min-width: 768px) max(100vw, 178svh), max(100vw, 57svh)"
         priority
         className="absolute inset-0 size-full object-cover object-center"
       />

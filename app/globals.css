@@ -59,10 +59,8 @@
 
   .benefits-section {
     --benefit-progress: 0;
-    --benefit-panorama-progress: var(--benefit-progress);
     --benefit-sticky-top: 5rem;
     --benefit-panel-height: calc(100svh - var(--benefit-sticky-top));
-    --benefit-viewport-width: 100vw;
     height: calc(var(--benefit-count) * var(--benefit-panel-height));
   }
 
@@ -75,23 +73,22 @@
 
   .benefits-panorama {
     position: absolute;
-    width: max(100%, calc(var(--benefit-panel-height) * 1.5));
-    height: 100%;
-    transform: translateX(calc(var(--benefit-panorama-progress) * -100%)) translateX(calc(var(--benefit-panorama-progress) * var(--benefit-viewport-width)));
-    will-change: transform;
+    inset: 0;
   }
 
   .benefits-track {
     position: relative;
     display: flex;
+    width: calc(var(--benefit-count) * 100%);
     height: 100%;
-    transform: translateX(calc(var(--benefit-progress) * (var(--benefit-count) - 1) * -100%));
+    transform: translateX(calc(var(--benefit-progress) * (var(--benefit-count) - 1) / var(--benefit-count) * -100%));
     will-change: transform;
   }
 
   .benefits-panel {
+    position: relative;
     display: flex;
-    flex: 0 0 100%;
+    flex: 0 0 calc(100% / var(--benefit-count));
     align-items: center;
     min-width: 0;
     padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 4vw, 2rem);
@@ -114,12 +111,6 @@
     transform-origin: left;
   }
 
-  @media (min-width: 768px) {
-    .benefits-panorama {
-      width: max(100%, calc(var(--benefit-panel-height) * 3));
-    }
-  }
-
   @media (max-height: 640px) {
     .benefits-panel {
       padding-block: 1.5rem;
@@ -135,12 +126,6 @@
 
     .benefits-progress {
       bottom: 0.75rem;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .benefits-section {
-      --benefit-panorama-progress: 0;
     }
   }
 

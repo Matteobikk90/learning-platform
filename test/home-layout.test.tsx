@@ -26,7 +26,9 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 vi.mock("@/components/responsive-background-image", () => ({
-  ResponsiveBackgroundImage: () => null,
+  ResponsiveBackgroundImage: ({ sizes }: { sizes?: string }) => (
+    <div data-background-sizes={sizes} />
+  ),
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -61,8 +63,10 @@ describe("home layout", () => {
 
     expect(html.match(/class="benefits-panel"/g)).toHaveLength(3);
     expect(html).toContain('--benefit-count:3');
-    expect(html).toContain('class="benefits-panorama"');
-    expect(html).toContain('class="benefits-track"');
+    expect(html.match(/class="benefits-track"/g)).toHaveLength(1);
+    expect(html).toContain(
+      '<div class="benefits-track"><div class="benefits-panorama" aria-hidden="true"><div data-background-sizes="300vw"></div></div><article class="benefits-panel">'
+    );
     expect(html).toContain('class="benefits-progress" aria-hidden="true"');
     expect(html).not.toContain("<button");
     expect(html).not.toContain("benefits-controls");

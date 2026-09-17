@@ -1,12 +1,6 @@
-import { getImageProps, type StaticImageData } from "next/image";
+import { getImageProps } from "next/image";
 
-type ResponsiveBackgroundImageProps = {
-  desktopSrc: StaticImageData;
-  mobileSrc: StaticImageData;
-  className?: string;
-  sizes?: string;
-  priority?: boolean;
-};
+import type { ResponsiveBackgroundImageProps } from "@/types/image";
 
 export function ResponsiveBackgroundImage({
   desktopSrc,
@@ -28,7 +22,7 @@ export function ResponsiveBackgroundImage({
     src: desktopSrc,
   });
   const {
-    props: { srcSet: mobileSrcSet, ...mobileImageProps },
+    props: mobileImageProps,
   } = getImageProps({
     ...common,
     src: mobileSrc,
@@ -40,11 +34,8 @@ export function ResponsiveBackgroundImage({
         media="(min-width: 768px)"
         sizes={sizes}
         srcSet={desktopSrcSet}
-      />
-      <source
-        media="(max-width: 767px)"
-        sizes={sizes}
-        srcSet={mobileSrcSet}
+        width={desktopSrc.width}
+        height={desktopSrc.height}
       />
       <img
         {...mobileImageProps}

@@ -61,7 +61,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
-    deviceSizes: [640, 750, 828, 1080, 1440, 1920, 2560],
+    deviceSizes: [640, 750, 828, 1080, 1440, 1920, 2560, 6000],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: supabaseUrl
       ? [

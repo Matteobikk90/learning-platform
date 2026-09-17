@@ -24,16 +24,15 @@ export function Benefici() {
         "--benefit-count": totalSlides,
       } as CSSProperties}>
       <div ref={viewportRef} className="benefits-viewport">
-        <div className="benefits-panorama" aria-hidden="true">
-          <ResponsiveBackgroundImage
-            desktopSrc={benefitsDesktop}
-            mobileSrc={benefitsMobile}
-            sizes="(min-width: 768px) 300svh, 150svh"
-            className="block size-full object-cover object-center"
-          />
-        </div>
-
         <div className="benefits-track">
+          <div className="benefits-panorama" aria-hidden="true">
+            <ResponsiveBackgroundImage
+              desktopSrc={benefitsDesktop}
+              mobileSrc={benefitsMobile}
+              sizes={`${totalSlides * 100}vw`}
+              className="block size-full object-cover object-center"
+            />
+          </div>
           {benefits.map(({ title, body }, index) => {
             const num = String(index + 1).padStart(2, "0");
 
