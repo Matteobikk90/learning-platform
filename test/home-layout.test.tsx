@@ -52,7 +52,7 @@ describe("home layout", () => {
     expect(html).not.toContain("hidden");
   });
 
-  it("provides horizontal navigation for short screens and reduced motion", () => {
+  it("keeps three scroll-driven benefit panels without manual carousel controls", () => {
     const html = renderToStaticMarkup(
       <NextIntlClientProvider locale="it" messages={messages} timeZone="Europe/Rome">
         <Benefici />
@@ -60,9 +60,12 @@ describe("home layout", () => {
     );
 
     expect(html.match(/class="benefits-panel"/g)).toHaveLength(3);
-    expect(html).toContain('aria-label="Beneficio precedente"');
-    expect(html).toContain('aria-label="Beneficio successivo"');
-    expect(html).toContain('aria-controls="benefits-track"');
+    expect(html).toContain('--benefit-count:3');
+    expect(html).toContain('class="benefits-panorama"');
+    expect(html).toContain('class="benefits-track"');
+    expect(html).toContain('class="benefits-progress" aria-hidden="true"');
+    expect(html).not.toContain("<button");
+    expect(html).not.toContain("benefits-controls");
   });
 
   it("places the hero CTA after the introduction and uses native section links", () => {

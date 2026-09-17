@@ -12,7 +12,7 @@ export function Benefici() {
   const t = useTranslations("Home.benefits");
   const benefits = t.raw("items") as BenefitContent[];
   const totalSlides = benefits.length;
-  const { sectionRef, viewportRef, trackRef, activeIndex, moveSlide } = useBenefitsScroll(totalSlides);
+  const { sectionRef, viewportRef } = useBenefitsScroll();
 
   return (
     <section
@@ -33,13 +33,7 @@ export function Benefici() {
           />
         </div>
 
-        <div
-          ref={trackRef}
-          id="benefits-track"
-          role="group"
-          aria-label={t("label")}
-          tabIndex={0}
-          className="benefits-track">
+        <div className="benefits-track">
           {benefits.map(({ title, body }, index) => {
             const num = String(index + 1).padStart(2, "0");
 
@@ -65,29 +59,9 @@ export function Benefici() {
             );
           })}
         </div>
-      </div>
-      <div className="benefits-controls">
-        <button
-          type="button"
-          aria-label={t("previous")}
-          aria-controls="benefits-track"
-          disabled={activeIndex === 0}
-          onClick={() => moveSlide(-1)}
-          className="btn-secondary min-h-11 min-w-11 text-white disabled:cursor-default disabled:opacity-30">
-          <span aria-hidden="true">←</span>
-        </button>
-        <span className="font-mono text-xs text-white" aria-live="polite" aria-atomic="true">
-          {String(activeIndex + 1).padStart(2, "0")} / {String(totalSlides).padStart(2, "0")}
-        </span>
-        <button
-          type="button"
-          aria-label={t("next")}
-          aria-controls="benefits-track"
-          disabled={activeIndex === totalSlides - 1}
-          onClick={() => moveSlide(1)}
-          className="btn-secondary min-h-11 min-w-11 text-white disabled:cursor-default disabled:opacity-30">
-          <span aria-hidden="true">→</span>
-        </button>
+        <div className="benefits-progress" aria-hidden="true">
+          <div />
+        </div>
       </div>
     </section>
   );

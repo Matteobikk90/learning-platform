@@ -24,6 +24,7 @@ export type CourseCoverMediaProps = {
   className?: string;
   coverImageUrl: string | null;
   sizes: string;
+  variant?: "card" | "banner";
 };
 
 export type CoursePublicationModule = {

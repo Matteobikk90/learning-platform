@@ -59,14 +59,17 @@
 
   .benefits-section {
     --benefit-progress: 0;
-    --benefit-panel-height: var(--home-section-height);
+    --benefit-panorama-progress: var(--benefit-progress);
     --benefit-sticky-top: 5rem;
+    --benefit-panel-height: calc(100svh - var(--benefit-sticky-top));
     --benefit-viewport-width: 100vw;
+    height: calc(var(--benefit-count) * var(--benefit-panel-height));
   }
 
   .benefits-viewport {
-    position: relative;
-    min-height: var(--home-section-height);
+    position: sticky;
+    top: var(--benefit-sticky-top);
+    height: var(--benefit-panel-height);
     overflow: hidden;
   }
 
@@ -74,22 +77,16 @@
     position: absolute;
     width: max(100%, calc(var(--benefit-panel-height) * 1.5));
     height: 100%;
-    transform: translateX(calc(var(--benefit-progress) * -100%)) translateX(calc(var(--benefit-progress) * var(--benefit-viewport-width)));
+    transform: translateX(calc(var(--benefit-panorama-progress) * -100%)) translateX(calc(var(--benefit-panorama-progress) * var(--benefit-viewport-width)));
+    will-change: transform;
   }
 
   .benefits-track {
     position: relative;
     display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    overscroll-behavior-x: contain;
-    scrollbar-width: thin;
-    scrollbar-color: #fff #000;
-  }
-
-  .benefits-track:focus-visible {
-    outline: 1px solid white;
-    outline-offset: -4px;
+    height: 100%;
+    transform: translateX(calc(var(--benefit-progress) * (var(--benefit-count) - 1) * -100%));
+    will-change: transform;
   }
 
   .benefits-panel {
@@ -97,49 +94,53 @@
     flex: 0 0 100%;
     align-items: center;
     min-width: 0;
-    min-height: var(--home-section-height);
     padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 4vw, 2rem);
-    scroll-snap-align: start;
   }
 
-  .benefits-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    padding: 1rem 1.5rem;
+  .benefits-progress {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    width: 4rem;
+    height: 1px;
+    background: rgb(255 255 255 / 20%);
+    transform: translateX(-50%);
   }
 
-  .benefits-section[data-scroll-driven="true"] {
-    height: calc(var(--benefit-count) * var(--benefit-panel-height));
-  }
-
-  .benefits-section[data-scroll-driven="true"] .benefits-viewport {
-    position: sticky;
-    top: var(--benefit-sticky-top);
-  }
-
-  .benefits-section[data-scroll-driven="true"] .benefits-track {
-    overflow: hidden;
-    scroll-snap-type: none;
-  }
-
-  .benefits-section[data-scroll-driven="true"] .benefits-panel {
-    transform: translateX(calc(var(--benefit-progress) * (var(--benefit-count) - 1) * -100%));
-    will-change: transform;
-  }
-
-  .benefits-section[data-scroll-driven="true"] .benefits-panorama {
-    will-change: transform;
-  }
-
-  .benefits-section[data-scroll-driven="true"] .benefits-controls {
-    display: none;
+  .benefits-progress > div {
+    height: 100%;
+    background: white;
+    transform: scaleX(var(--benefit-progress));
+    transform-origin: left;
   }
 
   @media (min-width: 768px) {
     .benefits-panorama {
       width: max(100%, calc(var(--benefit-panel-height) * 3));
+    }
+  }
+
+  @media (max-height: 640px) {
+    .benefits-panel {
+      padding-block: 1.5rem;
+    }
+
+    .benefits-panel .section-title {
+      font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+    }
+
+    .benefits-panel p {
+      line-height: 1.25rem;
+    }
+
+    .benefits-progress {
+      bottom: 0.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .benefits-section {
+      --benefit-panorama-progress: 0;
     }
   }
 
@@ -301,26 +302,6 @@
     @apply flex min-w-0 flex-col overflow-hidden rounded-2xl border border-white/20 bg-surface;
   }
 
-  .course-card-body {
-    @apply flex flex-1 flex-col p-6 sm:p-7;
-  }
-
-  .course-card-copy {
-    @apply min-w-0;
-  }
-
-  .course-card-title {
-    @apply wrap-break-word font-display text-xl font-medium leading-tight tracking-[-0.025em] text-white sm:text-2xl;
-  }
-
-  .course-card-description {
-    @apply mt-3 line-clamp-3 text-sm leading-relaxed text-white sm:text-base;
-  }
-
-  .course-card-actions {
-    @apply mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/15 pt-6;
-  }
-
   .course-placeholder-orbit,
   .course-placeholder-ambient {
     transition: opacity 0.6s ease, transform 0.8s ease;
@@ -386,5 +367,26 @@
 
   .form-input:focus {
     border-color: var(--color-subtle);
+  }
+}
+
+@layer utilities {
+  @media (max-height: 400px) {
+    .benefits-panel {
+      padding-block: 1rem;
+    }
+
+    .benefits-panel > div > div,
+    .benefits-panel .section-title {
+      margin-bottom: 0.5rem;
+    }
+
+    .benefits-panel p {
+      padding-top: 0.5rem;
+    }
+
+    .benefits-progress {
+      display: none;
+    }
   }
 }

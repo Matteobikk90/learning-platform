@@ -18,6 +18,12 @@ export type CorsiSectionProps = {
   purchasedSet: Set<string>;
 };
 
+export type CourseBannerProps = {
+  course: Course;
+  isAdmin: boolean;
+  purchased: boolean;
+};
+
 export type BenefitContent = {
   title: string;
   body: string;

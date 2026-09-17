@@ -8,11 +8,13 @@ export function CourseCoverMedia({
   className,
   coverImageUrl,
   sizes,
+  variant = "card",
 }: CourseCoverMediaProps) {
   return (
     <div
       className={cn(
-        "relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-surface",
+        "relative overflow-hidden rounded-xl border border-white/10 bg-surface",
+        variant === "banner" ? "aspect-[32/9]" : "aspect-video",
         className
       )}>
       {coverImageUrl ? (
@@ -21,7 +23,9 @@ export function CourseCoverMedia({
           alt=""
           fill
           sizes={sizes}
-          className="object-cover transition-transform duration-700 group-hover:scale-[1.025]"
+          className={variant === "banner"
+            ? "object-contain"
+            : "object-cover transition-transform duration-700 group-hover:scale-[1.025]"}
         />
       ) : (
         <CourseCoverPlaceholder />
