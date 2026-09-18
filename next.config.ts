@@ -1,4 +1,4 @@
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -93,6 +93,10 @@ export default withSentryConfig(withNextIntl(nextConfig), {
   telemetry: false,
   widenClientFileUpload: true,
   tunnelRoute: SENTRY_TUNNEL_ROUTE,
-  disableLogger: true,
-  automaticVercelMonitors: false,
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    automaticVercelMonitors: false,
+  },
 });
