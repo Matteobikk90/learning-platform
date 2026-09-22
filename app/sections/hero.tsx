@@ -10,13 +10,13 @@ export function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-title"
-      className="home-section relative flex items-center overflow-hidden bg-navy px-6 pt-14 pb-28 sm:px-8 sm:pt-20 sm:pb-32">
+      className="home-section relative flex items-center bg-navy px-6 pt-14 pb-28 sm:px-8 sm:pt-20 sm:pb-32">
       <ResponsiveBackgroundImage
         desktopSrc={heroDesktop}
         mobileSrc={heroMobile}
         sizes="(min-width: 768px) max(100vw, 178dvh), max(100vw, 57dvh)"
         priority
-        className="absolute inset-0 size-full object-cover object-center"
+        className="absolute inset-x-0 bottom-0 h-[calc(100%+var(--site-header-height))] w-full object-cover object-center"
       />
       <div data-reveal className="relative z-10 mx-auto w-full max-w-6xl text-left">
         <span className="label-upper mb-6">{t("eyebrow")}</span>
@@ -44,7 +44,7 @@ export function Hero() {
         <span className="font-mono text-[0.625rem] tracking-[0.25em] uppercase">
           {t("scroll")}
         </span>
-        <span className="h-8 w-px bg-white/60" aria-hidden="true" />
+        <span className="hero-scroll-line h-8 w-px bg-white/25" aria-hidden="true" />
       </a>
     </section>
   );

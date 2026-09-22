@@ -67,6 +67,42 @@
     padding-inline: clamp(1.5rem, 4vw, 2rem);
   }
 
+  .hero-scroll-line {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-scroll-line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-scroll-line::after {
+      animation: hero-scroll-line 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+  }
+
+  @keyframes hero-scroll-line {
+    0% {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+
+    15%,
+    65% {
+      opacity: 1;
+    }
+
+    85%,
+    100% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+
   .benefits-section {
     --benefit-progress: 0;
     --benefit-panel-height: var(--page-viewport-height);

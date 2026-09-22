@@ -12,6 +12,7 @@ import { Hero } from "@/app/sections/hero";
 import { Testimonianze } from "@/app/sections/testimonianze";
 import { FaqItem } from "@/components/faq-item";
 import { HomeSections } from "@/components/home-sections";
+import { Navbar } from "@/components/navbar";
 import messages from "@/messages/it.json";
 import { prisma } from "@/lib/prisma";
 
@@ -27,14 +28,18 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 vi.mock("@/components/responsive-background-image", () => ({
-  ResponsiveBackgroundImage: ({ sizes }: { sizes?: string }) => (
-    <div data-background-sizes={sizes} />
+  ResponsiveBackgroundImage: ({ sizes, className }: { sizes?: string; className?: string }) => (
+    <div data-background-sizes={sizes} data-background-class={className} />
   ),
 }));
 
 vi.mock("@/i18n/navigation", () => ({
   Link: (props: ComponentProps<"a">) => createElement("a", props),
+  usePathname: () => "/",
 }));
+
+vi.mock("@/components/navbar-auth", () => ({ NavbarAuth: () => null }));
+vi.mock("@/components/language-toggle", () => ({ LanguageToggle: () => null }));
 
 describe("home layout", () => {
   it("renders the six sections in a single main without duplicating navigation or footer", async () => {
@@ -73,9 +78,8 @@ describe("home layout", () => {
     expect(html.match(/class="benefits-panel"/g)).toHaveLength(3);
     expect(html).toContain('--benefit-count:3');
     expect(html.match(/class="benefits-track"/g)).toHaveLength(1);
-    expect(html).toContain(
-      '<div class="benefits-track"><div class="benefits-panorama" aria-hidden="true"><div data-background-sizes="300vw"></div></div><article class="benefits-panel">'
-    );
+    expect(html).toContain('<div class="benefits-track"><div class="benefits-panorama" aria-hidden="true">');
+    expect(html.match(/data-background-sizes="300vw"/g)).toHaveLength(1);
     expect(html).toContain('class="benefits-progress" aria-hidden="true"');
     expect(html).not.toContain("<button");
     expect(html).not.toContain("benefits-controls");
@@ -91,6 +95,24 @@ describe("home layout", () => {
     expect(html.indexOf('href="#corsi"')).toBeGreaterThan(html.indexOf("A tua disposizione."));
     expect(html).toContain('href="#benefici"');
     expect(html).not.toContain("<button");
+    expect(html).toContain("absolute bottom-6 left-1/2");
+    expect(html).toContain('class="hero-scroll-line h-8 w-px bg-white/25" aria-hidden="true"');
+    expect(html).toContain("h-[calc(100%+var(--site-header-height))]");
+    expect(html).not.toContain("overflow-hidden");
+  });
+
+  it("keeps the shared header translucent without dimming its contents", () => {
+    const html = renderToStaticMarkup(
+      <NextIntlClientProvider locale="it" messages={messages} timeZone="Europe/Rome">
+        <Navbar />
+      </NextIntlClientProvider>
+    );
+
+    expect(html).toContain("bg-black/70");
+    expect(html).toContain("sm:bg-black/45");
+    expect(html).toContain('href="#hero"');
+    expect(html).not.toContain("bg-black/85");
+    expect(html).not.toContain("opacity-");
   });
 
   it("renders accessible FAQ disclosure without depending on client state", () => {

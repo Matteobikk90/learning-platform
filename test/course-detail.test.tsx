@@ -3,6 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import CourseDetailPage, { generateMetadata } from "@/app/[locale]/courses/[courseId]/page";
+import YogaSuMisura from "@/app/[locale]/yoga-su-misura/page";
+import { YOGA_PRESENTATION } from "@/constants/course-presentations";
 import { PUBLIC_CATALOG_COURSE_FILTER } from "@/constants/courses";
 import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { getPublishedCourse } from "@/functions/courses/get-published-course";
@@ -24,9 +26,9 @@ vi.mock("next/navigation", () => ({
 }));
 vi.mock("next-intl/server", () => ({
   setRequestLocale: vi.fn(),
-  getTranslations: async ({ locale }: { locale: string }) => {
-    const messages = locale === "en" ? en.CourseDetail : itMessages.CourseDetail;
-    return (key: keyof typeof messages) => messages[key];
+  getTranslations: async ({ locale, namespace }: { locale: string; namespace: "CourseDetail" | "Yoga" }) => {
+    const messages = (locale === "en" ? en : itMessages)[namespace];
+    return (key: string) => (messages as Record<string, string>)[key];
   },
 }));
 vi.mock("@/components/course-cover-media", () => ({
@@ -66,6 +68,47 @@ describe("public course detail", () => {
     expect(html).toContain(`href="/checkout/${course.id}"`);
     expect(html).toContain('data-prefetch="false"');
     expect(findPurchase).not.toHaveBeenCalled();
+  });
+
+  it("restores the sheet presentation video and body on the detail linked by the home banner", async () => {
+    const html = await renderPage();
+
+    expect(html.match(/<video\b/g)).toHaveLength(1);
+    expect(html).toContain(`src="${YOGA_PRESENTATION.video.src}"`);
+    expect(html).toContain(`poster="${YOGA_PRESENTATION.video.poster}"`);
+    expect(html).toContain('controls=""');
+    expect(html).toContain('playsInline=""');
+    expect(html).toContain('preload="none"');
+    expect(html).toContain(itMessages.Yoga.videoLabel);
+    expect(html).toContain(itMessages.Yoga.body);
+    expect(html).not.toContain("autoPlay");
+    expect(html).not.toContain("data-course-cover");
+    expect(html.indexOf("<video")).toBeLessThan(html.indexOf("<footer"));
+  });
+
+  it("does not assign the Yoga video or editorial text to another backend course", async () => {
+    findFirst.mockResolvedValue({ ...course, title: "NeuroBreathMethod" });
+
+    const html = await renderPage();
+
+    expect(html).toContain("NeuroBreathMethod");
+    expect(html).toContain(`data-course-cover="${course.coverImageUrl}"`);
+    expect(html).not.toContain("<video");
+    expect(html).not.toContain(YOGA_PRESENTATION.video.src);
+    expect(html).not.toContain(itMessages.Yoga.body);
+  });
+
+  it.each(["it", "en"])("preserves the original Yoga URL and the same video layout in %s", async (locale) => {
+    const html = renderToStaticMarkup(await YogaSuMisura({ params: Promise.resolve({ locale }) }));
+    const messages = locale === "en" ? en : itMessages;
+
+    expect(html).toContain(messages.Yoga.title);
+    expect(html).toContain(messages.Yoga.subtitle);
+    expect(html).toContain(messages.Yoga.body);
+    expect(html).toContain(`src="${YOGA_PRESENTATION.video.src}"`);
+    expect(html).toContain('href="/#corsi"');
+    expect(html).toContain("md:grid-cols-2");
+    expect(html).not.toContain("/checkout/");
   });
 
   it("only retrieves catalog-visible courses, without exposing video identifiers", async () => {
@@ -123,6 +166,7 @@ describe("public course detail", () => {
     expect(html).toContain(course.title);
     expect(html).toContain("€45.59");
     expect(html).toContain(en.CourseDetail.buy);
+    expect(html).toContain(en.Yoga.videoLabel);
   });
 
   it("provides localized metadata for the public detail", async () => {
