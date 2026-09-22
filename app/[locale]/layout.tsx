@@ -79,6 +79,7 @@ async function LocaleLayout({
   return (
     <html
       lang={locale}
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${spaceMono.variable} h-full`}>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider messages={messages}>

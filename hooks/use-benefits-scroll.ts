@@ -13,22 +13,15 @@ export function useBenefitsScroll() {
     const viewport = viewportRef.current;
     if (!section || !viewport) return;
 
-    const header = document.querySelector<HTMLElement>(".site-header");
     let frame: number | null = null;
 
     const update = () => {
       const progress = getScrollProgress(
-        -section.getBoundingClientRect().top,
+        viewport.getBoundingClientRect().top - section.getBoundingClientRect().top,
         section.offsetHeight - viewport.offsetHeight
       );
 
       section.style.setProperty("--benefit-progress", String(progress));
-    };
-
-    const measure = () => {
-      const headerHeight = header?.getBoundingClientRect().height ?? 0;
-      section.style.setProperty("--benefit-header-height", `${headerHeight}px`);
-      update();
     };
 
     const onScroll = () => {
@@ -39,17 +32,16 @@ export function useBenefitsScroll() {
       });
     };
 
-    const resizeObserver = new ResizeObserver(measure);
+    const resizeObserver = new ResizeObserver(update);
     resizeObserver.observe(viewport);
-    if (header) resizeObserver.observe(header);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", measure);
-    measure();
+    window.addEventListener("resize", update);
+    update();
 
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", measure);
+      window.removeEventListener("resize", update);
       if (frame !== null) window.cancelAnimationFrame(frame);
     };
   }, []);
