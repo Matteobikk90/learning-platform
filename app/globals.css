@@ -266,7 +266,7 @@
   }
 
   .nav-action {
-    @apply inline-flex min-h-9 cursor-pointer items-center gap-2 border-0 bg-transparent p-0 no-underline;
+    @apply inline-flex min-h-9 min-w-6 cursor-pointer items-center justify-center gap-2 border-0 bg-transparent p-0 no-underline;
     color: #ffffff;
     transition: color 0.2s ease, opacity 0.2s ease, text-shadow 0.2s ease;
   }

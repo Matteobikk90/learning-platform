@@ -66,6 +66,7 @@ describe("public course detail", () => {
     expect(html).toContain(course.description);
     expect(html).toContain("45,59\u00a0€");
     expect(html).toContain(`href="/checkout/${course.id}"`);
+    expect(html).toContain(itMessages.CourseDetail.buy);
     expect(html).toContain('data-prefetch="false"');
     expect(findPurchase).not.toHaveBeenCalled();
   });
@@ -132,30 +133,39 @@ describe("public course detail", () => {
     expect(findFirst).not.toHaveBeenCalled();
   });
 
-  it("opens the classroom for a learner with an active purchase", async () => {
+  it.each(["it", "en"])("opens the classroom for a learner with an active purchase in %s", async (locale) => {
     getAppSession.mockResolvedValue({ user: { id: "learner-1", role: "USER" } });
     findPurchase.mockResolvedValue({ id: "purchase-1" });
 
-    const html = await renderPage();
+    const html = await renderPage(locale);
+    const messages = locale === "en" ? en : itMessages;
 
     expect(findPurchase).toHaveBeenCalledWith({
       where: { ...ACTIVE_PURCHASE_FILTER, userId: "learner-1", courseId: course.id },
       select: { id: true },
     });
     expect(html).toContain(`href="/profile/courses/${course.id}"`);
+    expect(html).toContain(messages.CourseDetail.continue);
     expect(html).not.toContain("/checkout/");
   });
 
-  it("keeps checkout available when the learner has no active purchase", async () => {
+  it.each(["it", "en"])("keeps checkout available when the learner has no active purchase in %s", async (locale) => {
     getAppSession.mockResolvedValue({ user: { id: "learner-1", role: "USER" } });
-    expect(await renderPage()).toContain(`href="/checkout/${course.id}"`);
+    const html = await renderPage(locale);
+    const messages = locale === "en" ? en : itMessages;
+
+    expect(html).toContain(`href="/checkout/${course.id}"`);
+    expect(html).toContain(messages.CourseDetail.buy);
+    expect(html).not.toContain(`/admin/courses/${course.id}`);
   });
 
-  it("offers management instead of purchase to administrators", async () => {
+  it.each(["it", "en"])("offers management instead of purchase to administrators in %s", async (locale) => {
     getAppSession.mockResolvedValue({ user: { id: "admin-1", role: "ADMIN" } });
-    const html = await renderPage();
+    const html = await renderPage(locale);
+    const messages = locale === "en" ? en : itMessages;
 
     expect(html).toContain(`href="/admin/courses/${course.id}/modules"`);
+    expect(html).toContain(messages.CourseDetail.manage);
     expect(html).not.toContain("/checkout/");
     expect(findPurchase).not.toHaveBeenCalled();
   });

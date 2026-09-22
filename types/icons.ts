@@ -1,8 +1,7 @@
 import type { Locale } from "@/types/i18n";
 
 export type NavigationIconName =
-  | "admin"
-  | "courses"
+  | "user"
   | "login"
   | "logout";
 

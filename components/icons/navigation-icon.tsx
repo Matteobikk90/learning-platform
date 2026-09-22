@@ -1,18 +1,10 @@
 import type { NavigationIconProps } from "@/types/icons";
 
 const paths = {
-  admin: (
+  user: (
     <>
-      <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1" />
-      <rect x="14" y="3.5" width="6.5" height="6.5" rx="1" />
-      <rect x="3.5" y="14" width="6.5" height="6.5" rx="1" />
-      <rect x="14" y="14" width="6.5" height="6.5" rx="1" />
-    </>
-  ),
-  courses: (
-    <>
-      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22.5z" />
-      <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v17h4.5a2.5 2.5 0 0 1 2.5 2.5z" />
+      <circle cx="12" cy="8" r="4" />
+      <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
     </>
   ),
   login: (
@@ -33,7 +25,7 @@ const paths = {
 
 export function NavigationIcon({
   name,
-  className = "size-3.5",
+  className = "size-5 shrink-0",
 }: NavigationIconProps) {
   return (
     <svg
@@ -44,6 +36,7 @@ export function NavigationIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
+      focusable="false"
       aria-hidden="true">
       {paths[name]}
     </svg>

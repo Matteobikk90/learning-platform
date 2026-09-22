@@ -18,26 +18,13 @@ export function NavbarAuth() {
 
     return (
       <>
-        {isAdmin && (
-          <Link
-            href="/admin"
-            aria-label={t("admin")}
-            title={t("admin")}
-            className="nav-link nav-action">
-            <NavigationIcon name="admin" />
-            <span className="hidden sm:inline">{t("admin")}</span>
-          </Link>
-        )}
-        {!isAdmin && (
-          <Link
-            href="/profile"
-            aria-label={t("myCourses")}
-            title={t("myCourses")}
-            className="nav-link nav-action">
-            <NavigationIcon name="courses" />
-            <span className="hidden sm:inline">{t("myCourses")}</span>
-          </Link>
-        )}
+        <Link
+          href={isAdmin ? "/admin" : "/profile"}
+          aria-label={t(isAdmin ? "admin" : "myCourses")}
+          title={t(isAdmin ? "admin" : "myCourses")}
+          className="nav-link nav-action">
+          <NavigationIcon name="user" />
+        </Link>
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: `/${locale}` })}
