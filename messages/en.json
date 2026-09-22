@@ -53,6 +53,7 @@
       "title": "Start your transformation:",
       "titleEmphasis": "choose your path",
       "empty": "No courses are currently available.",
+      "discover": "Discover more",
       "digitalAccess": "Digital access",
       "guidedPath": "Guided program",
       "purchased": "Purchased",
@@ -101,6 +102,13 @@
         }
       ]
     }
+  },
+  "CourseDetail": {
+    "back": "Programs",
+    "price": "Course price",
+    "buy": "Buy the course",
+    "continue": "Go to course",
+    "manage": "Manage course"
   },
   "Yoga": {
     "title": "Tailored Yoga",

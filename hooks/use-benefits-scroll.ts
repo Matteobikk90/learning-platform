@@ -14,12 +14,11 @@ export function useBenefitsScroll() {
     if (!section || !viewport) return;
 
     const header = document.querySelector<HTMLElement>(".site-header");
-    let stickyTop = 0;
     let frame: number | null = null;
 
     const update = () => {
       const progress = getScrollProgress(
-        stickyTop - section.getBoundingClientRect().top,
+        -section.getBoundingClientRect().top,
         section.offsetHeight - viewport.offsetHeight
       );
 
@@ -27,8 +26,8 @@ export function useBenefitsScroll() {
     };
 
     const measure = () => {
-      stickyTop = header?.getBoundingClientRect().height ?? 0;
-      section.style.setProperty("--benefit-sticky-top", `${stickyTop}px`);
+      const headerHeight = header?.getBoundingClientRect().height ?? 0;
+      section.style.setProperty("--benefit-header-height", `${headerHeight}px`);
       update();
     };
 

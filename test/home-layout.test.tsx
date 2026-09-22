@@ -13,6 +13,7 @@ import { Testimonianze } from "@/app/sections/testimonianze";
 import { FaqItem } from "@/components/faq-item";
 import { HomeSections } from "@/components/home-sections";
 import messages from "@/messages/it.json";
+import { prisma } from "@/lib/prisma";
 
 vi.mock("@/lib/session", () => ({
   getAppSession: vi.fn().mockResolvedValue(null),
@@ -43,6 +44,14 @@ describe("home layout", () => {
     expect(Children.toArray(page.props.children).filter(isValidElement).map((child) => child.type)).toEqual([
       Hero, Benefici, Corsi, Testimonianze, ChiSono, Faq,
     ]);
+  });
+
+  it("does not request prices or purchase state for the home banners", async () => {
+    await Home();
+    expect(prisma.course.findMany).toHaveBeenLastCalledWith(expect.objectContaining({
+      select: { id: true, title: true, description: true, coverImageUrl: true },
+    }));
+    expect(prisma.purchase.findMany).not.toHaveBeenCalled();
   });
 
   it("keeps a semantic main and visible content before animations load", () => {

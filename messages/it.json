@@ -53,6 +53,7 @@
       "title": "Inizia ora la trasformazione:",
       "titleEmphasis": "scegli il tuo percorso",
       "empty": "Nessun corso disponibile al momento.",
+      "discover": "Scopri di più",
       "digitalAccess": "Accesso digitale",
       "guidedPath": "Percorso guidato",
       "purchased": "Acquistato",
@@ -101,6 +102,13 @@
         }
       ]
     }
+  },
+  "CourseDetail": {
+    "back": "Percorsi",
+    "price": "Prezzo del corso",
+    "buy": "Acquista il corso",
+    "continue": "Vai al corso",
+    "manage": "Gestisci corso"
   },
   "Yoga": {
     "title": "Yoga su misura",

@@ -27,6 +27,16 @@
     scroll-padding-top: 5rem;
   }
 
+  main {
+    min-height: 100dvh;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     @apply bg-canvas text-ink antialiased;
     font-size: 0.9375rem;
@@ -43,7 +53,6 @@
 
 @layer components {
   .marketing-page {
-    --home-section-height: calc(100svh - 5rem);
     --color-muted: #ffffff;
     --color-subtle: #ffffff;
     --color-petrol: #ffffff;
@@ -52,21 +61,21 @@
   .home-section {
     display: grid;
     align-content: center;
-    min-height: var(--home-section-height);
+    min-height: 100dvh;
     padding-block: clamp(5rem, 9vw, 8rem);
     padding-inline: clamp(1.5rem, 4vw, 2rem);
   }
 
   .benefits-section {
     --benefit-progress: 0;
-    --benefit-sticky-top: 5rem;
-    --benefit-panel-height: calc(100svh - var(--benefit-sticky-top));
+    --benefit-header-height: 5rem;
+    --benefit-panel-height: 100dvh;
     height: calc(var(--benefit-count) * var(--benefit-panel-height));
   }
 
   .benefits-viewport {
     position: sticky;
-    top: var(--benefit-sticky-top);
+    top: 0;
     height: var(--benefit-panel-height);
     overflow: hidden;
   }
@@ -92,6 +101,7 @@
     align-items: center;
     min-width: 0;
     padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 4vw, 2rem);
+    padding-top: calc(clamp(2rem, 6vw, 5rem) + var(--benefit-header-height));
   }
 
   .benefits-progress {
@@ -114,6 +124,7 @@
   @media (max-height: 640px) {
     .benefits-panel {
       padding-block: 1.5rem;
+      padding-top: calc(1.5rem + var(--benefit-header-height));
     }
 
     .benefits-panel .section-title {
@@ -359,6 +370,7 @@
   @media (max-height: 400px) {
     .benefits-panel {
       padding-block: 1rem;
+      padding-top: calc(1rem + var(--benefit-header-height));
     }
 
     .benefits-panel > div > div,

@@ -12,7 +12,7 @@ export default async function LoginPage({ searchParams }: LoginRouteProps) {
   const safeCallbackUrl = getSafeAuthCallbackUrl(locale, callbackUrl);
 
   return (
-    <main className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-6 py-16">
+    <main className="mx-auto flex max-w-md flex-col justify-center px-6 py-16">
       <span className="label-upper text-center">{t("loginEyebrow")}</span>
 
       <h1 className="page-title leading-[1.15] mb-3 text-center">

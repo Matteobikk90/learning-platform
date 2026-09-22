@@ -5,7 +5,7 @@ export default async function VerifyRequestPage() {
   const t = await getTranslations("Auth");
 
   return (
-    <main className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-6 py-16 text-center">
+    <main className="mx-auto flex max-w-md flex-col justify-center px-6 py-16 text-center">
       <div className="w-12 h-12 rounded-full bg-ocean/10 flex items-center justify-center mx-auto mb-6">
         <svg
           width="20"

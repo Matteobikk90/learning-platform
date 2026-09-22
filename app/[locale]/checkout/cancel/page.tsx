@@ -5,7 +5,7 @@ export default async function CheckoutCancelPage() {
   const t = await getTranslations("Checkout");
 
   return (
-    <main className="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-6 text-center">
+    <main className="mx-auto flex max-w-2xl flex-col items-center justify-center px-6 py-16 text-center">
       <div className="card w-full px-10 py-14">
         <p className="label-upper">{t("cancelled")}</p>
 

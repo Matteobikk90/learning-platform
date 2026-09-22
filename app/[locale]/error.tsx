@@ -17,7 +17,7 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <main className="mx-auto flex min-h-[70vh] max-w-xl flex-col items-center justify-center px-6 py-16 text-center">
+    <main className="mx-auto flex max-w-xl flex-col items-center justify-center px-6 py-16 text-center">
       <span className="label-upper">{t("label")}</span>
       <h1 className="page-title">{t("title")}</h1>
       <p className="mb-8 text-sm text-muted">

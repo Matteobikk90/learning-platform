@@ -6,15 +6,15 @@ import { Hero } from "@/app/sections/hero";
 import { Testimonianze } from "@/app/sections/testimonianze";
 import { HomeSections } from "@/components/home-sections";
 import { PUBLIC_CATALOG_COURSE_FILTER } from "@/constants/courses";
-import { ACTIVE_PURCHASE_FILTER } from "@/constants/purchases";
 import { isSupportedLocale } from "@/functions/i18n/is-supported-locale";
 import { getHomeAlternates } from "@/functions/seo/get-localized-alternates";
 import { routing } from "@/i18n/routing";
 import { prisma } from "@/lib/prisma";
-import { getAppSession } from "@/lib/session";
 import type { LocaleRouteProps } from "@/types/i18n";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -27,42 +27,22 @@ export async function generateMetadata({
 }
 
 export default async function Home() {
-  const [session, courses] = await Promise.all([
-    getAppSession(),
-    prisma.course.findMany({
-      where: PUBLIC_CATALOG_COURSE_FILTER,
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        price: true,
-        coverImageUrl: true,
-      },
-    }),
-  ]);
-  const isAdmin = session?.user.role === "ADMIN";
-
-  const purchases = session?.user.id && !isAdmin
-    ? await prisma.purchase.findMany({
-        where: {
-          ...ACTIVE_PURCHASE_FILTER,
-          userId: session.user.id,
-          course: PUBLIC_CATALOG_COURSE_FILTER,
-        },
-        select: { courseId: true },
-      })
-    : [];
+  const courses = await prisma.course.findMany({
+    where: PUBLIC_CATALOG_COURSE_FILTER,
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      coverImageUrl: true,
+    },
+  });
 
   return (
     <HomeSections>
       <Hero />
       <Benefici />
-      <Corsi
-        courses={courses}
-        isAdmin={isAdmin}
-        purchasedSet={new Set(purchases.map((purchase) => purchase.courseId))}
-      />
+      <Corsi courses={courses} />
       <Testimonianze />
       <ChiSono />
       <Faq />

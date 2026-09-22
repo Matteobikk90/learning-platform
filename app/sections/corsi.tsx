@@ -5,11 +5,7 @@ import coursesMobile from "@/public/images/home/courses-mobile.jpg";
 import type { CorsiSectionProps } from "@/types/home";
 import { useTranslations } from "next-intl";
 
-export function Corsi({
-  courses,
-  isAdmin,
-  purchasedSet,
-}: CorsiSectionProps) {
+export function Corsi({ courses }: CorsiSectionProps) {
   const t = useTranslations("Home.courses");
 
   return (
@@ -41,8 +37,6 @@ export function Corsi({
               <CourseBanner
                 key={course.id}
                 course={course}
-                isAdmin={isAdmin}
-                purchased={purchasedSet.has(course.id)}
               />
             ))}
           </div>

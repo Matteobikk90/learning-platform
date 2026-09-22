@@ -51,8 +51,8 @@ export default async function CourseCheckoutPage({
   if (!course) notFound();
 
   return (
-    <main className="mx-auto flex min-h-[75vh] max-w-2xl flex-col justify-center px-6 py-16">
-      <Link href="/#corsi" className="back-link">
+    <main className="mx-auto flex max-w-2xl flex-col justify-center px-6 py-16">
+      <Link href={`/courses/${courseId}`} className="back-link">
         ← {t("backToCourses")}
       </Link>
 
