@@ -36,7 +36,6 @@ export default async function YogaSuMisura({ params }: LocaleRouteProps) {
       body={t("body")}
       video={YOGA_PRESENTATION.video}
       videoLabel={t("videoLabel")}
-      openVideoLabel={t("openVideo")}
       backLabel={t("back")}
     />
   );

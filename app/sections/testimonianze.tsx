@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 
+import { MarketingVideo } from "@/components/marketing-video";
 import { TESTIMONIAL_REELS } from "@/constants/testimonials";
 
 export function Testimonianze() {
@@ -20,15 +21,11 @@ export function Testimonianze() {
               key={reel.id}
               data-reveal
               className="aspect-[9/16] overflow-hidden rounded-2xl border border-white/20 bg-surface">
-              {reel.videoSrc ? (
-                <video
-                  controls
-                  playsInline
-                  preload="none"
-                  src={reel.videoSrc}
-                  poster={reel.posterSrc}
-                  aria-label={t("videoLabel", { number: index + 1 })}
-                  className="size-full object-contain"
+              {reel.playbackId ? (
+                <MarketingVideo
+                  playbackId={reel.playbackId}
+                  title={t("videoLabel", { number: index + 1 })}
+                  className="size-full"
                 />
               ) : (
                 <div className="flex h-full flex-col items-center justify-center gap-4 px-3 text-center text-white">

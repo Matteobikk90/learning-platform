@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 
 export type CoursePresentationVideo = {
-  src: string;
-  poster: string;
+  playbackId: string;
 };
 
 export type CoursePresentationConfig = {
@@ -18,7 +17,6 @@ export type CoursePresentationProps = {
   coverImageUrl?: string | null;
   video?: CoursePresentationVideo;
   videoLabel?: string;
-  openVideoLabel?: string;
   backLabel: string;
   children?: ReactNode;
 };

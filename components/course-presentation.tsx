@@ -1,4 +1,5 @@
 import { CourseCoverMedia } from "@/components/course-cover-media";
+import { MarketingVideo } from "@/components/marketing-video";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import type { CoursePresentationProps } from "@/types/course-presentation";
@@ -10,7 +11,6 @@ export function CoursePresentation({
   coverImageUrl,
   video,
   videoLabel,
-  openVideoLabel,
   backLabel,
   children,
 }: CoursePresentationProps) {
@@ -37,16 +37,11 @@ export function CoursePresentation({
           )}
         </header>
         {video ? (
-          <video
-            controls
-            playsInline
-            preload="none"
-            src={video.src}
-            poster={video.poster}
-            aria-label={videoLabel}
-            className="mx-auto aspect-[9/16] w-full max-w-md rounded-2xl border border-white/20 bg-surface object-contain md:col-start-2 md:row-span-2 md:row-start-1">
-            <a href={video.src}>{openVideoLabel}</a>
-          </video>
+          <MarketingVideo
+            playbackId={video.playbackId}
+            title={videoLabel}
+            className="mx-auto aspect-[9/16] max-w-md overflow-hidden rounded-2xl border border-white/20 bg-surface md:col-start-2 md:row-span-2 md:row-start-1"
+          />
         ) : (
           <CourseCoverMedia
             coverImageUrl={coverImageUrl ?? null}

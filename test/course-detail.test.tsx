@@ -35,6 +35,10 @@ vi.mock("@/components/course-cover-media", () => ({
   CourseCoverMedia: ({ coverImageUrl }: { coverImageUrl: string | null }) =>
     createElement("div", { "data-course-cover": coverImageUrl ?? "placeholder" }),
 }));
+vi.mock("@/components/marketing-video", () => ({
+  MarketingVideo: ({ playbackId, title }: { playbackId: string; title?: string }) =>
+    createElement("div", { "data-marketing-video": playbackId, "data-video-title": title }),
+}));
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ prefetch, ...props }: ComponentProps<"a"> & { prefetch?: boolean }) =>
     createElement("a", { ...props, "data-prefetch": prefetch }),
@@ -74,17 +78,14 @@ describe("public course detail", () => {
   it("restores the sheet presentation video and body on the detail linked by the home banner", async () => {
     const html = await renderPage();
 
-    expect(html.match(/<video\b/g)).toHaveLength(1);
-    expect(html).toContain(`src="${YOGA_PRESENTATION.video.src}"`);
-    expect(html).toContain(`poster="${YOGA_PRESENTATION.video.poster}"`);
-    expect(html).toContain('controls=""');
-    expect(html).toContain('playsInline=""');
-    expect(html).toContain('preload="none"');
-    expect(html).toContain(itMessages.Yoga.videoLabel);
+    expect(html.match(/data-marketing-video=/g)).toHaveLength(1);
+    expect(html).toContain(
+      `data-marketing-video="${YOGA_PRESENTATION.video.playbackId}"`
+    );
+    expect(html).toContain(`data-video-title="${itMessages.Yoga.videoLabel}"`);
     expect(html).toContain(itMessages.Yoga.body);
-    expect(html).not.toContain("autoPlay");
     expect(html).not.toContain("data-course-cover");
-    expect(html.indexOf("<video")).toBeLessThan(html.indexOf("<footer"));
+    expect(html.indexOf("data-marketing-video")).toBeLessThan(html.indexOf("<footer"));
   });
 
   it("does not assign the Yoga video or editorial text to another backend course", async () => {
@@ -94,8 +95,8 @@ describe("public course detail", () => {
 
     expect(html).toContain("NeuroBreathMethod");
     expect(html).toContain(`data-course-cover="${course.coverImageUrl}"`);
-    expect(html).not.toContain("<video");
-    expect(html).not.toContain(YOGA_PRESENTATION.video.src);
+    expect(html).not.toContain("data-marketing-video");
+    expect(html).not.toContain(YOGA_PRESENTATION.video.playbackId);
     expect(html).not.toContain(itMessages.Yoga.body);
   });
 
@@ -106,7 +107,9 @@ describe("public course detail", () => {
     expect(html).toContain(messages.Yoga.title);
     expect(html).toContain(messages.Yoga.subtitle);
     expect(html).toContain(messages.Yoga.body);
-    expect(html).toContain(`src="${YOGA_PRESENTATION.video.src}"`);
+    expect(html).toContain(
+      `data-marketing-video="${YOGA_PRESENTATION.video.playbackId}"`
+    );
     expect(html).toContain('href="/#corsi"');
     expect(html).toContain("md:grid-cols-2");
     expect(html).not.toContain("/checkout/");

@@ -67,3 +67,9 @@ export type UseModuleProgressOptions = Pick<
   ModuleProgressPlayerProps,
   "moduleId" | "initialTime" | "isCompleted"
 >;
+
+export type MarketingVideoProps = {
+  playbackId: string;
+  title?: string;
+  className?: string;
+};

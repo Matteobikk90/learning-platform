@@ -74,6 +74,10 @@ Deploy the checkout-attempt migration before enabling Stripe live mode. When upg
 
 Sentry is optional and stays inert until a DSN is configured. Set `SENTRY_DSN` (server) and `NEXT_PUBLIC_SENTRY_DSN` (browser) to enable error reporting; both usually hold the same value. Browser events travel through the same-origin `/monitoring` route, so the Content Security Policy does not change. Add `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN` to the build environment to upload source maps; without them the build simply skips the upload. Personal data is not attached to events, but list Sentry as a processor in the privacy policy once it is enabled.
 
+## Marketing videos
+
+Presentation and testimonial videos are hosted on Mux with a public playback policy and referenced by playback ID in `constants/course-presentations.ts` and `constants/testimonials.ts`; the poster comes from Mux and nothing is stored in the repository. Upload new clips from the Mux dashboard with the "public" playback policy and the "basic" video quality, then paste the playback ID.
+
 ## Health check
 
 `GET /api/health` returns `200` only when the application can reach its database. It returns `503` without infrastructure details when the database is unavailable. The response is never cached and can be used by an external uptime monitor.

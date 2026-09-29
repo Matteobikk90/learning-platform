@@ -67,7 +67,6 @@ export default async function CourseDetailPage({ params }: PublicCourseRouteProp
       coverImageUrl={course.coverImageUrl}
       video={presentation?.video}
       videoLabel={editorial?.("videoLabel")}
-      openVideoLabel={editorial?.("openVideo")}
       backLabel={t("back")}>
       <footer className="flex flex-wrap items-center justify-between gap-6 border-t border-white/20 pt-8">
         <p className="flex flex-col gap-2">
