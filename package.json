@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^24.19.0",
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -58,6 +58,7 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.5",
     "typescript": "^5",
-    "vitest": "^4.1.10"
+    "vite": "^8.2.0",
+    "vitest": "^5.0.2"
   }
 }

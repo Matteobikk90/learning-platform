@@ -18,6 +18,10 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # Node types must follow the runtime pinned in "engines", not the latest major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
