@@ -15,3 +15,6 @@ export const PRIVATE_ROUTE_SEGMENTS = [
   "profile",
   "verify-request",
 ] as const;
+
+// Locale-relative marketing pages that exist regardless of database content.
+export const PUBLIC_MARKETING_PATHS = ["/yoga-su-misura"] as const;

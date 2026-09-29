@@ -58,7 +58,9 @@ describe("getHomeAlternates", () => {
 
 describe("getPublicSitemap", () => {
   it("lists the home and yoga page in each locale with matching hreflang alternates", () => {
-    const sitemap = getPublicSitemap("https://yoga.example.com", locales);
+    const sitemap = getPublicSitemap("https://yoga.example.com", locales, [
+      "/yoga-su-misura",
+    ]);
 
     expect(sitemap.map((entry) => entry.url)).toEqual([
       "https://yoga.example.com/it",
@@ -78,6 +80,29 @@ describe("getPublicSitemap", () => {
       en: "https://yoga.example.com/en/yoga-su-misura",
       "x-default": "https://yoga.example.com/yoga-su-misura",
     });
+  });
+
+  it("appends every published course page after the static pages", () => {
+    const sitemap = getPublicSitemap("https://yoga.example.com", locales, [
+      "/yoga-su-misura",
+      "/courses/abc123",
+    ]);
+
+    expect(sitemap.map((entry) => entry.url).slice(-2)).toEqual([
+      "https://yoga.example.com/it/courses/abc123",
+      "https://yoga.example.com/en/courses/abc123",
+    ]);
+    expect(sitemap.at(-1)?.alternates?.languages).toEqual({
+      it: "https://yoga.example.com/it/courses/abc123",
+      en: "https://yoga.example.com/en/courses/abc123",
+      "x-default": "https://yoga.example.com/courses/abc123",
+    });
+  });
+
+  it("falls back to the home pages only when no extra path is given", () => {
+    expect(
+      getPublicSitemap("https://yoga.example.com", locales).map((entry) => entry.url)
+    ).toEqual(["https://yoga.example.com/it", "https://yoga.example.com/en"]);
   });
 });
 

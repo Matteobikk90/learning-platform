@@ -5,26 +5,15 @@ import type { Locale } from "@/types/i18n";
 
 export function getPublicSitemap(
   appUrl: string,
-  locales: readonly Locale[]
+  locales: readonly Locale[],
+  paths: readonly string[] = []
 ): MetadataRoute.Sitemap {
-  const languages = getLocalizedAlternates(locales, appUrl);
+  return ["", ...paths].flatMap((path) => {
+    const languages = getLocalizedAlternates(locales, appUrl, path);
 
-  const homes = locales.map((locale) => ({
-    url: `${appUrl}/${locale}`,
-    alternates: { languages },
-  }));
-
-  const yogaPath = "/yoga-su-misura";
-  const yogaLanguages = {
-    ...Object.fromEntries(locales.map((locale) => [locale, `${appUrl}/${locale}${yogaPath}`])),
-    "x-default": `${appUrl}${yogaPath}`,
-  };
-
-  return [
-    ...homes,
-    ...locales.map((locale) => ({
-      url: `${appUrl}/${locale}${yogaPath}`,
-      alternates: { languages: yogaLanguages },
-    })),
-  ];
+    return locales.map((locale) => ({
+      url: `${appUrl}/${locale}${path}`,
+      alternates: { languages },
+    }));
+  });
 }

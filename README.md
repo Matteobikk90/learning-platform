@@ -84,7 +84,7 @@ Vercel Production builds validate `DIRECT_URL`, generate Prisma Client, build Ne
 
 ## Search indexing
 
-`/robots.txt` and `/sitemap.xml` are generated at build time from the application URL. The sitemap lists the localized home pages with `hreflang` alternates, while `robots.txt` blocks the API, admin, profile, checkout, and login areas. Legal pages stay reachable but carry a `noindex` directive until their copy is final.
+`/robots.txt` is generated at build time from the application URL, while `/sitemap.xml` is rendered on request so it can list the localized home page, the marketing pages, and every published course with `hreflang` alternates. `robots.txt` blocks the API, admin, profile, checkout, and login areas. Legal pages stay reachable but carry a `noindex` directive until their copy is final.
 
 ## Legal content
 
